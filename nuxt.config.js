@@ -1,13 +1,27 @@
+const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = {
+  /*
+  ** Modules
+  */
+  modules: [
+    ['@nuxtjs/google-analytics', {
+      id: 'UA-124043337-1',
+      debug: {
+        sendHitTask: isProduction
+      }
+    }]
+  ],
   /*
   ** Headers of the page
   */
   head: {
-    title: 'geidelguerra-website',
+    title: 'Geidel Guerra',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'My personal web site' }
+      { hid: 'description', name: 'description', content: 'My personal web site' },
+      { hid: 'keywords', name: 'keywords', content: 'software developer code vuejs nuxt' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
