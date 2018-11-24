@@ -1,17 +1,8 @@
-const isProduction = process.env.NODE_ENV === 'production';
+const pkg = require('./package')
 
 module.exports = {
-  /*
-  ** Modules
-  */
-  modules: [
-    ['@nuxtjs/google-analytics', {
-      id: 'UA-124043337-1',
-      debug: {
-        sendHitTask: isProduction
-      }
-    }]
-  ],
+  mode: 'universal',
+
   /*
   ** Headers of the page
   */
@@ -20,39 +11,52 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'My personal web site' },
-      { hid: 'keywords', name: 'keywords', content: 'software developer code vuejs nuxt' },
+      { hid: 'description', name: 'description', content: 'Software Developer' },
+      { hid: 'keywords', name: 'keywords', content: 'software,fullstack,web,vuejs,laravel,node,mysql,nuxt' },
+      // Open graph
+      { hid: 'og:title', property: 'og:title', content: 'Geidel Guerra' },
+      { hid: 'og:type', property: 'og:type', content: 'website' },
+      { hid: 'og:url', property: 'og:url', content: 'https://geidelguerra.com' },
+      { hid: 'og:description', property: 'og:description', content: 'Software Developer' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+
   /*
-  ** Customize the progress bar color
+  ** Customize the progress-bar color
   */
-  loading: { color: '#3B8070' },
+  loading: { color: '#fff' },
+
   /*
   ** Global CSS
   */
   css: [
     '~/assets/css/tailwind.css'
   ],
+
+  /*
+  ** Plugins to load before mounting the App
+  */
+  plugins: [
+  ],
+
+  /*
+  ** Nuxt.js modules
+  */
+  modules: [
+  ],
+
   /*
   ** Build configuration
   */
   build: {
     /*
-    ** Run ESLint on save
+    ** You can extend webpack config here
     */
-    extend (config, { isDev, isClient }) {
-      if (isDev && isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
-      }
+    extend(config, ctx) {
+
     }
   }
 }
