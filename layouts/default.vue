@@ -1,9 +1,9 @@
 <template>
-  <div class="font-sans min-h-screen flex flex-col text-white bg-black">
+  <div class="font-sans flex flex-col text-white bg-black">
     <nuxt class="flex-1"/>
 
     <footer>
-      <div class="text-center text-xs pt-2 pb-2 uppercase font-mono font-bold text-green-dark">
+      <div class="text-center text-xs pt-2 pb-2 uppercase font-thin text-green-dark">
         Copyright 2018 &copy; Geidel Guerra
       </div>
     </footer>

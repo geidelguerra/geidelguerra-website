@@ -1,5 +1,5 @@
 <template>
-  <section class="container mx-auto flex justify-center items-center">
+  <section class="container mx-auto flex justify-center items-center min-h-screen">
     <div>
       <h1 class="text-center font-thin">
         Geidel Guerra
@@ -16,6 +16,9 @@
           href="https://github.com/geidelguerra"
           target="_blank"
           class="text-green-dark">GitHub</a>
+      </div>
+      <div class="flex justify-center m-4">
+        <a class="block bg-green-dark text-white no-underline p-4 rounded" href="/cv/geidelguerra_cv_en.pdf">Download CV</a>
       </div>
     </div>
   </section>

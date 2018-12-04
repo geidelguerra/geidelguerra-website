@@ -791,7 +791,7 @@ module.exports = {
     backgroundSize: false,
     borderCollapse: [],
     borderColors: false,
-    borderRadius: false,
+    borderRadius: [],
     borderStyle: false,
     borderWidths: false,
     cursor: false,
