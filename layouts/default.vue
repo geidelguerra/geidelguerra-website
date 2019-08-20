@@ -1,10 +1,10 @@
 <template>
-  <div class="font-sans flex flex-col text-white bg-black">
-    <nuxt class="flex-1"/>
+  <div class="font-sans flex flex-col text-white bg-black min-h-screen">
+    <nuxt class="flex-1" />
 
     <footer>
       <div class="text-center text-xs pt-2 pb-2 uppercase font-thin text-green-dark">
-        Copyright 2018 &copy; Geidel Guerra
+        Copyright {{ new Date().getFullYear() }} &copy; Geidel Guerra
       </div>
     </footer>
   </div>
@@ -26,5 +26,8 @@ html {
 *:after {
   box-sizing: border-box;
   margin: 0;
+}
+.__layout {
+  height: 100%;
 }
 </style>

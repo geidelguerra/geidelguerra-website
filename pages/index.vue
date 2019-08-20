@@ -1,5 +1,5 @@
 <template>
-  <section class="container mx-auto flex justify-center items-center min-h-screen">
+  <section class="container mx-auto flex justify-center items-center h-full">
     <div>
       <h1 class="text-center font-thin">
         Geidel Guerra
@@ -11,11 +11,13 @@
         <a
           href="https://linkedin.com/in/geidelguerra"
           target="_blank"
-          class="text-green-dark">LinkedIn</a>
+          class="text-green-dark"
+        >LinkedIn</a>
         <a
           href="https://github.com/geidelguerra"
           target="_blank"
-          class="text-green-dark">GitHub</a>
+          class="text-green-dark"
+        >GitHub</a>
       </div>
     </div>
   </section>
