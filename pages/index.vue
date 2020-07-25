@@ -5,7 +5,7 @@
         Geidel Guerra
       </h1>
       <h2 class="text-center font-mono uppercase text-sm">
-        Software Developer
+        Software Developer - Laravel, Vuejs, Unity, Ansible.
       </h2>
       <div class="text-center p-2">
         <a
