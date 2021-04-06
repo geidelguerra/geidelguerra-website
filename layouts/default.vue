@@ -1,9 +1,9 @@
 <template>
-  <div class="font-sans flex flex-col text-white bg-black min-h-screen">
+  <div class="font-sans flex flex-col text-white bg-gray-800 min-h-screen">
     <nuxt class="flex-1" />
 
     <footer>
-      <div class="text-center text-xs pt-2 pb-2 uppercase font-thin text-green-dark">
+      <div class="text-center text-xs py-2 uppercase font-bold text-green-500">
         Copyright {{ new Date().getFullYear() }} &copy; Geidel Guerra
       </div>
     </footer>

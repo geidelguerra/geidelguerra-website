@@ -44,6 +44,8 @@ module.exports = {
   */
   modules: [],
 
+  buildModules: ['@nuxtjs/tailwindcss'],
+
   /*
   ** Build configuration
   */
