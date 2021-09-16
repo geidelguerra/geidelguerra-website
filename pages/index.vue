@@ -1,12 +1,12 @@
 <template>
-  <section class="container flex items-center justify-center h-full mx-auto">
+  <section class="container flex flex-col items-center justify-center h-full mx-auto">
     <div class="flex flex-col items-center justify-center p-6 mx-2 bg-gray-900 rounded-lg">
       <img src="/images/geidel_profile.jpg" alt="Geidel Guerra Picture" class="mb-6 overflow-hidden rounded-full w-28 h-28">
       <h1 class="mb-4 text-4xl font-thin text-center">
         Geidel Guerra
       </h1>
       <h2 class="font-mono text-sm font-bold text-center uppercase">
-        Software Developer - Laravel, Vuejs, Ansible.
+        Software Developer - Laravel, Vuejs, Ansible.<br>Learning Godot Engine, hoping to make some games :)
       </h2>
       <div class="p-2 space-x-1 text-center">
         <template v-for="network in networks">
