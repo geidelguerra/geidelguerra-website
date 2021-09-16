@@ -5,7 +5,7 @@
       <h1 class="mb-4 text-4xl font-thin text-center">
         Geidel Guerra
       </h1>
-      <h2 class="font-mono text-sm font-bold text-center uppercase">
+      <h2 class="font-mono text-sm tracking-tighter text-center">
         Software Developer - Laravel, Vuejs, Ansible.<br>Learning Godot Engine, hoping to make some games :)
       </h2>
       <div class="p-2 space-x-1 text-center">
