@@ -1,0 +1,24 @@
+{
+  "include": [
+    "./components/**/*",
+    "./layouts/**/*",
+    "./middleware/**/*",
+    "./pages/**/*",
+    "./plugins/**/*",
+    "./store/**/*",
+    "./nuxt.config.js"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "components/*",
+        "layouts/*",
+        "middleware/*",
+        "pages/*",
+        "plugins/*",
+        "store/*",
+      ]
+    }
+  }
+}
