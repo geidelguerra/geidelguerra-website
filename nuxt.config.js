@@ -1,3 +1,5 @@
+import webpack from 'webpack';
+
 module.exports = {
   target: 'static',
   /*
@@ -37,6 +39,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/cubes.client.js'
   ],
 
   /*
@@ -54,7 +57,9 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-
+      config.plugins.push(new webpack.ProvidePlugin({
+        THREE: 'three'
+      }));
     }
   }
 }
