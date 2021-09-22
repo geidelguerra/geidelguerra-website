@@ -47,7 +47,10 @@ module.exports = {
   */
   modules: [],
 
-  buildModules: ['@nuxtjs/tailwindcss'],
+  buildModules: [
+    '@nuxtjs/tailwindcss',
+    ['nuxt-rfg-icon', { masterPicture: 'static/favicon.png' }],
+  ],
 
   /*
   ** Build configuration
