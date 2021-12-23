@@ -79,5 +79,6 @@ dist
 
 # IDE
 .idea
+.vscode
 
 scripts
