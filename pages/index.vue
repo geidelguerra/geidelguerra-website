@@ -1,8 +1,5 @@
 <template>
   <section class="relative">
-    <client-only>
-      <Cubes class="absolute top-0 bottom-0 left-0 right-0" />
-    </client-only>
     <div class="container absolute top-0 bottom-0 left-0 right-0 z-10 flex flex-col items-center justify-center h-full mx-auto">
       <div class="flex flex-col items-center justify-center p-6 mx-2">
         <img src="/images/geidel_profile.jpg" alt="Geidel Guerra Picture" class="mb-6 overflow-hidden rounded-full w-28 h-28 ring-white ring-2">
