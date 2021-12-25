@@ -50,6 +50,14 @@ module.exports = {
   buildModules: [
     '@nuxtjs/tailwindcss',
     ['nuxt-rfg-icon', { masterPicture: 'static/favicon.png' }],
+    ['@nuxtjs/google-fonts', {
+      display: 'swap',
+      download: true,
+      families: {
+        'Fira Sans': [400],
+        'Fira Code': true
+      }
+    }]
   ],
 
   /*
