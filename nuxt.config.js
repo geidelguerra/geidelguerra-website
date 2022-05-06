@@ -39,7 +39,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/cubes.client.js'
+    '~/plugins/analytics.client.js'
   ],
 
   /*
