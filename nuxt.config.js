@@ -48,7 +48,7 @@ module.exports = {
   modules: [],
 
   buildModules: [
-    '@nuxtjs/tailwindcss',
+    '@nuxt/postcss8',
     ['nuxt-rfg-icon', { masterPicture: 'static/favicon.png' }],
     ['@nuxtjs/google-fonts', {
       display: 'swap',
@@ -64,13 +64,11 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    /*
-    ** You can extend webpack config here
-    */
-    extend(config, ctx) {
-      config.plugins.push(new webpack.ProvidePlugin({
-        THREE: 'three'
-      }));
+    postcss: {
+      plugins: {
+        tailwindcss: {},
+        autoprefixer: {},
+      },
     }
   }
 }
