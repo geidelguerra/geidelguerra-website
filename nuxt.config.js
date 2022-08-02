@@ -19,7 +19,10 @@ module.exports = {
       { hid: 'og:description', property: 'og:description', content: 'Software Developer - Laravel, Vuejs, Ansible. Learning Godot Engine, hoping to make some games :)' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: "preconnect", href: "https://fonts.bunny.net" },
+      { rel: "stylesheet", href: "https://fonts.bunny.net/css?family=fira-code:400|fira-sans:100,300,400,700" }
+
     ]
   },
 
@@ -50,14 +53,6 @@ module.exports = {
   buildModules: [
     '@nuxt/postcss8',
     ['nuxt-rfg-icon', { masterPicture: 'static/favicon.png' }],
-    ['@nuxtjs/google-fonts', {
-      display: 'swap',
-      download: true,
-      families: {
-        'Fira Sans': [400],
-        'Fira Code': true
-      }
-    }]
   ],
 
   /*
