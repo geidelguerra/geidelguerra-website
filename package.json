@@ -4,6 +4,9 @@
   "description": "My personal website",
   "author": "Geidel Guerra",
   "private": true,
+  "engines": {
+    "node": "14"
+  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
