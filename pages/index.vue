@@ -7,7 +7,7 @@
           Geidel Guerra
         </h1>
         <h2 class="font-mono text-sm tracking-tighter text-center">
-          Software Developer - Laravel, Vuejs, Ansible.<br>Learning Godot Engine, hoping to make some games :)
+          Software Developer - Laravel, Vuejs, Ansible.<br>Hoping to make some games in the future :)
         </h2>
         <div class="p-2 space-x-1 text-center">
           <template v-for="network in networks">
