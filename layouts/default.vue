@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen font-sans text-white bg-black">
+  <div class="flex flex-col min-h-screen font-sans text-white bg-gray-700">
     <nuxt class="flex-1" />
 
     <footer class="flex flex-col items-center justify-center ">
