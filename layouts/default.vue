@@ -24,7 +24,7 @@
 
     <footer class="flex px-4 py-2 items-end">
       <div class="flex flex-1 flex-col">
-        <h3 class="text-sm text-green-300 mb-2">Where to find me?</h3>
+        <h3 class="text-sm text-green-300 mb-1">Where to find me?</h3>
         <ul class="flex space-x-2">
           <template v-for="link in networks">
             <li :key="link.url">
@@ -34,10 +34,10 @@
         </ul>
       </div>
       <div class="flex flex-col items-end space-x-4">
-        <span class="text-xs">Deployed using <a class="hover:underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://netlify.com/">Netlify</a></span>
-        <span class="text-xs font-medium text-center text-green-300">
+        <div class="text-xs mb-1"><span class="text-green-300">Deployed using</span> <a class="hover:underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://netlify.com/">Netlify</a></div>
+        <div class="text-sm text-white">
           Copyright {{ new Date().getFullYear() }} &copy; Geidel Guerra
-        </span>
+        </div>
       </div>
     </footer>
   </div>
