@@ -48,7 +48,9 @@ module.exports = {
   /*
   ** Nuxt.js modules
   */
-  modules: [],
+  modules: [
+    '@nuxt/content'
+  ],
 
   buildModules: [
     '@nuxt/postcss8',
