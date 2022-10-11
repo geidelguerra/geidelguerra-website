@@ -1,6 +1,6 @@
 <template>
   <section class="relative">
-    <div
+    <!-- <div
       class="container absolute top-0 bottom-0 left-0 right-0 z-10 flex flex-col items-center justify-center h-full mx-auto">
       <div class="flex flex-col items-center justify-center p-6 mx-2">
         <img src="/images/geidel_profile.jpg" alt="Geidel Guerra Picture"
@@ -25,7 +25,7 @@
           </ul>
         </div>
       </div>
-    </div>
+    </div> -->
   </section>
 </template>
 
