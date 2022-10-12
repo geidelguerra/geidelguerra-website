@@ -1,5 +1,5 @@
 ---
-title: How to setup Laravel Echo when using InertiaJs
+title: Otro post
 excerpt: Learn in a few minutes how to setup Laravel Echo when using InertiaJs.
 ---
 

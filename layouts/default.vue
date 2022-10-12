@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-col min-h-screen font-sans text-white bg-gray-700">
-    <header class="h-16 flex items-center px-4">
-      <div class="flex items-center space-x-4">
+  <div class="flex flex-col min-h-screen font-sans text-white bg-gray-800">
+    <header class="h-16 flex items-center px-4 bg-gray-700 z-50 sticky top-0 shadow-sm">
+      <nuxt-link to="/" class="flex items-center space-x-4">
         <img src="/images/geidel_profile.jpg" alt="Geidel Guerra Picture"
           class="overflow-hidden rounded-full w-10 h-10 border-white border-2">
         <span>Geidel Guerra's website</span>
-      </div>
+      </nuxt-link>
       <div class="flex-1"></div>
       <div class="mr-4">
         <ul class="flex space-x-2">
@@ -18,11 +18,11 @@
       </div>
     </header>
 
-    <main class="flex-1 flex">
+    <main class="flex-1 flex py-4">
       <nuxt />
     </main>
 
-    <footer class="flex px-4 py-2 items-end">
+    <footer class="flex px-4 sm:px-0 pb-2 pt-10 items-end mx-auto max-w-3xl w-full">
       <div class="flex flex-1 flex-col">
         <h3 class="text-sm text-green-300 mb-1">Where to find me?</h3>
         <ul class="flex space-x-2">
@@ -48,7 +48,7 @@ export default {
   setup() {
     const navMenu = [
       {
-        text: 'About',
+        text: 'About me',
         url: '/'
       },
       {

@@ -2,9 +2,9 @@
   <div class="mx-auto max-w-3xl">
     <div class="mb-8">
       <h1 class="text-2xl">Blog</h1>
-      <p>My ramblings about things and stuff... mostly software</p>
+      <p class="text-green-300 italic">My ramblings about stuff... mostly software</p>
     </div>
-    <div>
+    <div class="flex flex-col space-y-6">
       <template v-for="post in posts">
         <PostCard :post="post" :key="post.id"/>
       </template>

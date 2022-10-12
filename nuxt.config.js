@@ -40,7 +40,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/analytics.client.js'
+    //
   ],
 
   /*
@@ -49,6 +49,15 @@ module.exports = {
   modules: [
     '@nuxt/content'
   ],
+
+  content: {
+    liveEdit: false,
+    markdown: {
+      prism: {
+        theme: 'prism-themes/themes/prism-material-oceanic.css'
+      }
+    }
+  },
 
   buildModules: [
     '@nuxt/postcss8',

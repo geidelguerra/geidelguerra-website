@@ -1,10 +1,12 @@
 <template>
   <div>
-    <h2>
-      <nuxt-link class="hover:underline text-blue-300" :to="post.path">{{ post.title }}</nuxt-link>
-    </h2>
-    <div>{{ post.createdAt }}</div>
-    <nuxt-content :document="{ body: post.excerpt }"/>
+    <div class="mb-2">
+      <h2 class="text-2xl font-extrabold">
+        <nuxt-link class="hover:underline text-blue-300" :to="post.path">{{ post.title }}</nuxt-link>
+      </h2>
+      <div class="text-gray-500 text-sm">{{ new Date(post.createdAt).toLocaleDateString() }}</div>
+    </div>
+    <nuxt-content class="prose prose-invert" :document="{ body: post.excerpt }"/>
   </div>
 </template>
 
