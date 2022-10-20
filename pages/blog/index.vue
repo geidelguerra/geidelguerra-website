@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto max-w-3xl">
+  <div class="mx-auto max-w-3xl px-4 md:px-0">
     <div class="mb-8">
       <h1 class="text-2xl">Blog</h1>
       <p class="text-green-300 italic">My ramblings about stuff... mostly software</p>

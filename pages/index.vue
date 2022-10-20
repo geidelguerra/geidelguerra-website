@@ -1,10 +1,10 @@
 <template>
-  <div class="mx-auto max-w-screen-md w-full flex flex-col space-y-8">
+  <div class="mx-auto max-w-screen-md w-full flex flex-col space-y-8 px-4 md:px-0">
     <section>
       <h2 class="font-black text-3xl tracking-tight mb-4">Who am I?</h2>
       <div class="prose prose-invert">
         <p>
-          I'm a self taught “Fullstack Developer” specialized in Laravel, Vuejs and TailwindCSS. Hoping to make some
+          I'm a self taught "Fullstack Developer" specialized in Laravel, VueJs and TailwindCSS. Hoping to make some
           games in the future.
         </p>
         <p>
@@ -14,8 +14,7 @@
         <p>
 
           I have experience developing SaaS applications, REST APIs, Third-Party integrations (Facebook, Twitter,
-          Google,
-          LinkedIn, YouTube) and basic websites using NuxtJs and Vue.
+          Google, LinkedIn, YouTube) and basic websites using NuxtJs and Vue.
         </p>
         <p>
           I have some experience with AWS and DevOps. I use Digital Ocean for my personal stuff.
@@ -57,7 +56,7 @@
       <div>
         <template v-for="lang in languages">
           <div :key="lang.label" class="flex space-x-2 items-center">
-            <h3 class="w-16">{{ lang.label }}</h3>
+            <h3>{{ lang.label }}</h3>
             <div class="flex-1 h-px bg-slate-600"></div>
             <div>
               <a v-if="lang.url" class="text-blue-300 hover:underline" :href="lang.url" target="_blank"
@@ -73,7 +72,7 @@
       <div>
         <template v-for="tool in toolkit">
           <div :key="tool.category" class="flex space-x-2 items-center">
-            <h3 class="w-16">{{ tool.category }}</h3>
+            <h3>{{ tool.category }}</h3>
             <div class="flex-1 h-px bg-slate-600"></div>
             <div>
               <a v-if="tool.url" class="text-blue-300 hover:underline" :href="tool.url" target="_blank"
@@ -84,32 +83,6 @@
         </template>
       </div>
     </section>
-    <!-- <div
-      class="container absolute top-0 bottom-0 left-0 right-0 z-10 flex flex-col items-center justify-center h-full mx-auto">
-      <div class="flex flex-col items-center justify-center p-6 mx-2">
-        <img src="/images/geidel_profile.jpg" alt="Geidel Guerra Picture"
-          class="mb-6 overflow-hidden rounded-full w-28 h-28 ring-white ring-2">
-        <h1 class="mb-4 text-4xl font-thin text-center">
-          Geidel Guerra
-        </h1>
-        <h2 class="font-mono text-sm tracking-tighter text-center mb-4">
-          Software Developer - Laravel, Vuejs, Ansible.<br>Hoping to make some games in the future :)
-        </h2>
-        <div>
-          <p class="text-center text-lg">Where to find me?</p>
-          <ul class="space-x-2 text-center flex">
-            <template v-for="network in networks">
-              <li :key="network.url">
-                <a :href="network.url" target="_blank" rel="noopener noreferrer"
-                  class="text-green-500 hover:text-green-300 block">
-                  {{ network.label }}
-                </a>
-              </li>
-            </template>
-          </ul>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
