@@ -16,7 +16,7 @@
 import PostCard from '@/components/PostCard.vue';
 export default {
     async asyncData({ $content }) {
-        const posts = await $content("blog").fetch();
+        const posts = await $content("blog").sortBy('date', 'desc').fetch();
         return { posts };
     },
     data() {
