@@ -24,7 +24,7 @@
 
     <footer class="flex px-4 md:px-0 pb-2 pt-10 items-end mx-auto max-w-3xl w-full">
       <div class="flex flex-1 flex-col">
-        <h3 class="text-sm text-green-300 mb-1">Where to find me?</h3>
+        <h3 class="text-xs text-green-300 mb-1">Where to find me?</h3>
         <ul class="flex space-x-2">
           <template v-for="link in networks">
             <li :key="link.url">
