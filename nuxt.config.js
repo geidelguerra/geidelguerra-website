@@ -8,13 +8,18 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Software Developer - Laravel, Vuejs, Ansible. Learning Godot Engine, hoping to make some games :)' },
+      { hid: 'description', name: 'description', content: 'Software Developer - Laravel, Vuejs, Ansible. Hoping to make some games in the future :)' },
       { hid: 'keywords', name: 'keywords', content: 'software,fullstack,web,vuejs,laravel,node,mysql,nuxt,threejs,ansible' },
       // Open graph
       { hid: 'og:title', property: 'og:title', content: 'Geidel Guerra' },
       { hid: 'og:type', property: 'og:type', content: 'website' },
       { hid: 'og:url', property: 'og:url', content: 'https://geidelguerra.com' },
-      { hid: 'og:description', property: 'og:description', content: 'Software Developer - Laravel, Vuejs, Ansible. Learning Godot Engine, hoping to make some games :)' }
+      { hid: 'og:description', property: 'og:description', content: 'Software Developer - Laravel, Vuejs, Ansible. Hoping to make some games in the future :)' },
+      // Twitter
+      { hid: 'twitter:card', name: 'twitter:card', content: 'summary' },
+      { hid: 'twitter:site', name: 'twitter:site', content: '@geidelguerra' },
+      { hid: 'twitter:title', name: 'twitter:title', content: 'Geidel Guerra' },
+      { hid: 'twitter:description', name: 'twitter:description', content: 'Software Developer - Laravel, Vuejs, Ansible. Hoping to make some games in the future :)' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
