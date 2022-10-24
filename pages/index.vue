@@ -105,10 +105,21 @@ export default {
         { label: 'VueJs', score: 4, url: 'https://vuejs.org' },
         { label: 'InertiaJs', score: 4, url: 'https://inertiajs.com' },
         { label: 'DevOps', score: 4, url: 'https://www.martinfowler.com/bliki/DevOpsCulture.html' },
-        { label: 'Git', score: 3.5, url: 'https://git-scm.com' },
         { label: 'Ansible', score: 2.5, url: 'https://www.ansible.com' },
+        { label: 'Git', score: 3.5, url: 'https://git-scm.com' },
         { label: 'MySQL', score: 2.5 },
-      ],
+        { label: 'NodeJs', score: 3, url: 'https://nodejs.org' },
+      ].sort((a, b) => {
+        if (a.score > b.score) {
+          return -1
+        }
+
+        if (a.score < b.score) {
+          return 1
+        }
+
+        return 0
+      }),
       toolkit: [
         { category: 'OS', name: 'Ubuntu 22.04' },
         { category: 'Editor', name: 'VSCode' },
