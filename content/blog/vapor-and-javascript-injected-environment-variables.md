@@ -1,5 +1,6 @@
 ---
 title: Laravel Vapor and injected javascript environment variables
+description: If you are using Laravel Vapor and need to inject some environment variables to javascript keep reading.
 ---
 
 If you are using Laravel Vapor and need to inject some environment variables to

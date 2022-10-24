@@ -1,12 +1,13 @@
 <template>
-  <div class="mx-auto max-w-3xl">
-    <div class="mb-4">
+  <article class="mx-auto max-w-3xl">
+    <header class="mb-4">
       <h1 class="text-3xl text-blue-300 font-extrabold">{{ post.title }}</h1>
       <div class="text-gray-500 text-sm mb-4">{{ new Date(post.createdAt).toLocaleDateString() }}</div>
       <ShareMenu :text="post.title" :url="permalink" />
-    </div>
+    </header>
     <nuxt-content class="prose prose-invert" :document="post" />
-  </div>
+    <p>EOF</p>
+  </article>
 </template>
 
 <script>
