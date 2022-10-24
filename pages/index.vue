@@ -12,9 +12,8 @@
           jumped to C++, C#, Java, Python and eventually landed with PHP and JavaScript.
         </p>
         <p>
-
           I have experience developing SaaS applications, REST APIs, Third-Party integrations (Facebook, Twitter,
-          Google, LinkedIn, YouTube) and basic websites using NuxtJs and Vue.
+          Google, LinkedIn, YouTube, Stripe) and basic websites using NuxtJs and Vue.
         </p>
         <p>
           I have some experience with AWS and DevOps. I use Digital Ocean for my personal stuff.
@@ -42,9 +41,15 @@
       <div>
         <template v-for="skill in skills">
           <div :key="skill.label" class="flex space-x-2 items-center">
-            <h3 class="w-16">{{ skill.label }}</h3>
+            <h3 class="w-16">
+              <a v-if="skill.url" class="text-blue-300 hover:underline" :href="skill.url" target="_blank"
+                rel="noopener noreferrer">
+                {{ skill.label }}
+              </a>
+              <span v-else>{{ skill.label }}</span>
+            </h3>
             <div class="relative overflow-hidden bg-slate-600 rounded-lg h-3 flex-1">
-              <div :style="{width: `${Math.ceil(skill.score * 100 / 5)}%`}"
+              <div :style="{ width: `${Math.ceil(skill.score * 100 / 5)}%` }"
                 class="absolute left-0 top-0 h-3 bg-lime-600 rounded-lg"></div>
             </div>
           </div>
@@ -96,10 +101,13 @@ export default {
         { label: 'Twitter', url: 'https://twitter.com/geidelguerra' }
       ],
       skills: [
-        { label: 'Laravel', score: 5 },
-        { label: 'VueJs', score: 4 },
-        { label: 'Git', score: 3.5 },
-        { label: 'Ansible', score: 2.5 },
+        { label: 'Laravel', score: 5, url: 'https://laravel.com' },
+        { label: 'VueJs', score: 4, url: 'https://vuejs.org' },
+        { label: 'InertiaJs', score: 4, url: 'https://inertiajs.com' },
+        { label: 'DevOps', score: 4, url: 'https://www.martinfowler.com/bliki/DevOpsCulture.html' },
+        { label: 'Git', score: 3.5, url: 'https://git-scm.com' },
+        { label: 'Ansible', score: 2.5, url: 'https://www.ansible.com' },
+        { label: 'MySQL', score: 2.5 },
       ],
       toolkit: [
         { category: 'OS', name: 'Ubuntu 22.04' },
