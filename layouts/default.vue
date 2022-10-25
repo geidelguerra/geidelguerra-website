@@ -22,7 +22,7 @@
       <nuxt />
     </main>
 
-    <footer class="flex flex-col items-center space-y-4 p-4 mx-auto max-w-3xl sm:flex-row sm:justify-between sm:space-y-0 sm:w-full">
+    <footer class="flex flex-col items-center space-y-4 p-4 mx-auto max-w-3xl md:px-0 sm:flex-row sm:justify-between sm:space-y-0 sm:w-full">
       <div class="flex flex-col">
         <h3 class="text-xs text-green-300 mb-1 text-center sm:text-left">Where to find me?</h3>
         <ul class="flex space-x-2">

@@ -31,9 +31,6 @@
         <p>
           Proficient in English, native Spanish speaker.
         </p>
-        <p>
-          EOF
-        </p>
       </div>
     </section>
     <section>
