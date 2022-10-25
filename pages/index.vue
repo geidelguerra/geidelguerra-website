@@ -38,10 +38,11 @@
     </section>
     <section>
       <h2 class="font-black text-3xl tracking-tight mb-4">Skills</h2>
+      <p class="text-xs mb-2">The score's scale is 1 to 5. 1 been almost no experience and 5 been a lot of experience</p>
       <div>
         <template v-for="skill in skills">
           <div :key="skill.label" class="flex space-x-2 items-center">
-            <h3 class="w-16">
+            <h3 class="w-32 whitespace-nowrap">
               <a v-if="skill.url" class="text-blue-300 hover:underline" :href="skill.url" target="_blank"
                 rel="noopener noreferrer">
                 {{ skill.label }}
@@ -52,6 +53,7 @@
               <div :style="{ width: `${Math.ceil(skill.score * 100 / 5)}%` }"
                 class="absolute left-0 top-0 h-3 bg-lime-600 rounded-lg"></div>
             </div>
+            <div class="font-bold text-xs w-5">{{ skill.score }}</div>
           </div>
         </template>
       </div>
@@ -107,8 +109,12 @@ export default {
         { label: 'DevOps', score: 4, url: 'https://www.martinfowler.com/bliki/DevOpsCulture.html' },
         { label: 'Ansible', score: 2.5, url: 'https://www.ansible.com' },
         { label: 'Git', score: 3.5, url: 'https://git-scm.com' },
-        { label: 'MySQL', score: 2.5 },
+        { label: 'MySQL', score: 2.5, url: 'https://www.mysql.com' },
         { label: 'NodeJs', score: 3, url: 'https://nodejs.org' },
+        { label: 'AWS', score: 3, url: 'https://console.aws.amazon.com/' },
+        { label: 'Laravel Vapor', score: 3.5, url: 'https://vapor.laravel.com' },
+        { label: 'Laravel Forge', score: 3.5, url: 'https://forge.laravel.com' },
+        { label: 'Laravel Envoyer', score: 3.5, url: 'https://envoyer.io' },
       ].sort((a, b) => {
         if (a.score > b.score) {
           return -1

@@ -1,5 +1,5 @@
 <template>
-  <article class="mx-auto max-w-3xl">
+  <article class="mx-auto max-w-3xl px-4 md:px-0">
     <header class="mb-4">
       <h1 class="text-3xl text-blue-300 font-extrabold">{{ post.title }}</h1>
       <div class="text-gray-500 text-sm mb-4">{{ new Date(post.createdAt).toLocaleDateString() }}</div>

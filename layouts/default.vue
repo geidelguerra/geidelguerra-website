@@ -4,7 +4,7 @@
       <nuxt-link to="/" class="flex items-center space-x-4">
         <img src="/images/geidel_profile.jpg" alt="Geidel Guerra Picture"
           class="overflow-hidden rounded-full w-10 h-10 border-white border-2">
-        <span>Geidel Guerra's website</span>
+        <span class="hidden sm:block">Geidel Guerra's website</span>
       </nuxt-link>
       <div class="flex-1"></div>
       <div class="mr-4">
@@ -22,9 +22,9 @@
       <nuxt />
     </main>
 
-    <footer class="flex px-4 md:px-0 pb-2 pt-10 items-end mx-auto max-w-3xl w-full">
-      <div class="flex flex-1 flex-col">
-        <h3 class="text-xs text-green-300 mb-1">Where to find me?</h3>
+    <footer class="flex flex-col items-center space-y-4 p-4 mx-auto max-w-3xl sm:flex-row sm:justify-between sm:space-y-0 sm:w-full">
+      <div class="flex flex-col">
+        <h3 class="text-xs text-green-300 mb-1 text-center sm:text-left">Where to find me?</h3>
         <ul class="flex space-x-2">
           <template v-for="link in networks">
             <li :key="link.url">
@@ -33,8 +33,8 @@
           </template>
         </ul>
       </div>
-      <div class="flex flex-col items-end space-x-4">
-        <div class="text-xs mb-1"><span class="text-green-300">Deployed using</span> <a class="hover:underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://netlify.com/">Netlify</a></div>
+      <div class="flex flex-col">
+        <h3 class="text-xs mb-1 text-center sm:text-right"><span class="text-green-300">Deployed using</span> <a class="hover:underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://netlify.com/">Netlify</a></h3>
         <div class="text-sm text-white">
           Copyright {{ new Date().getFullYear() }} &copy; Geidel Guerra
         </div>
