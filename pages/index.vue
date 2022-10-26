@@ -35,7 +35,8 @@
     </section>
     <section>
       <h2 class="font-black text-3xl tracking-tight mb-4">Skills</h2>
-      <p class="text-xs mb-2">The score's scale is 1 to 5. 1 been almost no experience and 5 been a lot of experience</p>
+      <p class="text-xs mb-2">The score's scale is 1 to 5. 1 been almost no experience and 5 been a lot of experience
+      </p>
       <div>
         <template v-for="skill in skills">
           <div :key="skill.label" class="flex space-x-2 items-center">
@@ -87,6 +88,26 @@
         </template>
       </div>
     </section>
+    <section>
+      <h2 class="font-black text-3xl tracking-tight mb-4">Projects</h2>
+      <div class="flex flex-col space-y-4">
+        <template v-for="project in projects">
+          <div :key="project.name">
+            <h3 class="font-bold">
+              <a v-if="project.url" class="text-blue-300 hover:underline" :href="project.url" target="_blank"
+                rel="noopener noreferrer">{{ project.name }}</a>
+              <span v-else>{{ project.name }}</span>
+            </h3>
+            <div class="text-sm text-slate-400 mb-1 flex items-end space-x-1">
+              <span>{{ project.startDate }}</span> <span class="mb-0.5">&rarr;</span> <span>{{ project.endDate }}</span>
+            </div>
+            <div>
+              {{ project.description }}
+            </div>
+          </div>
+        </template>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -132,6 +153,50 @@ export default {
       languages: [
         { label: 'Spanish', score: 'Native' },
         { label: 'English', score: 'Proficient (C2)', url: 'https://www.efset.org/cert/TNPV3e' },
+      ],
+      projects: [
+        {
+          name: 'Tenza Website',
+          url: 'https://tenza.us',
+          startDate: '2021-11',
+          endDate: 'Present',
+          description: 'Official website for Tenza Studio. Tech used: NuxtJs + TailwindCSS + ThreeJs + AnimeJs and Lottie. Hosted on Netlify'
+        },
+        {
+          name: 'Alberto Hernandez Reyes Personal Website',
+          url: 'https://albertohreyes.com/',
+          startDate: '2018-06',
+          endDate: '2021-12',
+          description: 'Official website of the Cuban artist Alberto Hernandez. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify'
+        },
+        {
+          name: 'La Tinta Magazine Website',
+          url: 'https://web.archive.org/web/20210119105411/https://www.latintamagazine.com/',
+          startDate: '2018-03',
+          endDate: '2021-01',
+          description: 'Official website for the first Cuban magazine about body art. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify'
+        },
+        {
+          name: 'PlaceArt Website',
+          url: 'https://www.placeart.app/',
+          startDate: '2019-02',
+          endDate: '2020-12',
+          description: '"PlaceArt aims to lower Art access barriers through Augmented and Virtual Reality experiences that allow to visualize and customize fine art prints from the best of Public Domain Museum Art pieces around the world". Tech used: NuxtJs + Laravel + ThreeJs + AFrame'
+        },
+        {
+          name: 'Fábrica de Arte Cubano Website',
+          url: 'https://web.archive.org/web/20180618093513/https://fac.cu/',
+          startDate: '2015-01',
+          endDate: '2018-06',
+          description: 'Official website for the multicultural site Fábrica de Arte Cubano. Tech used: Laravel 5 + Bootstrap + jQuery'
+        },
+        {
+          name: 'Gráfica Interactiva II (with Serones Art Group)',
+          url: 'https://www.youtube.com/watch?v=4kQNjOp4UJ8',
+          startDate: '2017-01',
+          endDate: '2017-03',
+          description: 'This was a collaboration with a cuban art group called Serones. I was tasked with the coding of the 3D navigation system, event triggers and illumination. Tech used: Unity3D'
+        },
       ]
     }
   }
