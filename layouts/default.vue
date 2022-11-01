@@ -3,15 +3,15 @@
     <header class="h-16 flex items-center px-4 bg-gray-700 z-50 sticky top-0 shadow-sm">
       <nuxt-link to="/" class="flex items-center space-x-4">
         <img src="/images/geidel_profile.jpg" alt="Geidel Guerra Picture"
-          class="overflow-hidden rounded-full w-10 h-10 border-white border-2">
-        <span class="hidden sm:block">Geidel Guerra's website</span>
+          class="overflow-hidden rounded-full w-10 h-10 min-h-10 shrink-0 border-white border-2">
+        <div class="text-sm sm:text-base">Geidel Guerra's website</div>
       </nuxt-link>
       <div class="flex-1"></div>
       <div class="mr-4">
         <ul class="flex space-x-2">
           <template v-for="navItem in navMenu">
             <li :key="navItem.url">
-              <nuxt-link :to="navItem.url" exact-active-class="underline text-blue-300" class="hover:underline text-blue-300">{{ navItem.text }}</nuxt-link>
+              <nuxt-link :to="navItem.url" exact-active-class="bg-slate-600" class="text-blue-300 px-2 py-1 hover:bg-slate-600 rounded transition-all whitespace-nowrap">{{ navItem.text }}</nuxt-link>
             </li>
           </template>
         </ul>
@@ -23,6 +23,9 @@
     </main>
 
     <footer class="flex flex-col items-center space-y-4 p-4 mx-auto max-w-3xl md:px-0 sm:flex-row sm:justify-between sm:space-y-0 sm:w-full">
+      <div>
+        <a target="_blank" class="text-blue-300 px-2 py-1 hover:bg-slate-600 rounded transition-all" href="/files/geidelguerra_cv_en.pdf">Download CV</a>
+      </div>
       <div class="flex flex-col">
         <h3 class="text-xs text-green-300 mb-1 text-center sm:text-left">Where to find me?</h3>
         <ul class="flex space-x-2">

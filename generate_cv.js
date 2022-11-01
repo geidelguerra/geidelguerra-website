@@ -8,11 +8,22 @@ doc.pipe(fs.createWriteStream('./static/files/geidelguerra_cv_en.pdf'));
 
 doc.image('static/images/geidel_profile.jpg', 70, 20, { fit: [70, 70]})
 doc.text('Geidel Guerra', 150, 30)
+doc.moveDown(0.1)
+
+doc.fontSize(10).text('Where to find me: ', { continued: true })
+
+data.networks.forEach((item, i) => {
+  const notLast = i < data.networks.length - 1
+  doc
+    .text(item.label, { link: item.url, continued: notLast })
+    .text('  ', { continued: notLast })
+})
 
 doc.text('', 70, 40)
 doc.moveDown(5)
 
 doc
+  .fillColor('black')
   .font('assets/fonts/pdf/FiraSans-Black.ttf')
   .fontSize(18)
   .text('Who am I?')
