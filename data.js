@@ -21,7 +21,7 @@ Proficient in English, native Spanish speaker.
     { label: 'Twitter', url: 'https://twitter.com/geidelguerra' }
   ],
   skills: [
-    { label: 'Laravel', score: 4, url: 'https://laravel.com' },
+    { label: 'Laravel', score: 5, url: 'https://laravel.com' },
     { label: 'VueJs', score: 4, url: 'https://vuejs.org' },
     { label: 'InertiaJs', score: 4, url: 'https://inertiajs.com' },
     { label: 'DevOps', score: 4, url: 'https://www.martinfowler.com/bliki/DevOpsCulture.html' },
