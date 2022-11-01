@@ -6,7 +6,8 @@
     </section>
     <section>
       <h2 class="font-black text-3xl tracking-tight mb-4">Skills</h2>
-      <p class="text-xs mb-2">The score's scale is 1 to 5. 1 been almost no experience and 5 been a lot of experience
+      <p class="text-xs mb-2">
+        The score's scale is 1 to 5. 1 been almost no experience and 5 been a lot of experience
       </p>
       <div>
         <template v-for="skill in skills">

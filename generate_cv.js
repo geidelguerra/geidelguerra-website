@@ -6,7 +6,7 @@ const doc = new PDFDocument();
 
 doc.pipe(fs.createWriteStream('./static/files/geidelguerra_cv_en.pdf'));
 
-doc.image('static/images/geidel_profile.jpg', 70, 20, { fit: [70, 70]})
+doc.image('static/images/geidel_profile.jpg', 70, 20, { fit: [70, 70] })
 doc.text('Geidel Guerra', 150, 30)
 doc.moveDown(0.1)
 
@@ -32,16 +32,21 @@ doc
 doc
   .font('assets/fonts/pdf/FiraSans-Regular.ttf')
   .fontSize(12)
-  .text(data.about, { align: 'justify'})
+  .text(data.about, { align: 'justify' })
 
 doc.moveDown()
-doc.font('assets/fonts/pdf/FiraSans-Black.ttf').fontSize(18).text('Skills').moveDown(0.5)
+doc.font('assets/fonts/pdf/FiraSans-Black.ttf').fontSize(18).text('Skills')
+
+doc.fillColor('#888').font('assets/fonts/pdf/FiraSans-Regular.ttf').fontSize(10).text('The score\'s scale is 1 to 5. 1 been almost no experience and 5 been a lot of experience')
+doc.moveDown(0.5)
+
+doc.fillColor('black')
 
 data.skills.forEach((item) => {
   doc
     .font('assets/fonts/pdf/FiraSans-Regular.ttf')
     .fontSize(12)
-    .text(`${item.label} - ${item.score}`)
+    .text(`${item.label} - ${item.score}`, { link: item.url })
 })
 
 doc.moveDown()
