@@ -56,6 +56,20 @@ Proficient in English, native Spanish speaker.
   ],
   projects: [
     {
+      name: 'Klipers Saas',
+      url: 'https://klipers.com',
+      startDate: '2022-02',
+      endDate: 'Present',
+      description: '"Dashboards for Ecommerce made easy". Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Vapor'
+    },
+    {
+      name: 'Contegy Saas',
+      url: 'https://contegy.io',
+      startDate: '2020-08',
+      endDate: 'Present',
+      description: '"The Content Operations Platform for Agencies and Brands". Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Forge and Envoyer'
+    },
+    {
       name: 'Tenza Website',
       url: 'https://tenza.us',
       startDate: '2021-11',
