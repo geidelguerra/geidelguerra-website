@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Generate fresh CV file
+        run: node generate_cv.js
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Add updated CV"
+          skip_fetch: true
+
+      - name: Deploy
+        run: curl -X POST -d '{}' ${{ secrets.NETLIFY_BUILD_HOOK }}
