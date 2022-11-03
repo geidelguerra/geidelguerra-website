@@ -79,6 +79,7 @@ data.experience.forEach((item) => {
     .text(item.name, { link: item.url })
     .font('assets/fonts/pdf/FiraSans-Regular.ttf')
     .fontSize(10)
+    .text(item.company, { link: item.company_url })
     .fillColor('#888')
     .text(`${item.startDate} - ${item.endDate}`)
     .fillColor('black')

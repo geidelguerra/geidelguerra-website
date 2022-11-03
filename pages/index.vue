@@ -70,6 +70,7 @@
                 rel="noopener noreferrer">{{ item.name }}</a>
               <span v-else>{{ item.name }}</span>
             </h3>
+            <div class="text-sm">{{ item.company }}</div>
             <div class="text-sm text-slate-400 mb-1 flex items-end space-x-1">
               <span>{{ item.startDate }}</span> <span class="mb-0.5">&rarr;</span> <span>{{ item.endDate }}</span>
             </div>
