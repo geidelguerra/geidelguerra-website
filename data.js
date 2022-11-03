@@ -54,6 +54,38 @@ Proficient in English, native Spanish speaker.
     { label: 'Spanish', score: 'Native' },
     { label: 'English', score: 'Proficient (C2)', url: 'https://www.efset.org/cert/TNPV3e' },
   ],
+  experience: [
+    {
+      name: 'CTO / Full Stack Developer',
+      company: 'La Caja Company',
+      startDate: '2020-08',
+      endDate: 'Present'
+    },
+    {
+      name: 'Content Manager - Maintainer',
+      company: 'Artcrónica',
+      startDate: '2018-06',
+      endDate: '2022-04'
+    },
+    {
+      name: 'Full Stack Developer',
+      company: 'NextReality Digital',
+      startDate: '2019-02',
+      endDate: '2020-12'
+    },
+    {
+      name: 'Full Stack Developer',
+      company: 'Fábrica de Arte Cubano',
+      startDate: '2014-12',
+      endDate: '2018-05'
+    },
+    {
+      name: 'Videogame Developer',
+      company: 'Joven Club de Computación y Electrónica',
+      startDate: '2013-10',
+      endDate: '2014-12'
+    }
+  ],
   projects: [
     {
       name: 'Klipers Saas',

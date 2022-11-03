@@ -61,6 +61,26 @@
       </div>
     </section>
     <section>
+      <h2 class="font-black text-3xl tracking-tight mb-4">Experience</h2>
+      <div class="flex flex-col space-y-4">
+        <template v-for="item in experience">
+          <div :key="item.name">
+            <h3 class="font-bold">
+              <a v-if="item.url" class="text-blue-300 hover:underline" :href="item.url" target="_blank"
+                rel="noopener noreferrer">{{ item.name }}</a>
+              <span v-else>{{ item.name }}</span>
+            </h3>
+            <div class="text-sm text-slate-400 mb-1 flex items-end space-x-1">
+              <span>{{ item.startDate }}</span> <span class="mb-0.5">&rarr;</span> <span>{{ item.endDate }}</span>
+            </div>
+            <div v-if="item.description">
+              {{ item.description }}
+            </div>
+          </div>
+        </template>
+      </div>
+    </section>
+    <section>
       <h2 class="font-black text-3xl tracking-tight mb-4">Projects</h2>
       <div class="flex flex-col space-y-4">
         <template v-for="project in projects">

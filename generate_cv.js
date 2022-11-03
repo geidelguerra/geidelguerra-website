@@ -70,6 +70,30 @@ data.toolkit.forEach((item) => {
 })
 
 doc.moveDown()
+doc.font('assets/fonts/pdf/FiraSans-Black.ttf').fontSize(18).text('Experience').moveDown(0.5)
+
+data.experience.forEach((item) => {
+  doc
+    .font('assets/fonts/pdf/FiraSans-Bold.ttf')
+    .fontSize(12)
+    .text(item.name, { link: item.url })
+    .font('assets/fonts/pdf/FiraSans-Regular.ttf')
+    .fontSize(10)
+    .fillColor('#888')
+    .text(`${item.startDate} - ${item.endDate}`)
+    .fillColor('black')
+    .moveDown()
+
+  if (item.description) {
+    doc
+      .fontSize(12)
+      .font('assets/fonts/pdf/FiraSans-Regular.ttf')
+      .text(item.description)
+      .moveDown()
+  }
+})
+
+doc.moveDown()
 doc.font('assets/fonts/pdf/FiraSans-Black.ttf').fontSize(18).text('Projects').moveDown(0.5)
 
 data.projects.forEach((item) => {
