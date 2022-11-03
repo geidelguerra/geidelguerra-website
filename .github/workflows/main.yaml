@@ -12,6 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '1'
+
+      - name: Install node dependencies
+        run: npm ci
+
       - name: Generate fresh CV file
         run: node generate_cv.js
 
