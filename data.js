@@ -62,7 +62,7 @@ Proficient in English, native Spanish speaker.
       endDate: 'Present'
     },
     {
-      name: 'Content Manager - Maintainer',
+      name: 'Content Manager / Maintainer',
       company: 'Artcrónica',
       startDate: '2018-06',
       endDate: '2022-04'
