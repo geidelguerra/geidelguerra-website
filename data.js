@@ -52,7 +52,7 @@ Proficient in English, native Spanish speaker.
   ],
   languages: [
     { label: 'Spanish', score: 'Native' },
-    { label: 'English', score: 'Proficient (C2)', url: 'https://www.efset.org/cert/TNPV3e' },
+    { label: 'English', score: 'Proficient (C2)', url: 'https://www.efset.org/cert/2j6mot' },
   ],
   experience: [
     {
