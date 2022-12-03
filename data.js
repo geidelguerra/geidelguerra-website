@@ -110,7 +110,7 @@ Proficient in English, native Spanish speaker.
     },
     {
       name: 'Alberto Hernandez Reyes Personal Website',
-      url: 'https://albertohreyes.com/',
+      url: 'https://web.archive.org/web/20220613222648/https://albertohreyes.com/',
       startDate: '2018-06',
       endDate: '2021-12',
       description: 'Official website of the Cuban artist Alberto Hernandez. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify'
