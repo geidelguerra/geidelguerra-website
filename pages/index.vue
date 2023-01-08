@@ -2,7 +2,7 @@
   <div class="mx-auto max-w-screen-md w-full flex flex-col space-y-8 px-4 md:px-0">
     <section>
       <h2 class="font-black text-3xl tracking-tight mb-4">Who am I?</h2>
-      <div v-html="about.replace(/\n/g, '<br>')" class="prose prose-invert"/>
+      <div v-html="about.replace(/\n/g, '<br>')" class="prose prose-invert" />
     </section>
     <section>
       <h2 class="font-black text-3xl tracking-tight mb-4">Skills</h2>
@@ -61,7 +61,7 @@
       </div>
     </section>
     <section>
-      <h2 class="font-black text-3xl tracking-tight mb-4">Experience</h2>
+      <h2 class="font-black text-3xl tracking-tight mb-4">Experience ({{ totalYearsOfExperience }})</h2>
       <div class="flex flex-col space-y-4">
         <template v-for="item in experience">
           <div :key="item.name">
@@ -73,6 +73,7 @@
             <div class="text-sm">{{ item.company }}</div>
             <div class="text-sm text-slate-400 mb-1 flex items-end space-x-1">
               <span>{{ item.startDate }}</span> <span class="mb-0.5">&rarr;</span> <span>{{ item.endDate }}</span>
+              <span>({{ dateDiff(item.startDate, item.endDate) }})</span>
             </div>
             <div v-if="item.description">
               {{ item.description }}
@@ -93,6 +94,7 @@
             </h3>
             <div class="text-sm text-slate-400 mb-1 flex items-end space-x-1">
               <span>{{ project.startDate }}</span> <span class="mb-0.5">&rarr;</span> <span>{{ project.endDate }}</span>
+              <span>({{ dateDiff(project.startDate, project.endDate) }})</span>
             </div>
             <div>
               {{ project.description }}
@@ -106,9 +108,44 @@
 
 <script>
 import data from '~/data.js'
+import { differenceInYears, differenceInMonths, parse } from 'date-fns'
 export default {
   data() {
     return data
+  },
+  computed: {
+    totalYearsOfExperience() {
+      return this.dateDiff('2013-10', new Date())
+    }
+  },
+  methods: {
+    dateDiff(dateA, dateB) {
+      if (typeof dateA === 'string') {
+        dateA = parse(dateA, 'yyyy-MM', new Date())
+      }
+
+      if (typeof dateB === 'string') {
+        dateB = dateB === 'Present' ? new Date() : parse(dateB, 'yyyy-MM', new Date())
+      }
+
+      let diff = differenceInYears(dateB, dateA)
+
+      if (diff > 1) {
+        return `${diff} years`
+      }
+
+      if (diff === 1) {
+        return `${diff} year`
+      }
+
+      diff = differenceInMonths(dateB, dateA)
+
+      if (diff > 1) {
+        return `${diff} months`
+      }
+
+      return `${diff} month`
+    }
   }
 }
 </script>
