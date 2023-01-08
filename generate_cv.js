@@ -1,6 +1,9 @@
 const data = require('./data');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const { dateDiff } = require('./lib/utils');
+
+const totalYearsOfExperience = dateDiff('2013-10', new Date())
 
 const doc = new PDFDocument();
 
@@ -70,7 +73,7 @@ data.toolkit.forEach((item) => {
 })
 
 doc.moveDown()
-doc.font('assets/fonts/pdf/FiraSans-Black.ttf').fontSize(18).text('Experience').moveDown(0.5)
+doc.font('assets/fonts/pdf/FiraSans-Black.ttf').fontSize(18).text(`Experience (${totalYearsOfExperience})`).moveDown(0.5)
 
 data.experience.forEach((item) => {
   doc
@@ -81,7 +84,7 @@ data.experience.forEach((item) => {
     .fontSize(10)
     .text(item.company, { link: item.company_url })
     .fillColor('#888')
-    .text(`${item.startDate} - ${item.endDate}`)
+    .text(`${item.startDate} → ${item.endDate} (${dateDiff(item.startDate, item.endDate)})`)
     .fillColor('black')
     .moveDown()
 
@@ -105,7 +108,7 @@ data.projects.forEach((item) => {
     .font('assets/fonts/pdf/FiraSans-Regular.ttf')
     .fontSize(10)
     .fillColor('#888')
-    .text(`${item.startDate} - ${item.endDate}`)
+    .text(`${item.startDate} → ${item.endDate} (${dateDiff(item.startDate, item.endDate)})`)
     .fillColor('black')
     .moveDown()
     .fontSize(12)

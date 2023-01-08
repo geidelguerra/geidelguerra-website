@@ -108,43 +108,20 @@
 
 <script>
 import data from '~/data.js'
-import { differenceInYears, differenceInMonths, parse } from 'date-fns'
+import { dateDiff } from '~/lib/utils.js'
+
 export default {
   data() {
     return data
   },
   computed: {
     totalYearsOfExperience() {
-      return this.dateDiff('2013-10', new Date())
+      return dateDiff('2013-10', new Date())
     }
   },
   methods: {
     dateDiff(dateA, dateB) {
-      if (typeof dateA === 'string') {
-        dateA = parse(dateA, 'yyyy-MM', new Date())
-      }
-
-      if (typeof dateB === 'string') {
-        dateB = dateB === 'Present' ? new Date() : parse(dateB, 'yyyy-MM', new Date())
-      }
-
-      let diff = differenceInYears(dateB, dateA)
-
-      if (diff > 1) {
-        return `${diff} years`
-      }
-
-      if (diff === 1) {
-        return `${diff} year`
-      }
-
-      diff = differenceInMonths(dateB, dateA)
-
-      if (diff > 1) {
-        return `${diff} months`
-      }
-
-      return `${diff} month`
+      return dateDiff(dateA, dateB)
     }
   }
 }
