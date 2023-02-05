@@ -56,10 +56,16 @@ Proficient in English, native Spanish speaker.
   ],
   experience: [
     {
+      name: 'Full Stack Developer',
+      company: 'Cerberu',
+      startDate: '2023-02',
+      endDate: 'Present'
+    },
+    {
       name: 'CTO / Full Stack Developer',
       company: 'La Caja Company',
       startDate: '2020-08',
-      endDate: 'Present'
+      endDate: '2023-02'
     },
     {
       name: 'Content Manager / Maintainer',
