@@ -56,13 +56,13 @@ Proficient in English, native Spanish speaker.
   ],
   experience: [
     {
-      name: 'Full Stack Developer',
+      name: 'Fullstack Developer',
       company: 'Cerberu',
       startDate: '2023-02',
       endDate: 'Present'
     },
     {
-      name: 'CTO / Full Stack Developer',
+      name: 'CTO / Fullstack Developer',
       company: 'La Caja Company',
       startDate: '2020-08',
       endDate: '2023-02'
@@ -74,13 +74,13 @@ Proficient in English, native Spanish speaker.
       endDate: '2022-04'
     },
     {
-      name: 'Full Stack Developer',
+      name: 'Fullstack Developer',
       company: 'NextReality Digital',
       startDate: '2019-02',
       endDate: '2020-12'
     },
     {
-      name: 'Full Stack Developer',
+      name: 'Fullstack Developer',
       company: 'Fábrica de Arte Cubano',
       startDate: '2014-12',
       endDate: '2018-05'
