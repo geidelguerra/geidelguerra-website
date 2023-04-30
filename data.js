@@ -97,14 +97,14 @@ Proficient in English, native Spanish speaker.
       name: 'Klipers Saas',
       url: 'https://klipers.com',
       startDate: '2022-02',
-      endDate: 'Present',
+      endDate: '2023-02',
       description: '"Dashboards for Ecommerce made easy". Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Vapor'
     },
     {
       name: 'Contegy Saas',
       url: 'https://contegy.io',
       startDate: '2020-08',
-      endDate: 'Present',
+      endDate: '2023-02',
       description: '"The Content Operations Platform for Agencies and Brands". Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Forge and Envoyer'
     },
     {
