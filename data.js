@@ -1,5 +1,5 @@
 module.exports = {
-  about: `I'm a self taught "Fullstack Developer" specialized in Laravel, VueJs and TailwindCSS. Hoping to make some games in the future.
+  about: `I'm a self taught "Software Developer" specialized in PHP and JavaScript. Hoping to make some games in the future.
 
 I've been learning to code for myself since I was 16. I started with Macromedia Flash 8 offline help. Then I jumped to C++, C#, Java, Python and eventually landed with PHP and JavaScript.
 
@@ -13,7 +13,11 @@ I've been using Ubuntu Desktop for about 6 years. I use ZSH, Kitty and VSCode.
 
 I know about Jira, Trello, ClickUp and other project management tools. Also know a little about SCRUM methodology and have been using it for a while.
 
+Likes Unit/Feature tests btw
+
 Proficient in English, native Spanish speaker.
+
+Currently learning Rust and NeoVim btw.
   `,
   networks: [
     { label: 'LinkedIn', url: 'https://linkedin.com/in/geidelguerra' },
@@ -21,18 +25,16 @@ Proficient in English, native Spanish speaker.
     { label: 'Twitter', url: 'https://twitter.com/geidelguerra' }
   ],
   skills: [
-    { label: 'Laravel', score: 5, url: 'https://laravel.com' },
+    { label: 'PHP', score: 4, url: 'https://php.net' },
+    { label: 'JavaScript', score: 4, url: 'https://php.net' },
+    { label: 'Laravel', score: 4, url: 'https://laravel.com' },
     { label: 'VueJs', score: 4, url: 'https://vuejs.org' },
     { label: 'InertiaJs', score: 4, url: 'https://inertiajs.com' },
     { label: 'DevOps', score: 4, url: 'https://www.martinfowler.com/bliki/DevOpsCulture.html' },
     { label: 'Ansible', score: 2.5, url: 'https://www.ansible.com' },
     { label: 'Git', score: 3.5, url: 'https://git-scm.com' },
-    { label: 'MySQL', score: 2.5, url: 'https://www.mysql.com' },
-    { label: 'NodeJs', score: 3, url: 'https://nodejs.org' },
-    { label: 'AWS', score: 3, url: 'https://console.aws.amazon.com/' },
-    { label: 'Laravel Vapor', score: 3.5, url: 'https://vapor.laravel.com' },
-    { label: 'Laravel Forge', score: 3.5, url: 'https://forge.laravel.com' },
-    { label: 'Laravel Envoyer', score: 3.5, url: 'https://envoyer.io' },
+    { label: 'MySQL', score: 3, url: 'https://www.mysql.com' },
+    { label: 'AWS', score: 2.5, url: 'https://console.aws.amazon.com/' },
   ].sort((a, b) => {
     if (a.score > b.score) {
       return -1

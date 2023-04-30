@@ -4,9 +4,6 @@
   "description": "My personal website",
   "author": "Geidel Guerra",
   "private": true,
-  "engines": {
-    "node": "16"
-  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
@@ -19,7 +16,6 @@
     "date-fns": "^2.29.3",
     "nuxt": "^2.15.8",
     "nuxt-rfg-icon": "^0.6.4",
-    "plausible-tracker": "^0.3.5",
     "prism-themes": "^1.9.0"
   },
   "devDependencies": {
