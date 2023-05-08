@@ -13,11 +13,11 @@ I've been using Ubuntu Desktop for about 6 years. I use ZSH, Kitty and VSCode.
 
 I know about Jira, Trello, ClickUp and other project management tools. Also know a little about SCRUM methodology and have been using it for a while.
 
-Likes Unit/Feature tests btw
+Likes Unit/Feature tests
 
 Proficient in English, native Spanish speaker.
 
-Currently learning Rust and NeoVim btw.
+Currently learning Rust and NeoVim.
   `,
   networks: [
     { label: 'LinkedIn', url: 'https://linkedin.com/in/geidelguerra' },
