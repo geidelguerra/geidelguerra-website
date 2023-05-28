@@ -16,8 +16,6 @@ I know about Jira, Trello, ClickUp and other project management tools. Also know
 Likes Unit/Feature tests
 
 Proficient in English, native Spanish speaker.
-
-Currently learning Rust and NeoVim.
   `,
   networks: [
     { label: 'LinkedIn', url: 'https://linkedin.com/in/geidelguerra' },
