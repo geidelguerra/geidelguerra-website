@@ -13,9 +13,11 @@ I've been using Ubuntu Desktop for about 6 years. I use ZSH, Kitty and VSCode.
 
 I know about Jira, Trello, ClickUp and other project management tools. Also know a little about SCRUM methodology and have been using it for a while.
 
-Likes Unit/Feature tests
+Unit/Feature tests when possible.
 
 Proficient in English, native Spanish speaker.
+
+Learning Python and AI.
   `,
   networks: [
     { label: 'LinkedIn', url: 'https://linkedin.com/in/geidelguerra' },
@@ -23,6 +25,7 @@ Proficient in English, native Spanish speaker.
     { label: 'Twitter', url: 'https://twitter.com/geidelguerra' }
   ],
   skills: [
+    { label: 'Python', score: 3, url: 'https://www.python.org/' },
     { label: 'PHP', score: 4, url: 'https://php.net' },
     { label: 'JavaScript', score: 4, url: 'https://php.net' },
     { label: 'Laravel', score: 4, url: 'https://laravel.com' },
