@@ -25,12 +25,14 @@ Learning Python and AI.
     { label: 'Twitter', url: 'https://twitter.com/geidelguerra' }
   ],
   skills: [
+    { label: 'ChatGPT', score: 3, url: 'https://platform.openai.com/' },
+    { label: 'Docker', score: 3, url: 'https://www.docker.com/' },
+    { label: 'MongoDB', score: 3, url: 'https://www.mongodb.com/' },
     { label: 'Python', score: 3, url: 'https://www.python.org/' },
     { label: 'PHP', score: 4, url: 'https://php.net' },
     { label: 'JavaScript', score: 4, url: 'https://php.net' },
     { label: 'Laravel', score: 4, url: 'https://laravel.com' },
     { label: 'VueJs', score: 4, url: 'https://vuejs.org' },
-    { label: 'InertiaJs', score: 4, url: 'https://inertiajs.com' },
     { label: 'DevOps', score: 4, url: 'https://www.martinfowler.com/bliki/DevOpsCulture.html' },
     { label: 'Ansible', score: 2.5, url: 'https://www.ansible.com' },
     { label: 'Git', score: 3.5, url: 'https://git-scm.com' },
