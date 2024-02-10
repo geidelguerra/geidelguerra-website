@@ -37,7 +37,7 @@
             <template v-for="link in networks">
               <li :key="link.url">
                 <a class="hover:underline text-blue-300" :href="link.url" target="_blank" rel="noopener noreferrer">{{
-                    link.text
+                    link.label
                 }}</a>
               </li>
             </template>
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import data from '../data'
 export default {
   setup() {
     const navMenu = [
@@ -73,15 +74,9 @@ export default {
       }
     ]
 
-    const networks = [
-      { text: 'LinkedIn', url: 'https://linkedin.com/in/geidelguerra' },
-      { text: 'GitHub', url: 'https://github.com/geidelguerra' },
-      { text: 'Twitter', url: 'https://twitter.com/geidelguerra' }
-    ]
-
     return {
       navMenu,
-      networks
+      networks: data.networks
     }
   }
 }

@@ -14,7 +14,8 @@ Proficient in English, native Spanish speaker.
   networks: [
     { label: 'LinkedIn', url: 'https://linkedin.com/in/geidelguerra' },
     { label: 'GitHub', url: 'https://github.com/geidelguerra' },
-    { label: 'Twitter', url: 'https://twitter.com/geidelguerra' }
+    { label: 'Twitter', url: 'https://twitter.com/geidelguerra' },
+    { label: 'Manfred', url: 'https://mnf.red/928030c3-6502-47b4-bba7-5d4970f4bc59/timeline' }
   ],
   skills: [
     { label: 'ChatGPT', score: 3, url: 'https://platform.openai.com/' },
