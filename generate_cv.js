@@ -40,16 +40,13 @@ doc
 doc.moveDown()
 doc.font('assets/fonts/pdf/FiraSans-Black.ttf').fontSize(18).text('Skills')
 
-doc.fillColor('#888').font('assets/fonts/pdf/FiraSans-Regular.ttf').fontSize(10).text('The score\'s scale is 1 to 5. 1 been almost no experience and 5 been a lot of experience')
 doc.moveDown(0.5)
-
 doc.fillColor('black')
-
 data.skills.forEach((item) => {
   doc
     .font('assets/fonts/pdf/FiraSans-Regular.ttf')
     .fontSize(12)
-    .text(`${item.label} - ${item.score}`, { link: item.url })
+    .text(`${item.label}`, { link: item.url })
 })
 
 doc.moveDown()

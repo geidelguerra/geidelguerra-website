@@ -18,34 +18,16 @@ Proficient in English, native Spanish speaker.
     { label: 'Manfred', url: 'https://mnf.red/928030c3-6502-47b4-bba7-5d4970f4bc59/timeline' }
   ],
   skills: [
-    { label: 'ChatGPT', score: 3, url: 'https://platform.openai.com/' },
-    { label: 'Docker', score: 3, url: 'https://www.docker.com/' },
-    { label: 'MongoDB', score: 3, url: 'https://www.mongodb.com/' },
-    { label: 'Python', score: 3, url: 'https://www.python.org/' },
-    { label: 'PHP', score: 4, url: 'https://php.net' },
-    { label: 'JavaScript', score: 4, url: 'https://php.net' },
-    { label: 'Laravel', score: 4, url: 'https://laravel.com' },
-    { label: 'VueJs', score: 4, url: 'https://vuejs.org' },
-    { label: 'DevOps', score: 4, url: 'https://www.martinfowler.com/bliki/DevOpsCulture.html' },
-    { label: 'Ansible', score: 2.5, url: 'https://www.ansible.com' },
-    { label: 'Git', score: 3.5, url: 'https://git-scm.com' },
-    { label: 'MySQL', score: 3, url: 'https://www.mysql.com' },
-    { label: 'AWS', score: 2.5, url: 'https://console.aws.amazon.com/' },
-  ].sort((a, b) => {
-    if (a.score > b.score) {
-      return -1
-    }
-
-    if (a.score < b.score) {
-      return 1
-    }
-
-    return 0
-  }),
+    { label: 'Python', url: 'https://www.python.org/' },
+    { label: 'PHP', url: 'https://php.net' },
+    { label: 'JavaScript', url: 'https://php.net' },
+    { label: 'MongoDB', url: 'https://www.mongodb.com/' },
+    { label: 'MySQL', url: 'https://www.mysql.com' },
+  ],
   toolkit: [
-    { category: 'OS', name: 'Ubuntu 22.04' },
+    { category: 'OS', name: 'Ubuntu 22.04 & Windows with WSL' },
     { category: 'Editor', name: 'VSCode' },
-    { category: 'Terminal', name: 'Kitty, Tmux' },
+    { category: 'Terminal', name: 'Tmux' },
     { category: 'Shell', name: 'ZSH' },
   ],
   languages: [

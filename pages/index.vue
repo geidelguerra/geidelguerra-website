@@ -6,9 +6,6 @@
     </section>
     <section>
       <h2 class="font-black text-3xl tracking-tight mb-4">Skills</h2>
-      <p class="text-xs mb-2">
-        The score's scale is 1 to 5. 1 been almost no experience and 5 been a lot of experience
-      </p>
       <div>
         <template v-for="skill in skills">
           <div :key="skill.label" class="flex space-x-2 items-center">
@@ -19,11 +16,6 @@
               </a>
               <span v-else>{{ skill.label }}</span>
             </h3>
-            <div class="relative overflow-hidden bg-slate-600 rounded-lg h-3 flex-1">
-              <div :style="{ width: `${Math.ceil(skill.score * 100 / 5)}%` }"
-                class="absolute left-0 top-0 h-3 bg-lime-600 rounded-lg"></div>
-            </div>
-            <div class="font-bold text-xs w-5">{{ skill.score }}</div>
           </div>
         </template>
       </div>
