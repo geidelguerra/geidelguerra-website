@@ -7,8 +7,6 @@ I prefer working on cli tools and third party integrations on the backend to imp
 
 I have some experience with AWS and DevOps. I use Digital Ocean for my personal stuff.
 
-I've been using Ubuntu Desktop for about 6 years. I use ZSH, Kitty and VSCode.
-
 Proficient in English, native Spanish speaker.
   `,
   networks: [
