@@ -36,6 +36,7 @@ Proficient in English, native Spanish speaker.
     {
       name: 'Senior Software Developer',
       company: 'Cerberu',
+      companyUrl: 'https://cerberu.com',
       startDate: '2023-02',
       endDate: 'Present',
       skills: ['Python', 'PHP', 'MySQL', 'MongoDB', 'AWS', 'Docker']
@@ -43,6 +44,7 @@ Proficient in English, native Spanish speaker.
     {
       name: 'CTO / Senior Software Developer',
       company: 'La Caja Company',
+      companyUrl: 'https://lacaja.company',
       startDate: '2020-08',
       endDate: '2023-02',
       skills: ['PHP', 'JavaScript', 'MySQL', 'Vue', 'Laravel', 'Forge', 'Vapor', 'AWS']
@@ -50,6 +52,7 @@ Proficient in English, native Spanish speaker.
     {
       name: 'Content Manager / Maintainer',
       company: 'Artcrónica',
+      companyUrl: 'https://artcronica.com',
       startDate: '2018-06',
       endDate: '2022-04',
       skills: ['Wordpress']
@@ -57,6 +60,7 @@ Proficient in English, native Spanish speaker.
     {
       name: 'Fullstack Developer',
       company: 'NextReality Digital',
+      companyUrl: 'https://nextreality.digital',
       startDate: '2019-02',
       endDate: '2020-12',
       skills: ['JavaScript', 'PHP', 'MySQL', 'ThreeJS', 'Vue']
@@ -64,6 +68,7 @@ Proficient in English, native Spanish speaker.
     {
       name: 'Fullstack Developer',
       company: 'Fábrica de Arte Cubano',
+      companyUrl: 'https://fac.cu',
       startDate: '2014-12',
       endDate: '2018-05',
       skills: ['JavaScript', 'PHP', 'MySQL', 'Vue', 'Laravel']
@@ -71,6 +76,7 @@ Proficient in English, native Spanish speaker.
     {
       name: 'Videogame Developer',
       company: 'Joven Club de Computación y Electrónica',
+      companyUrl: 'https://www.jovenclub.cu',
       startDate: '2013-10',
       endDate: '2014-12',
       skills: ['Unity3D']

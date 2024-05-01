@@ -62,7 +62,11 @@
                 rel="noopener noreferrer">{{ item.name }}</a>
               <span v-else>{{ item.name }}</span>
             </h3>
-            <div class="text-sm">{{ item.company }}</div>
+            <div class="text-sm">
+              <a v-if="item.companyUrl" class="text-blue-300 hover:underline" :href="item.companyUrl" target="_blank"
+                rel="noopener noreferrer">{{  item.company }}</a>
+              <span v-else>{{ item.company }}</span>
+            </div>
             <div class="text-sm text-slate-400 mb-1 flex items-end space-x-1">
               <span>{{ item.startDate }}</span> <span class="mb-0.5">&rarr;</span> <span>{{ item.endDate }}</span>
               <span>({{ dateDiff(item.startDate, item.endDate) }})</span>
