@@ -82,16 +82,18 @@ data.experience.forEach((item) => {
     .text(item.company, { link: item.company_url })
     .fillColor('#888')
     .text(`${item.startDate} → ${item.endDate} (${dateDiff(item.startDate, item.endDate)})`)
-    .fillColor('black')
-    .moveDown()
 
-  if (item.description) {
+
+  if (item.skills) {
     doc
-      .fontSize(12)
+      .fontSize(10)
+      .fillColor('#888')
       .font('assets/fonts/pdf/FiraSans-Regular.ttf')
-      .text(item.description)
-      .moveDown()
+      .text(`Skills: ${item.skills.join(', ')}`)
   }
+
+  doc.fillColor('black')
+  doc.moveDown()
 })
 
 doc.moveDown()

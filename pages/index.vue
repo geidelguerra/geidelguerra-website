@@ -67,8 +67,8 @@
               <span>{{ item.startDate }}</span> <span class="mb-0.5">&rarr;</span> <span>{{ item.endDate }}</span>
               <span>({{ dateDiff(item.startDate, item.endDate) }})</span>
             </div>
-            <div v-if="item.description">
-              {{ item.description }}
+            <div v-if="item.skills" class="text-sm text-slate-400">
+              Skills: {{ item.skills.join(', ') }}
             </div>
           </div>
         </template>

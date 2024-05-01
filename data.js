@@ -34,40 +34,46 @@ Proficient in English, native Spanish speaker.
   ],
   experience: [
     {
-      name: 'Fullstack Developer',
+      name: 'Senior Software Developer',
       company: 'Cerberu',
       startDate: '2023-02',
-      endDate: 'Present'
+      endDate: 'Present',
+      skills: ['Python', 'PHP', 'MySQL', 'MongoDB', 'AWS', 'Docker']
     },
     {
-      name: 'CTO / Fullstack Developer',
+      name: 'CTO / Senior Software Developer',
       company: 'La Caja Company',
       startDate: '2020-08',
-      endDate: '2023-02'
+      endDate: '2023-02',
+      skills: ['PHP', 'JavaScript', 'MySQL', 'Vue', 'Laravel', 'Forge', 'Vapor', 'AWS']
     },
     {
       name: 'Content Manager / Maintainer',
       company: 'Artcrónica',
       startDate: '2018-06',
-      endDate: '2022-04'
+      endDate: '2022-04',
+      skills: ['Wordpress']
     },
     {
       name: 'Fullstack Developer',
       company: 'NextReality Digital',
       startDate: '2019-02',
-      endDate: '2020-12'
+      endDate: '2020-12',
+      skills: ['JavaScript', 'PHP', 'MySQL', 'ThreeJS', 'Vue']
     },
     {
       name: 'Fullstack Developer',
       company: 'Fábrica de Arte Cubano',
       startDate: '2014-12',
-      endDate: '2018-05'
+      endDate: '2018-05',
+      skills: ['JavaScript', 'PHP', 'MySQL', 'Vue', 'Laravel']
     },
     {
       name: 'Videogame Developer',
       company: 'Joven Club de Computación y Electrónica',
       startDate: '2013-10',
-      endDate: '2014-12'
+      endDate: '2014-12',
+      skills: ['Unity3D']
     }
   ],
   projects: [
