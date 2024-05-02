@@ -86,14 +86,14 @@ Proficient in English, native Spanish speaker.
   projects: [
     {
       name: 'Klipers Saas',
-      url: 'https://klipers.com',
+      url: 'https://web.archive.org/web/20230506224344/https://klipers.com/',
       startDate: '2022-02',
       endDate: '2023-02',
       description: '"Dashboards for Ecommerce made easy". Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Vapor'
     },
     {
       name: 'Contegy Saas',
-      url: 'https://contegy.io',
+      url: 'https://web.archive.org/web/20230204173727/https://contegy.io/',
       startDate: '2020-08',
       endDate: '2023-02',
       description: '"The Content Operations Platform for Agencies and Brands". Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Forge and Envoyer'
@@ -121,7 +121,7 @@ Proficient in English, native Spanish speaker.
     },
     {
       name: 'PlaceArt Website',
-      url: 'https://www.placeart.app/',
+      url: 'https://web.archive.org/web/20200815065239/https://www.placeart.app/',
       startDate: '2019-02',
       endDate: '2020-12',
       description: '"PlaceArt aims to lower Art access barriers through Augmented and Virtual Reality experiences that allow to visualize and customize fine art prints from the best of Public Domain Museum Art pieces around the world". Tech used: NuxtJs + Laravel + ThreeJs + AFrame'
