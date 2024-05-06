@@ -1,13 +1,15 @@
 module.exports = {
   about: `I'm a self taught developer specialized in web and cli tools. Hoping to make some games in the future.
 
-I've been learning to code for myself since I was 16. I started with Macromedia Flash 8 offline help. Then I jumped to C++, C#, Java, Python and eventually landed with PHP and JavaScript. Now mostly working on cli tools using Python and learning C by making games with Raylib.
+I've been learning to code for myself since I was 16. I started with Macromedia Flash 8 offline help. Then I jumped to C++, C#, Java, Python and eventually landed with PHP and JavaScript.
 
 I prefer working on cli tools and third party integrations on the backend to improve workflows, add new features to existing systems, create new systems. I like the challenge of learning a new language or tooling to solve a problem.
 
 I have some experience with AWS and DevOps. I use Digital Ocean for my personal stuff.
 
 Proficient in English, native Spanish speaker.
+
+Now mostly working on cli tools using Python and learning C by making games with Raylib.
   `,
   networks: [
     { label: 'LinkedIn', url: 'https://linkedin.com/in/geidelguerra' },
@@ -36,11 +38,11 @@ Proficient in English, native Spanish speaker.
   experience: [
     {
       name: 'Senior Software Developer',
-      company: 'Cerberu',
+      company: 'Cerberu Telegestión Turística, S.L',
       companyUrl: 'https://cerberu.com',
       startDate: '2023-02',
       endDate: 'Present',
-      skills: ['Python', 'PHP', 'MySQL', 'MongoDB', 'AWS', 'Docker']
+      skills: ['Python', 'PHP', 'MySQL', 'MongoDB', 'AWS', 'Docker', 'AI Prompt']
     },
     {
       name: 'CTO / Senior Software Developer',
@@ -48,7 +50,7 @@ Proficient in English, native Spanish speaker.
       companyUrl: 'https://lacaja.company',
       startDate: '2020-08',
       endDate: '2023-02',
-      skills: ['PHP', 'JavaScript', 'MySQL', 'Vue', 'Laravel', 'Forge', 'Vapor', 'AWS']
+      skills: ['PHP', 'JavaScript', 'MySQL', 'Vue', 'Laravel', 'Forge', 'Vapor', 'AWS', 'SaaS', 'API']
     },
     {
       name: 'Content Manager / Maintainer',
@@ -64,7 +66,7 @@ Proficient in English, native Spanish speaker.
       companyUrl: 'https://nextreality.digital',
       startDate: '2019-02',
       endDate: '2020-12',
-      skills: ['JavaScript', 'PHP', 'MySQL', 'ThreeJS', 'Vue']
+      skills: ['JavaScript', 'PHP', 'MySQL', 'ThreeJS', 'Vue', 'SaaS', 'API']
     },
     {
       name: 'Fullstack Developer',
