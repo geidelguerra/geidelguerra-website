@@ -42,7 +42,7 @@ Now mostly working on cli tools using Python and learning C by making games with
       companyUrl: 'https://cerberu.com',
       startDate: '2023-02',
       endDate: 'Present',
-      skills: ['Python', 'PHP', 'MySQL', 'MongoDB', 'AWS', 'Docker', 'AI Prompt']
+      skills: ['Python', 'PHP', 'MySQL', 'MongoDB', 'AWS', 'Docker', 'AI Prompt', 'Chatbot']
     },
     {
       name: 'CTO / Senior Software Developer',
