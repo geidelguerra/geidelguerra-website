@@ -1,9 +1,15 @@
 module.exports = {
   about: `I'm a self taught developer specialized in web and cli tools. Hoping to make some games in the future.
 
-I've been learning to code for myself since I was 16. I started with Macromedia Flash 8 offline help. Then I jumped to C++, C#, Java, Python and eventually landed with PHP and JavaScript.
+I've been learning to code for myself since I was 16. I started with Macromedia Flash 8 offline help. Then I jumped to C++, C#, Java, Python, PHP and JavaScript.
 
-I prefer working on cli tools and third party integrations on the backend to improve workflows, add new features to existing systems, create new systems. I like the challenge of learning a new language or tooling to solve a problem.
+I like a clear objective of what needs to be accomplished, the timeframe, and the autonomy to work with minimal supervision.
+I like simple git branching and commit often.
+I like working on cli tools and third party integrations.
+I like to improve workflows, add new features to existing systems, create new systems.
+I like the challenge of learning a new language or tooling to solve a problem.
+I like the backend but can work on the frontend if there is something interesting to do.
+I like video games, playing them and making them. Check my Snake game under "Projects" section.
 
 I have some experience with AWS and DevOps. I use Digital Ocean for my personal stuff.
 
@@ -87,60 +93,84 @@ Now mostly working on cli tools using Python and learning C by making games with
   ],
   projects: [
     {
+      name: 'Snake Game',
+      url: 'https://github.com/geidelguerra/snake-game',
+      startDate: '2024-05',
+      endDate: '2024-06',
+      description: 'Snake game made in C with Raylib',
+      isPersonal: true,
+    },
+    {
+      name: 'Crunchyroll Enhancer',
+      url: 'https://github.com/geidelguerra/crunchyroll-extension',
+      startDate: '2024-03',
+      endDate: '2024-03',
+      description: 'A very dump extension that skips Crunchyroll intros and credits',
+      isPersonal: true,
+    },
+    {
+      name: 'Conway\'s Game of Life in Python',
+      url: 'https://github.com/geidelguerra/conway-python',
+      startDate: '2024-01',
+      endDate: '2024-01',
+      description: 'Very simple implementation of Conway\'s Game of Life Algorithm.',
+      isPersonal: true,
+    },
+    {
       name: 'Klipers Saas',
       url: 'https://web.archive.org/web/20230506224344/https://klipers.com/',
       startDate: '2022-02',
       endDate: '2023-02',
-      description: '"Dashboards for Ecommerce made easy". Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Vapor'
+      description: 'A Saas made from 0 to production, I worked on the UI, adding integrations with third party APIs like Facebook, Instagram, Twitter, server configuration and deployment. Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Vapor'
     },
     {
       name: 'Contegy Saas',
       url: 'https://web.archive.org/web/20230204173727/https://contegy.io/',
       startDate: '2020-08',
       endDate: '2023-02',
-      description: '"The Content Operations Platform for Agencies and Brands". Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Forge and Envoyer'
+      description: 'A Saas made from 0 to production. I worked on the UI, adding multi-tenant architecture,  integrations with third party APIs like Facebook, Instagram, Google Analytics, Twitter, LinkedIn, server configuration and deployment. Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Forge and Envoyer'
     },
     {
       name: 'Tenza Website',
       url: 'https://tenza.us',
       startDate: '2021-11',
       endDate: 'Present',
-      description: 'Official website for Tenza Studio. Tech used: NuxtJs + TailwindCSS + ThreeJs + AnimeJs and Lottie. Hosted on Netlify'
+      description: 'Official website for Tenza Studio with some cool 3D animations and a 3D viewer. Tech used: NuxtJs + TailwindCSS + ThreeJs + AnimeJs and Lottie. Hosted on Netlify'
     },
     {
       name: 'Alberto Hernandez Reyes Personal Website',
       url: 'https://web.archive.org/web/20220613222648/https://albertohreyes.com/',
       startDate: '2018-06',
       endDate: '2021-12',
-      description: 'Official website of the Cuban artist Alberto Hernandez. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify'
+      description: 'Official website for a Cuban painter. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify'
     },
     {
       name: 'La Tinta Magazine Website',
       url: 'https://web.archive.org/web/20210119105411/https://www.latintamagazine.com/',
       startDate: '2018-03',
       endDate: '2021-01',
-      description: 'Official website for the first Cuban magazine about body art. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify'
+      description: 'Official website for the first body art magazine in Cuba. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify'
     },
     {
       name: 'PlaceArt Website',
       url: 'https://web.archive.org/web/20200815065239/https://www.placeart.app/',
       startDate: '2019-02',
       endDate: '2020-12',
-      description: '"PlaceArt aims to lower Art access barriers through Augmented and Virtual Reality experiences that allow to visualize and customize fine art prints from the best of Public Domain Museum Art pieces around the world". Tech used: NuxtJs + Laravel + ThreeJs + AFrame'
+      description: 'A Saas for selling art online. A work on the frontend, backend, 3D viewer for art showcase and server configuration and deployment. Tech used: NuxtJs + Laravel + ThreeJs + AFrame'
     },
     {
       name: 'Fábrica de Arte Cubano Website',
       url: 'https://web.archive.org/web/20180618093513/https://fac.cu/',
       startDate: '2015-01',
       endDate: '2018-06',
-      description: 'Official website for the multicultural site Fábrica de Arte Cubano. Tech used: Laravel 5 + Bootstrap + jQuery'
+      description: 'Official website. I worked on the frontend and backend (with a custom programming of events\'s calendar and editor). Tech used: Laravel 5 + Bootstrap + jQuery'
     },
     {
       name: 'Gráfica Interactiva II (with Serones Art Group)',
       url: 'https://www.youtube.com/watch?v=4kQNjOp4UJ8',
       startDate: '2017-01',
       endDate: '2017-03',
-      description: 'This was a collaboration with a cuban art group called Serones. I was tasked with the coding of the 3D navigation system, event triggers and illumination. Tech used: Unity3D'
+      description: 'A collaboration with the cuban art group called Serones. I was tasked with the coding of the 3D navigation system, event triggers and illumination. Tech used: Unity3D'
     }
   ]
 }

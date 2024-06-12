@@ -10,14 +10,14 @@ const doc = new PDFDocument();
 doc.pipe(fs.createWriteStream('./static/files/geidelguerra_cv_en.pdf'));
 
 doc.image('static/images/geidel_profile.jpg', 70, 20, { fit: [70, 70] })
-doc.text('Geidel Guerra', 150, 30)
+doc.fillColor('#333333')
+doc.fontSize(20).text('Geidel Guerra', 150, 30)
 doc.moveDown(0.1)
-
-doc.fontSize(10).text('Where to find me: ', { continued: true })
 
 data.networks.forEach((item, i) => {
   const notLast = i < data.networks.length - 1
   doc
+    .fontSize(14)
     .text(item.label, { link: item.url, continued: notLast })
     .text('  ', { continued: notLast })
 })
@@ -26,7 +26,7 @@ doc.text('', 70, 40)
 doc.moveDown(5)
 
 doc
-  .fillColor('black')
+  .fillColor('#333333')
   .font('assets/fonts/pdf/FiraSans-Black.ttf')
   .fontSize(18)
   .text('Who am I?')
@@ -35,13 +35,13 @@ doc
 doc
   .font('assets/fonts/pdf/FiraSans-Regular.ttf')
   .fontSize(12)
-  .text(data.about, { align: 'justify' })
+  .text(data.about, {wordSpacing: 0.5})
 
 doc.moveDown()
 doc.font('assets/fonts/pdf/FiraSans-Black.ttf').fontSize(18).text('Skills')
 
 doc.moveDown(0.5)
-doc.fillColor('black')
+doc.fillColor('#333333')
 data.skills.forEach((item) => {
   doc
     .font('assets/fonts/pdf/FiraSans-Regular.ttf')
@@ -92,7 +92,7 @@ data.experience.forEach((item) => {
       .text(`Skills: ${item.skills.join(', ')}`)
   }
 
-  doc.fillColor('black')
+  doc.fillColor('#333333')
   doc.moveDown()
 })
 
@@ -108,9 +108,9 @@ data.projects.forEach((item) => {
     .fontSize(10)
     .fillColor('#888')
     .text(`${item.startDate} → ${item.endDate} (${dateDiff(item.startDate, item.endDate)})`)
-    .fillColor('black')
-    .moveDown()
-    .fontSize(12)
+    .fillColor('#333333')
+    .moveDown(0.2)
+    .fontSize(10)
     .font('assets/fonts/pdf/FiraSans-Regular.ttf')
     .text(item.description)
     .moveDown()
