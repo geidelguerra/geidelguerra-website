@@ -1,0 +1,174 @@
+{
+  "about": "My name is Geidel Guerra. I'm a self taught developer with some formal studies, interested in low-level programming and making games.\n\nA bit of condensed history about me: I started learning to code using Macromedia Flash 8's offline help, making a phone book app to store phone number of StarCraft players (back then we use dialup peer to peer connections to play using phone numbers). I did some other stuff I don't remember. Fast forward in time, after finishing school (IT Bachelor) and dropping out of University at third year (IT Engineer) my first job was making games with Unity. After that I have been developing web applications that range from simple portfolio websites to complex e-commerce multi-tenancy Saas, command line tools to automate processed, browser extensions, configuring CI pipelines and Linux servers.\n\nI'm a fast learner (everybody says that, I'm I right?), highly autonomous and self motivated. I have a broad set of skills that makes me easy to align to any kind of task and the will to specialize in depth if needed.\n\nCurrently learning C and how to make games. Next will be games in assembly (you read that correctly).",
+  "startDate": "2013-10",
+  "networks": [
+    { "label": "LinkedIn", "url": "https://linkedin.com/in/geidelguerra" },
+    { "label": "GitHub", "url": "https://github.com/geidelguerra" },
+    { "label": "Twitter", "url": "https://twitter.com/geidelguerra" },
+    { "label": "Manfred", "url": "https://mnf.red/928030c3-6502-47b4-bba7-5d4970f4bc59/timeline" }
+  ],
+  "skills": [
+    { "label": "Python", "url": "https://www.python.org/", "startDate": "2023-02" },
+    { "label": "PHP", "url": "https://php.net", "startDate": "2014-10" },
+    { "label": "JavaScript", "url": "https://php.net", "startDate": "2014-12" },
+    { "label": "C", "url": "https://en.wikipedia.org/wiki/C_(programming_language)", "startDate": "2024-05" },
+    { "label": "MongoDB", "url": "https://www.mongodb.com/", "startDate": "2023-02" },
+    { "label": "MySQL", "url": "https://www.mysql.com", "startDate": "2014-12" }
+  ],
+  "toolkit": [
+    { "category": "OS", "tools": ["Debian 12"]},
+    { "category": "Editor", "tools": ["VSCode"]},
+    { "category": "Terminal", "tools": ["Tmux"]},
+    { "category": "Shell", "tools": ["ZSH"] }
+  ],
+  "languages": [
+    { "label": "Spanish", "score": "Native" },
+    { "label": "English", "score": "Proficient (C2)", "url": "https://www.efset.org/cert/2j6mot" }
+  ],
+  "studies": [
+    {
+      "name": "High School, Information Technology",
+      "school": "Politécnico Mártires de Chile, Havana, Cuba",
+      "startDate": "2002",
+      "endDate": "2006"
+    },
+    {
+      "name": "Engineer's degree, Information Technology",
+      "school": "Universidad Tecnológica de La Habana \"José Antonio Echeverría\", CUJAE, Havana, Cuba",
+      "startDate": "2006",
+      "endDate": "2009"
+    }
+  ],
+  "experience": [
+    {
+      "name": "Senior Software Developer",
+      "company": "Cerberu Telegestión Turística, S.L",
+      "companyUrl": "https://cerberu.com",
+      "startDate": "2023-02",
+      "endDate": "Present",
+      "tech": ["Python", "PHP", "MySQL", "MongoDB", "AWS", "Docker", "Browser Extensions", "AI Prompt", "Chatbot"]
+    },
+    {
+      "name": "CTO / Senior Software Developer",
+      "company": "La Caja Company",
+      "companyUrl": "https://lacaja.company",
+      "startDate": "2020-08",
+      "endDate": "2023-02",
+      "tech": ["PHP", "JavaScript", "MySQL", "Vue", "Laravel", "Forge", "Vapor", "AWS", "SaaS", "API"]
+    },
+    {
+      "name": "Content Manager / Maintainer",
+      "company": "Artcrónica",
+      "companyUrl": "https://artcronica.com",
+      "startDate": "2018-06",
+      "endDate": "2022-04",
+      "tech": ["Wordpress"]
+    },
+    {
+      "name": "Fullstack Developer",
+      "company": "NextReality Digital",
+      "companyUrl": "https://nextreality.digital",
+      "startDate": "2019-02",
+      "endDate": "2020-12",
+      "tech": ["JavaScript", "PHP", "MySQL", "ThreeJS", "Vue", "SaaS", "API"]
+    },
+    {
+      "name": "Fullstack Developer",
+      "company": "Fábrica de Arte Cubano",
+      "companyUrl": "https://fac.cu",
+      "startDate": "2014-12",
+      "endDate": "2018-05",
+      "tech": ["JavaScript", "PHP", "MySQL", "Vue", "Laravel"]
+    },
+    {
+      "name": "Videogame Developer",
+      "company": "Joven Club de Computación y Electrónica",
+      "companyUrl": "https://www.jovenclub.cu",
+      "startDate": "2013-10",
+      "endDate": "2014-12",
+      "tech": ["Unity3D"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Snake Game",
+      "url": "https://github.com/geidelguerra/snake-game",
+      "startDate": "2024-05",
+      "endDate": "2024-06",
+      "description": "Snake game made in C with Raylib",
+      "personal": true
+    },
+    {
+      "name": "Crunchyroll Enhancer",
+      "url": "https://github.com/geidelguerra/crunchyroll-extension",
+      "startDate": "2024-03",
+      "endDate": "2024-03",
+      "description": "Browser extension that skips Crunchyroll intros and credits",
+      "personal": true
+    },
+    {
+      "name": "Conway's Game of Life in Python",
+      "url": "https://github.com/geidelguerra/conway-python",
+      "startDate": "2024-01",
+      "endDate": "2024-01",
+      "description": "Python CLI Conway's Game of Life Algorithm simulation",
+      "personal": true
+    },
+    {
+      "name": "Klipers Saas",
+      "url": "https://web.archive.org/web/20230506224344/https://klipers.com/",
+      "startDate": "2022-02",
+      "endDate": "2023-02",
+      "description": "A Saas made from 0 to production, I worked on the UI, adding integrations with third party APIs like Facebook, Instagram, Twitter, server configuration and deployment. Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Vapor"
+    },
+    {
+      "name": "Contegy Saas",
+      "url": "https://web.archive.org/web/20230204173727/https://contegy.io/",
+      "startDate": "2020-08",
+      "endDate": "2023-02",
+      "description": "A Saas made from 0 to production. I worked on the UI, adding multi-tenant architecture,  integrations with third party APIs like Facebook, Instagram, Google Analytics, Twitter, LinkedIn, server configuration and deployment. Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Forge and Envoyer"
+    },
+    {
+      "name": "Tenza Website",
+      "url": "https://tenza.us",
+      "startDate": "2021-11",
+      "endDate": "Present",
+      "description": "Official website for Tenza Studio with some cool 3D animations and a 3D viewer. Tech used: NuxtJs + TailwindCSS + ThreeJs + AnimeJs and Lottie. Hosted on Netlify"
+    },
+    {
+      "name": "Alberto Hernandez Reyes Personal Website",
+      "url": "https://web.archive.org/web/20220613222648/https://albertohreyes.com/",
+      "startDate": "2018-06",
+      "endDate": "2021-12",
+      "description": "Official website for a Cuban painter. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify"
+    },
+    {
+      "name": "La Tinta Magazine Website",
+      "url": "https://web.archive.org/web/20210119105411/https://www.latintamagazine.com/",
+      "startDate": "2018-03",
+      "endDate": "2021-01",
+      "description": "Official website for the first body art magazine in Cuba. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify"
+    },
+    {
+      "name": "PlaceArt Website",
+      "url": "https://web.archive.org/web/20200815065239/https://www.placeart.app/",
+      "startDate": "2019-02",
+      "endDate": "2020-12",
+      "description": "A Saas for selling art online. A work on the frontend, backend, 3D viewer for art showcase and server configuration and deployment. Tech used: NuxtJs + Laravel + ThreeJs + AFrame"
+    },
+    {
+      "name": "Fábrica de Arte Cubano Website",
+      "url": "https://web.archive.org/web/20180618093513/https://fac.cu/",
+      "startDate": "2015-01",
+      "endDate": "2018-06",
+      "description": "Official website. I worked on the frontend and backend (with a custom programming of events's calendar and editor). Tech used: Laravel 5 + Bootstrap + jQuery"
+    },
+    {
+      "name": "Gráfica Interactiva II (with Serones Art Group)",
+      "url": "https://www.youtube.com/watch?v=4kQNjOp4UJ8",
+      "startDate": "2017-01",
+      "endDate": "2017-03",
+      "description": "A collaboration with the cuban art group called Serones. I was tasked with the coding of the 3D navigation system, event triggers and illumination. Tech used: Unity3D"
+    }
+  ]
+}

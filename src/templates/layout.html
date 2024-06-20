@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ header_data['title'] }}</title>
+  {% for item in header_data['meta'] %}
+  <meta {{ item|xmlattr }}>
+  {% endfor %}
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link rel="stylesheet" href="https://fonts.bunny.net/css?family=fira-code:400|fira-sans:100,300,400,700">
+  {% for item in header_data['icons'] %}
+  <link {{ item|xmlattr }}>
+  {% endfor %}
+  <style>
+    body {
+      background-color: #1f2937;
+      color: #ccc;
+      font-family: 'Fira Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    h1, h2, h3, h4, h5, h6, p, ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .section {
+      margin: 0 auto;
+      max-width: 960px;
+      & > h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #fff;
+      }
+
+      & h3 {
+        font-size: 1.5rem;
+      }
+
+      & a {
+        color: #93c5fd;
+        text-decoration: none;
+      }
+
+      & > ul > li {
+        margin: 0.5rem 0;
+      }
+    }
+    header {
+      margin-bottom: 2rem;
+      padding: 1rem 0;
+      > .section  {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      & img.profile {
+        overflow: hidden;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+      }
+    }
+    main .section  {
+      margin-bottom: 2rem;
+    }
+    .section p {
+      margin-bottom: 1rem;
+    }
+    #skills, #languages, #toolkit {
+      & > ul > li {
+        display: flex;
+        align-items: center;
+        & .sep {
+          border-bottom: 3px dashed white;
+          border-color: #bbb;
+          flex: 1;
+          margin: 0 1rem;
+        }
+      }
+    }
+    #experience, #projects {
+      & > ul > li {
+        margin: 1rem 0;
+      }
+
+      & div:nth-child(3) {
+        font-size: 1rem;
+      }
+    }
+    #networks {
+      ul {
+        display: flex;
+        & li {
+          margin-right: 1rem;
+        }
+      }
+      & a {
+        text-decoration: none;
+        color: #93c5fd;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="section">
+    <img class="profile" src="{{ url_for('static', filename='images/geidel_profile.jpg') }}" alt="Geidel Guerra">
+    <a target="_blank" rel="noopener noreferrer" href="{{ url_for('static', filename='files/geidelguerra_cv_en.pdf') }}">Download CV PDF</a>
+  </div>
+</header>
+{% block body %}{% endblock %}
+<footer>
+  <section id="networks" class="section">
+    <h3>Where to find me</h3>
+    <ul>
+      {% for network in footer_data.networks %}
+      <li>
+        <a target="_blank" rel="noopener noreferrer" href="{{ network.url }}">{{ network.label }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+</footer>
+</body>
+</html>
