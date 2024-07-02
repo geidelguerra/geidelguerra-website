@@ -105,7 +105,7 @@ Now mostly working on cli tools using Python and learning C by making games with
       url: 'https://github.com/geidelguerra/crunchyroll-extension',
       startDate: '2024-03',
       endDate: '2024-03',
-      description: 'A very dump extension that skips Crunchyroll intros and credits',
+      description: 'A very simple extension that skips Crunchyroll intros and credits',
       isPersonal: true,
     },
     {
