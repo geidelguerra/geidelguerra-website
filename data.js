@@ -32,7 +32,7 @@ Now mostly working on cli tools using Python and learning C by making games with
     { label: 'MySQL', url: 'https://www.mysql.com' },
   ],
   toolkit: [
-    { category: 'OS', name: 'Ubuntu 22.04 & Windows with WSL' },
+    { category: 'OS', name: 'Debian12' },
     { category: 'Editor', name: 'VSCode' },
     { category: 'Terminal', name: 'Tmux' },
     { category: 'Shell', name: 'ZSH' },
