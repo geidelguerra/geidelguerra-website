@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from asgiref.wsgi import WsgiToAsgi
 from web.extensions.markdown import MarkdownExtension
 from utils import get_data
@@ -24,13 +24,13 @@ def inject_shared_data():
         {'property': 'og:title', 'content': 'Geidel Guerra'},
         {'property': 'og:type', 'content': 'website'},
         {'property': 'og:url', 'content': 'https://geidelguerra.com'},
-        {'property': 'og:image', 'content': ''},
+        {'property': 'og:image', 'content': url_for('static', filename='images/geidel_profile.jpg')},
         {'property': 'og:description', 'content': data['about'].split('\n')[0]},
         # Twitter
         {'name': 'twitter:title', 'content': 'Geidel Guerra'},
         {'name': 'twitter:card', 'content': 'summary'},
         {'name': 'twitter:site', 'content': '@geidelguerra'},
-        {'name': 'twitter:image', 'content': ''},
+        {'name': 'twitter:image', 'content': url_for('static', filename='images/geidel_profile.jpg')},
         {'name': 'twitter:description', 'content': data['about'].split('\n')[0]},
       ],
       'icons': [
