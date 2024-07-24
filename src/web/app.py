@@ -24,13 +24,13 @@ def inject_shared_data():
         {'property': 'og:title', 'content': 'Geidel Guerra'},
         {'property': 'og:type', 'content': 'website'},
         {'property': 'og:url', 'content': 'https://geidelguerra.com'},
-        {'property': 'og:image', 'content': url_for('static', filename='images/geidel_profile.jpg')},
+        {'property': 'og:image', 'content': f"https://geidelguerra.com{url_for('static', filename='images/geidel_profile.jpg')}"},
         {'property': 'og:description', 'content': data['about'].split('\n')[0]},
         # Twitter
         {'name': 'twitter:title', 'content': 'Geidel Guerra'},
         {'name': 'twitter:card', 'content': 'summary'},
         {'name': 'twitter:site', 'content': '@geidelguerra'},
-        {'name': 'twitter:image', 'content': url_for('static', filename='images/geidel_profile.jpg')},
+        {'name': 'twitter:image', 'content': f"https://geidelguerra.com{url_for('static', filename='images/geidel_profile.jpg')}"},
         {'name': 'twitter:description', 'content': data['about'].split('\n')[0]},
       ],
       'icons': [
