@@ -14,8 +14,8 @@ jobs:
 
       - name: Deploy
         run: |
-          export SERVER_HOST=${secrets.SERVER_HOST}
-          export SERVER_USER=${secrets.SERVER_USER}
-          export GIT_DIR_PATH=${secrets.GIT_DIR_PATH}
-          export WORK_TREE_PATH=${secrets.WORK_TREE_PATH}
+          export SERVER_HOST=${{secrets.SERVER_HOST}}
+          export SERVER_USER=${{secrets.SERVER_USER}}
+          export GIT_DIR_PATH=${{secrets.GIT_DIR_PATH}}
+          export WORK_TREE_PATH=${{secrets.WORK_TREE_PATH}}
           /bin/bash scripts/deploy.sh
