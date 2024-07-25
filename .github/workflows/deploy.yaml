@@ -14,8 +14,11 @@ jobs:
 
       - name: Deploy
         run: |
-          export SERVER_HOST=${{secrets.SERVER_HOST}}
-          export SERVER_USER=${{secrets.SERVER_USER}}
-          export GIT_DIR_PATH=${{secrets.GIT_DIR_PATH}}
-          export WORK_TREE_PATH=${{secrets.WORK_TREE_PATH}}
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SERVER_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} > ~/.ssh/known_hosts
+          export SERVER_HOST=${{ secrets.SERVER_HOST }}
+          export SERVER_USER=${{ secrets.SERVER_USER }}
+          export GIT_DIR_PATH=${{ secrets.GIT_DIR_PATH }}
+          export WORK_TREE_PATH=${{ secrets.WORK_TREE_PATH }}
           /bin/bash scripts/deploy.sh
