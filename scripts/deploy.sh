@@ -9,7 +9,7 @@ set -xe
 mkdir -p $WORK_TREE_PATH
 git --work-tree=$WORK_TREE_PATH --git-dir=$GIT_DIR_PATH checkout -f master
 cd $WORK_TREE_PATH
-python3.11 -m venv .venv && source .venv/bin/activate
-pip install -q -r requirements.txt
+rm -rf .venv
+/root/.local/bin/poetry install --without dev
 supervisorctl restart geidelguerra-website
 EOF

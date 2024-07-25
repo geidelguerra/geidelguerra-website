@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "geidelguerra-website"
+version = "2.0.0"
+description = "My personal website"
+authors = ["Geidel Guerra <github.6870z@passmail.net>"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Flask = "^3.0.3"
+uvicorn = "^0.30.3"
+python-dotenv = "^1.0.1"
+click = "^8.1.7"
+asgiref = "^3.8.1"
+reportlab = "^4.2.2"
+markdown = "^3.6"
+
+
+[tool.poetry.group.dev.dependencies]
+watchfiles = "^0.22.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
