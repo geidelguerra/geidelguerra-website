@@ -11,3 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Deploy
+        run: /bin/bash./scripts/deploy.sh
