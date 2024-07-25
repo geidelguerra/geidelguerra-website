@@ -11,5 +11,6 @@ git --work-tree=$WORK_TREE_PATH --git-dir=$GIT_DIR_PATH checkout -f master
 cd $WORK_TREE_PATH
 rm -rf .venv
 /root/.local/bin/poetry install --without dev
+.venv/bin/python src/cli.py gen-pdf
 supervisorctl restart geidelguerra-website
 EOF

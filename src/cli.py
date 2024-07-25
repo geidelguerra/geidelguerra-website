@@ -10,11 +10,12 @@ def cli():
 @cli.command()
 def gen_pdf():
   static_folder = pathlib.Path(__name__).parent.joinpath('static').absolute()
-  filename = static_folder.joinpath('files').joinpath('geidelguerra_cv_en.pdf')
-  data = get_data()
+  filepath = static_folder.joinpath('files').joinpath('geidelguerra_cv_en.pdf').__str__()
 
   generator = PDFGenerator()
-  generator.generate_pdf(str(filename), data)
+
+  click.echo(f"Generating PDF in `{filepath}`")
+  generator.generate_pdf(filepath, get_data())
 
 if __name__ == '__main__':
   cli()
