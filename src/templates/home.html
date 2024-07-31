@@ -65,7 +65,8 @@
         <h3>{{ job.name }}</h3>
         <div><a href="{{ job.companyUrl }}" target="_blank" rel="noopener noreferrer">{{ job.company }}</a></div>
         <div>{{ job.startDate }} - {{ job.endDate }} ({{ job.years }})</div>
-        <div>{{ job.tech|join(', ') }}</div>
+        <div>{{ job.description }}</div>
+        <div>Tech: {{ job.tech|join(', ') }}</div>
       </li>
       {% endfor %}
     </ul>

@@ -46,6 +46,7 @@
       "companyUrl": "https://cerberu.com",
       "startDate": "2023-02",
       "endDate": "2024-08",
+      "description": "I worked on adding unit tests to existing projects in PHP. Improved MySQL queries performance by 400%. Created new internal tools from scratch using Python, Flask, MongoDB and OpenAI to improve customer support. Created internal Chrome extension to improve staff work.",
       "tech": ["Python", "PHP", "MySQL", "MongoDB", "AWS", "Docker", "Browser Extensions", "AI Prompt", "Chatbot"]
     },
     {
@@ -54,6 +55,7 @@
       "companyUrl": "https://lacaja.company",
       "startDate": "2020-08",
       "endDate": "2023-02",
+      "description": "I worked on Saas projects from scratch, with third-party integrations to social networks and multitenancy, using Laravel, Vue and MySQL. As CTO and Lead Programmer I was in charge of a very small team (two other developers).",
       "tech": ["PHP", "JavaScript", "MySQL", "Vue", "Laravel", "Forge", "Vapor", "AWS", "SaaS", "API"]
     },
     {
@@ -62,6 +64,7 @@
       "companyUrl": "https://artcronica.com",
       "startDate": "2018-06",
       "endDate": "2022-04",
+      "description": "I was in charge of the maintenance and content upload.",
       "tech": ["Wordpress"]
     },
     {
@@ -70,6 +73,7 @@
       "companyUrl": "https://nextreality.digital",
       "startDate": "2019-02",
       "endDate": "2020-12",
+      "description": "I worked on the creation of a Saas product from scratch using Laravel, Vue and ThreeJs.",
       "tech": ["JavaScript", "PHP", "MySQL", "ThreeJS", "Vue", "SaaS", "API"]
     },
     {
@@ -78,6 +82,7 @@
       "companyUrl": "https://fac.cu",
       "startDate": "2014-12",
       "endDate": "2018-05",
+      "description": "I worked on the creation of the official website and internal tooling for content administration",
       "tech": ["JavaScript", "PHP", "MySQL", "Vue", "Laravel"]
     },
     {
@@ -86,6 +91,7 @@
       "companyUrl": "https://www.jovenclub.cu",
       "startDate": "2013-10",
       "endDate": "2014-12",
+      "description": "I worked on the creation of games",
       "tech": ["Unity3D"]
     }
   ],
