@@ -76,8 +76,15 @@
     <ul>
       {% for project in data.projects %}
       <li>
-        <h3><a href="{{ project.url }}" target="_blank" rel="noopener noreferrer">{{ project.name }}</a></h3>
-        <div>{{ project.description }}</div>
+        <div>
+          {% if 'image_url' in project %}
+          <img src="{{ project.image_url }}" alt="{{ project.name }}">
+          {% endif %}
+        </div>
+        <div>
+          <h3><a href="{{ project.url }}" target="_blank" rel="noopener noreferrer">{{ project.name }}</a></h3>
+          <div>{{ project.description }}</div>
+        </div>
       </li>
       {% endfor %}
     </ul>

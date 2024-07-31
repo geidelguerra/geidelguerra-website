@@ -101,6 +101,7 @@
       "url": "https://github.com/geidelguerra/snake-game",
       "startDate": "2024-05",
       "endDate": "2024-06",
+      "image_url": "/static/images/snake_c.png",
       "description": "Snake game made in C with Raylib",
       "personal": true
     },
@@ -117,6 +118,7 @@
       "url": "https://github.com/geidelguerra/conway-python",
       "startDate": "2024-01",
       "endDate": "2024-01",
+      "image_url": "/static/images/conway_python.png",
       "description": "Python CLI Conway's Game of Life Algorithm simulation",
       "personal": true
     },
@@ -125,6 +127,7 @@
       "url": "https://web.archive.org/web/20230506224344/https://klipers.com/",
       "startDate": "2022-02",
       "endDate": "2023-02",
+      "image_url": "/static/images/klipers_saas.png",
       "description": "A Saas made from 0 to production, I worked on the UI, adding integrations with third party APIs like Facebook, Instagram, Twitter, server configuration and deployment. Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Vapor"
     },
     {
@@ -132,6 +135,7 @@
       "url": "https://web.archive.org/web/20230204173727/https://contegy.io/",
       "startDate": "2020-08",
       "endDate": "2023-02",
+      "image_url": "/static/images/contegy_saas.png",
       "description": "A Saas made from 0 to production. I worked on the UI, adding multi-tenant architecture,  integrations with third party APIs like Facebook, Instagram, Google Analytics, Twitter, LinkedIn, server configuration and deployment. Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Forge and Envoyer"
     },
     {
@@ -139,6 +143,7 @@
       "url": "https://tenza.us",
       "startDate": "2021-11",
       "endDate": "Present",
+      "image_url": "/static/images/tenza_website.png",
       "description": "Official website for Tenza Studio with some cool 3D animations and a 3D viewer. Tech used: NuxtJs + TailwindCSS + ThreeJs + AnimeJs and Lottie. Hosted on Netlify"
     },
     {
@@ -146,6 +151,7 @@
       "url": "https://web.archive.org/web/20220613222648/https://albertohreyes.com/",
       "startDate": "2018-06",
       "endDate": "2021-12",
+      "image_url": "/static/images/albertohr_website.png",
       "description": "Official website for a Cuban painter. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify"
     },
     {
@@ -153,6 +159,7 @@
       "url": "https://web.archive.org/web/20210119105411/https://www.latintamagazine.com/",
       "startDate": "2018-03",
       "endDate": "2021-01",
+      "image_url": "/static/images/latinta_website.png",
       "description": "Official website for the first body art magazine in Cuba. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify"
     },
     {
@@ -160,6 +167,7 @@
       "url": "https://web.archive.org/web/20200815065239/https://www.placeart.app/",
       "startDate": "2019-02",
       "endDate": "2020-12",
+      "image_url": "/static/images/placeart_saas.png",
       "description": "A Saas for selling art online. A work on the frontend, backend, 3D viewer for art showcase and server configuration and deployment. Tech used: NuxtJs + Laravel + ThreeJs + AFrame"
     },
     {
@@ -167,6 +175,7 @@
       "url": "https://web.archive.org/web/20180618093513/https://fac.cu/",
       "startDate": "2015-01",
       "endDate": "2018-06",
+      "image_url": "/static/images/fac_website.png",
       "description": "Official website. I worked on the frontend and backend (with a custom programming of events's calendar and editor). Tech used: Laravel 5 + Bootstrap + jQuery"
     },
     {
@@ -174,6 +183,7 @@
       "url": "https://www.youtube.com/watch?v=4kQNjOp4UJ8",
       "startDate": "2017-01",
       "endDate": "2017-03",
+      "image_url": "/static/images/grafica_interactiva_2.png",
       "description": "A collaboration with the cuban art group called Serones. I was tasked with the coding of the 3D navigation system, event triggers and illumination. Tech used: Unity3D"
     }
   ]
