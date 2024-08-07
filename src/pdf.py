@@ -43,7 +43,7 @@ class PDFGenerator:
     canvas.drawText(text_obj)
     canvas._y = text_obj._y + canvas._leading
 
-  def draw_text_block(self, canvas: Canvas, text: str) -> None:
+  def _draw_text_block(self, canvas: Canvas, text: str) -> None:
     x = self.margin
     y = canvas._y
     if y == 0:
@@ -92,8 +92,14 @@ class PDFGenerator:
     canvas.setFont(self.default_font, self.default_font_size, self.default_leading)
     canvas.setFillColorRGB(0, 0, 0, 1)
 
+    self._draw_text_header(canvas, 'Where to find me:')
+    networks_text = ''
+    for network in data['networks']:
+      networks_text += f"{network['label']}: {network['url']}<br/>"
+    self._draw_text_block(canvas, networks_text)
+
     self._draw_text_header(canvas, 'Who Am I?')
-    self.draw_text_block(canvas, data['about'])
+    self._draw_text_block(canvas, data['about'])
 
     self._draw_text_line(canvas, '')
 
@@ -146,6 +152,6 @@ class PDFGenerator:
       self._draw_text_header(canvas, item['name'], 3)
       self._draw_text_line(canvas, f"{item['startDate']} - {item['endDate']}")
       self.restore_state(canvas)
-      self.draw_text_block(canvas, item['description'])
+      self._draw_text_block(canvas, item['description'])
 
     canvas.save()
