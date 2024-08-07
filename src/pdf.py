@@ -1,30 +1,12 @@
 from reportlab.pdfgen.canvas import Canvas
-from reportlab.platypus import Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, SimpleDocTemplate
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from pathlib import Path
 
 class PDFGenerator:
   def __init__(self) -> None:
-    self.margin = 40
-    self.default_font_size = 10
-    self.default_leading = self.default_font_size * 1.4
-    self.default_font = 'FiraSansRegular'
-    self.header_font = 'FiraSansBold'
-    self.state_stack = []
-    self.register_fonts()
-
-  def save_state(self, canvas: Canvas) -> None:
-    self.state_stack.append((canvas._fontname, canvas._fontsize, canvas._leading))
-
-  def restore_state(self, canvas: Canvas) -> None:
-    (fontname, fontsize, leading) = self.state_stack.pop()
-    canvas._fontname = fontname
-    canvas._fontsize = fontsize
-    canvas._leading = leading
-
-  def register_fonts(self) -> None:
     for font_name, font_filename in [
       ('FiraSansRegular', 'FiraSans-Regular.ttf'),
       ('FiraSansBold', 'FiraSans-Bold.ttf'),
@@ -32,126 +14,103 @@ class PDFGenerator:
       font_path = Path(__file__).parent.joinpath('fonts').joinpath(font_filename)
       pdfmetrics.registerFont(TTFont(font_name, font_path))
 
-  def _draw_text_line(self, canvas: Canvas, text: str) -> None:
-    x = canvas._x + self.margin
-    y = canvas._y
-    if y == 0:
-      y = self.margin + canvas._leading
-
-    text_obj = canvas.beginText(x, y)
-    text_obj.textLines(text)
-    canvas.drawText(text_obj)
-    canvas._y = text_obj._y + canvas._leading
-
-  def _draw_text_block(self, canvas: Canvas, text: str) -> None:
-    x = self.margin
-    y = canvas._y
-    if y == 0:
-      y = self.margin + canvas._leading
-
-    style = getSampleStyleSheet()['Normal']
-    style.fontName = canvas._fontname
-    style.fontSize = canvas._fontsize
-    style.leading = canvas._leading
-
-    paragraph = Paragraph(text.replace('\n', '<br/>'), style)
-    paragraph.debug = 0
-    paragraph.wrapOn(canvas, canvas._pagesize[0] - self.margin * 2, 0)
-    height = paragraph.height
-    # hack to draw text correctly
-    paragraph.height = canvas._leading
-    paragraph.drawOn(canvas, x, y)
-    paragraph.height = height
-    canvas._y += paragraph.height + style.leading
-
-  def _draw_text_header(self, canvas: Canvas, text: str, level: int = 1) -> None:
-    self.save_state(canvas)
-    font_size = (1 - (level * 0.8 / 6)) * canvas._fontsize * 2
-
-    canvas.setFont(self.header_font, font_size, font_size * 0.5)
-    self._draw_text_line(canvas, text)
-
-    self.restore_state(canvas)
-
-  def draw_label_value_line(self, canvas: Canvas, label: str, value: str) -> None:
-    sep = '-'
-    padding = 2
-    label += ' ' * padding
-    value = ' ' * padding + value
-    available_width = canvas._pagesize[0] - self.margin * 2 - canvas.stringWidth(label) - canvas.stringWidth(value)
-    sep_width = canvas.stringWidth(sep)
-    text = f"{label}{sep * (int(available_width / sep_width) - 2)}{value}"
-    self.save_state(canvas)
-    canvas.setFontSize(None, canvas._fontsize)
-    self._draw_text_line(canvas, text)
-    self.restore_state(canvas)
-
   def generate_pdf(self, filename: str, data: dict):
-    canvas = Canvas(filename=filename, bottomup=0, pagesize=(540, 2200))
-    canvas.setTitle('Geidel Guerra CV')
-    canvas.setFont(self.default_font, self.default_font_size, self.default_leading)
-    canvas.setFillColorRGB(0, 0, 0, 1)
+    width = 540
+    height = 2400
+    margin = 40
+    styles = {
+      'normal': ParagraphStyle(
+        name='normal',
+        fontName='FiraSansRegular',
+        fontSize=10,
+        leading=15
+      ),
+      'h2': ParagraphStyle(
+        name='h2',
+        fontName='FiraSansBold',
+        fontSize=18,
+        leading=22
+      ),
+      'h3': ParagraphStyle(
+        name='h3',
+        fontName='FiraSansBold',
+        fontSize=13,
+        leading=18
+      )
+    }
+    content = []
 
-    self._draw_text_header(canvas, 'Where to find me:')
-    networks_text = ''
-    for network in data['networks']:
-      networks_text += f"{network['label']}: {network['url']}<br/>"
-    self._draw_text_block(canvas, networks_text)
+    networks = []
+    for item in data['networks']:
+      networks.append(f"<link href=\"{item['url']}\">{item['label']}</link>")
+    content.append(Paragraph('Links: ' + ', '.join(networks), styles['normal']))
+    content.append(Paragraph('<br/><br/>', styles['normal']))
 
-    self._draw_text_header(canvas, 'Who Am I?')
-    self._draw_text_block(canvas, data['about'])
+    content.append(Paragraph('Who Am I?', styles['h2']))
+    content.append(Paragraph(data['about'].replace('\n', '<br/>'), styles['normal']))
+    content.append(Paragraph('<br/><br/>', styles['normal']))
 
-    self._draw_text_line(canvas, '')
-
-    self._draw_text_header(canvas, 'Skills')
+    content.append(Paragraph('Skills', styles['h2']))
     for item in data['skills']:
-      self.draw_label_value_line(canvas, item['label'], item['years'])
+      label = item['label'] + '  '
+      value = '  ' + item['years']
+      label_width = pdfmetrics.stringWidth(label, styles['normal'].fontName, styles['normal'].fontSize)
+      value_width = pdfmetrics.stringWidth(value, styles['normal'].fontName, styles['normal'].fontSize)
+      sep = '-'
+      sep_width = pdfmetrics.stringWidth(sep, styles['normal'].fontName, styles['normal'].fontSize)
+      sep *= int((width - (margin * 2) - label_width - value_width) / sep_width) - 2
+      content.append(Paragraph(f"{label}{sep}{value}", styles['normal']))
+    content.append(Paragraph('<br/><br/>', styles['normal']))
 
-    self._draw_text_line(canvas, '')
-
-    self._draw_text_header(canvas, 'Languages')
+    content.append(Paragraph('Languages', styles['h2']))
     for item in data['languages']:
-      self.draw_label_value_line(canvas, item['label'], item['score'])
+      label = item['label'] + '  '
+      value = '  ' + item['score']
+      url = item.get('url', '')
+      label_width = pdfmetrics.stringWidth(label, styles['normal'].fontName, styles['normal'].fontSize)
+      value_width = pdfmetrics.stringWidth(value, styles['normal'].fontName, styles['normal'].fontSize)
+      sep = '-'
+      sep_width = pdfmetrics.stringWidth(sep, styles['normal'].fontName, styles['normal'].fontSize)
+      sep *= int((width - (margin * 2) - label_width - value_width) / sep_width) - 2
+      content.append(Paragraph(f"{label}{sep}<link href=\"{url}\">{value}</link>", styles['normal']))
+    content.append(Paragraph('<br/><br/>', styles['normal']))
 
-    self._draw_text_line(canvas, '')
-
-    self._draw_text_header(canvas, 'Toolkit')
+    content.append(Paragraph('Toolkit', styles['h2']))
     for item in data['toolkit']:
-      self.draw_label_value_line(canvas, item['category'], ', '.join(item['tools']))
+      label = item['category'] + '  '
+      value = '  ' + ', '.join(item['tools'])
+      url = item.get('url', '')
+      label_width = pdfmetrics.stringWidth(label, styles['normal'].fontName, styles['normal'].fontSize)
+      value_width = pdfmetrics.stringWidth(value, styles['normal'].fontName, styles['normal'].fontSize)
+      sep = '-'
+      sep_width = pdfmetrics.stringWidth(sep, styles['normal'].fontName, styles['normal'].fontSize)
+      sep *= int((width - (margin * 2) - label_width - value_width) / sep_width) - 2
+      content.append(Paragraph(f"{label}{sep}<link href=\"{url}\">{value}</link>", styles['normal']))
+    content.append(Paragraph('<br/><br/>', styles['normal']))
 
-    self._draw_text_line(canvas, '')
-
-    self._draw_text_header(canvas, f"Studies")
+    content.append(Paragraph('Studies', styles['h2']))
     for item in data['studies']:
-      self.save_state(canvas)
-      canvas.setFontSize(None, canvas._fontsize * 0.7)
-      self._draw_text_header(canvas, item['name'], 3)
-      self._draw_text_line(canvas, item['school'])
-      self._draw_text_line(canvas, f"{item['startDate']} - {item['endDate']} ({item['years']})")
-      self._draw_text_line(canvas, '')
-      self.restore_state(canvas)
+      content.append(Paragraph(item['name'], styles['h3']))
+      content.append(Paragraph(item['school'], styles['normal']))
+      content.append(Paragraph(f"{item['startDate']} - {item['endDate']} ({item['years']})", styles['normal']))
+    content.append(Paragraph('<br/><br/>', styles['normal']))
 
-    self._draw_text_line(canvas, '')
-
-    self._draw_text_header(canvas, f"Experience ({data['experienceYears']})")
+    content.append(Paragraph(f"Experience ({data['experienceYears']})", styles['h2']))
     for item in data['experience']:
-      self.save_state(canvas)
-      canvas.setFontSize(None, canvas._fontsize * 0.7)
-      self._draw_text_header(canvas, item['name'], 3)
-      self._draw_text_line(canvas, item['company'])
-      self._draw_text_line(canvas, f"{item['startDate']} - {item['endDate']} ({item['years']})")
-      self.restore_state(canvas)
-      self._draw_text_line(canvas, ', '.join(item['tech']))
+      company_url = item.get('companyUrl', '')
+      content.append(Paragraph(item['name'], styles['h3']))
+      content.append(Paragraph(f"<link href=\"{company_url}\">{item['company']}</link>", styles['normal']))
+      content.append(Paragraph(f"{item['startDate']} - {item['endDate']} ({item['years']})", styles['normal']))
+      content.append(Paragraph(item['description'], styles['normal']))
+      content.append(Paragraph('Tech: ' + ', '.join(item['tech']), styles['normal']))
+    content.append(Paragraph('<br/><br/>', styles['normal']))
 
-    self._draw_text_line(canvas, '')
-
-    self._draw_text_header(canvas, 'Projects')
+    content.append(Paragraph('Projects', styles['h2']))
     for item in data['projects']:
-      self.save_state(canvas)
-      canvas.setFontSize(None, canvas._fontsize * 0.7)
-      self._draw_text_header(canvas, item['name'], 3)
-      self._draw_text_line(canvas, f"{item['startDate']} - {item['endDate']}")
-      self.restore_state(canvas)
-      self._draw_text_block(canvas, item['description'])
+      url = item.get('url', '')
+      content.append(Paragraph(f"<link href=\"{url}\">{item['name']}</link>", styles['h3']))
+      content.append(Paragraph(f"{item['startDate']} - {item['endDate']}", styles['normal']))
+      content.append(Paragraph(item['description'], styles['normal']))
 
-    canvas.save()
+    doc = SimpleDocTemplate(filename, pagesize=(width, height), leftMargin=margin, rightMargin=margin, topMargin=margin, bottomMargin=margin)
+    doc.build(content)
