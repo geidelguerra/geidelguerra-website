@@ -112,5 +112,5 @@ class PDFGenerator:
       content.append(Paragraph(f"{item['startDate']} - {item['endDate']}", styles['normal']))
       content.append(Paragraph(item['description'], styles['normal']))
 
-    doc = SimpleDocTemplate(filename, pagesize=(width, height), leftMargin=margin, rightMargin=margin, topMargin=margin, bottomMargin=margin)
+    doc = SimpleDocTemplate(filename, title="Geidel Guerra CV", pagesize=(width, height), leftMargin=margin, rightMargin=margin, topMargin=margin, bottomMargin=margin)
     doc.build(content)
