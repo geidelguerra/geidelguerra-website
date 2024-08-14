@@ -61,7 +61,7 @@
     #stuff {
       position: relative;
       background-color: rgba(31, 41, 55, 1);
-      margin: 1rem auto;
+      margin: 1rem auto 100px auto;
       padding: 0 2rem;
       max-width: 960px;
       box-shadow: inset 0 0px 2px rgba(237, 182, 22, 0.5);
@@ -184,6 +184,41 @@
       top: 0;
       left: 0;
     }
+
+    #easter {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+
+      & img {
+        position: absolute;
+        width: auto;
+        bottom: 0;
+        height: 100px;
+        transform: translateY({{easter_entry['offset_top']}}px);
+        transition: all 0.5s;
+      }
+
+      & span {
+        position: absolute;
+        top: -4rem;
+        left: 133px;
+        font-family: monospace;
+        transform: translateY(100px);
+        transition: all 0.5s ease-out;
+        display: inline-block;
+        width: 250px;
+      }
+
+      &.show {
+        & img {
+          transform: translateY(0);
+        }
+        & span {
+          transform: translateY(0);
+        }
+      }
+    }
   </style>
 </head>
 
@@ -210,6 +245,10 @@
         </ul>
       </section>
     </footer>
+    <div id="easter">
+      <img src="{{ easter_entry['image_url'] }}">
+      <span>{{ easter_entry['text'] }}</span>
+    </div>
   </div>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>

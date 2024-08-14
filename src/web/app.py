@@ -4,6 +4,7 @@ from web.extensions.markdown import MarkdownExtension
 from utils import get_data
 from pdf import PDFGenerator
 import pathlib
+import random
 
 static_folder = pathlib.Path(__name__).parent.parent.joinpath('static').absolute()
 
@@ -13,6 +14,33 @@ app.jinja_env.add_extension(MarkdownExtension)
 @app.context_processor
 def inject_shared_data():
   data = get_data()
+  easter_entries = [
+    {
+      'image_url': url_for('static', filename='easter/fry_02.png'),
+      'text': 'There is something odd with this bug.',
+      'offset_top': 70,
+    },
+    {
+      'image_url': url_for('static', filename='easter/zoidberg_02.png'),
+      'text': 'Do you wanna see my shell script?',
+      'offset_top': 70,
+    },
+    {
+      'image_url': url_for('static', filename='easter/bender_01.png'),
+      'text': 'Do you need a bot? I have one right here!',
+      'offset_top': 70,
+    },
+    {
+      'image_url': url_for('static', filename='easter/zap_01.png'),
+      'text': 'I marble at my own magnificent coding skills.',
+      'offset_top': 80,
+    },
+    {
+      'image_url': url_for('static', filename='easter/professor_01.png'),
+      'text': 'Good news! I fixed the bug.',
+      'offset_top': 70,
+    },
+  ]
 
   return {
     'header_data': {
@@ -67,6 +95,7 @@ def inject_shared_data():
     'footer_data': {
       'networks': data['networks']
     },
+    'easter_entry': random.choice(easter_entries)
   }
 
 @app.get('/')

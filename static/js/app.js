@@ -1,4 +1,5 @@
 const canvas = document.getElementById('canvas');
+const easter = document.getElementById('easter');
 
 const numbOfBlocks = 100;
 const minBlockSize = 5;
@@ -155,6 +156,10 @@ if (canvas) {
      * @param {HTMLCanvasElement}
      */
     function onMouseUp(event) {
+        if (event.target !== canvas) {
+            return;
+        }
+
         startPosition.x = event.clientX;
         startPosition.y = event.clientY;
 
@@ -232,3 +237,14 @@ function vnormalize(v) {
     v.x /= mag;
     v.y /= mag;
 }
+
+function onScroll() {
+    if (window.scrollY >= document.body.scrollHeight - document.documentElement.clientHeight) {
+        easter.classList.add('show');
+    } else {
+        easter.classList.remove('show');
+    }
+}
+
+onScroll();
+window.addEventListener('scroll', onScroll);
