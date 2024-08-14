@@ -177,7 +177,6 @@ if (canvas) {
         isRunning = true;
         time = Date.now();
         requestAnimationFrame(update);
-        console.log('simulation started');
     }
 
     function stopSimulation() {
@@ -186,7 +185,6 @@ if (canvas) {
         }
 
         isRunning = false;
-        console.log('simulation stopped');
     }
 
     window.addEventListener('resize', resize);
