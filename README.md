@@ -9,3 +9,6 @@ My ideal scenario is to update the data here and sync it to other websites like 
 Check back later if you don't see any of that yet. All sync adapters will be in here somewhere. Also I will auto generate a PDF CV from the data.
 
 You are free to use this code as a template for your own website.
+
+References
+- https://processing.org/examples/flocking.html
