@@ -33,7 +33,7 @@ def inject_shared_data():
     {
       'image_url': url_for('static', filename='easter/zap_01.png'),
       'text': 'I marble at my own magnificent coding skills.',
-      'offset_top': 80,
+      'offset_top': 85,
     },
     {
       'image_url': url_for('static', filename='easter/professor_01.png'),
@@ -102,12 +102,5 @@ def inject_shared_data():
 def home_page():
   data = get_data()
   return render_template('home.html', data=data)
-
-@app.get('/genpdf')
-def genpdf():
-  data = get_data()
-  pdf_generator = PDFGenerator()
-  pdf_generator.generate_pdf('geidelguerra_cv.pdf', data)
-  return ''
 
 app = WsgiToAsgi(app)
