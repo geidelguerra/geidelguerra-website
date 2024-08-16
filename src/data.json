@@ -98,6 +98,14 @@
   ],
   "projects": [
     {
+      "name": "Know Your Craft Website",
+      "url": "https://knowurcraft.com",
+      "startDate": "2024-08",
+      "endDate": "Present",
+      "image_url": "/static/images/knowurcraft.png",
+      "description": "Website with a compilation of cheatsheets for different languages."
+    },
+    {
       "name": "Snake Game",
       "url": "https://github.com/geidelguerra/snake-game",
       "startDate": "2024-05",
