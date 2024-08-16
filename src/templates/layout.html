@@ -14,6 +14,12 @@
   <link {{ item|xmlattr }}>
   {% endfor %}
   <style>
+    :root {
+      --clock-hours-hand-width: 1px;
+      --clock-minutes-hand-width: 1px;
+      --clock-seconds-hand-width: 1px;
+    }
+
     body {
       background-color: #000;
       color: #ccc;
@@ -36,6 +42,11 @@
       list-style: none;
     }
 
+    & a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
     .section {
       &>h2 {
         font-size: 2rem;
@@ -46,11 +57,6 @@
 
       & h3 {
         font-size: 1.5rem;
-      }
-
-      & a {
-        color: #93c5fd;
-        text-decoration: none;
       }
 
       &>ul>li {
@@ -69,13 +75,18 @@
     }
 
     header {
-      margin-bottom: 2rem;
       padding: 1rem 0;
+      position: relative;
 
       >.section {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      & .download-cv {
+        display: block;
       }
 
       & img.profile {
@@ -219,6 +230,60 @@
         }
       }
     }
+
+    #clock {
+      width: 2rem;
+      height: 2rem;
+      position: relative;
+
+
+      & .dial {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      & .hours-hand,
+      & .minutes-hand,
+      & .seconds-hand {
+        position: absolute;
+        bottom: 50%;
+        transform-origin: bottom;
+        background-color: #ccc;
+      }
+
+      & .hours-hand {
+        transform: rotate(0);
+        width: var(--clock-hours-hand-width);
+        left: calc(50% - var(--clock-hours-hand-width) / 2);
+        height: 20%;
+      }
+
+      & .minutes-hand {
+        transform: rotate(90deg);
+        width: var(--clock-hours-hand-width);
+        left: calc(50% - var(--clock-hours-hand-width) / 2);
+        height: 40%;
+      }
+
+      & .seconds-hand {
+        transform: rotate(180deg);
+        width: var(--clock-seconds-hand-width);
+        left: calc(50% - var(--clock-seconds-hand-width) / 2);
+        height: 50%;
+      }
+
+      & .cap {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: var(--clock-hours-hand-width);
+        height: var(--clock-hours-hand-width);
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background-color: #ccc;
+      }
+    }
   </style>
 </head>
 
@@ -228,9 +293,16 @@
     <header>
       <div class="section">
         <img class="profile" src="{{ url_for('static', filename='images/geidel_profile.jpg') }}" alt="Geidel Guerra">
-        <a target="_blank" rel="noopener noreferrer"
-          href="{{ url_for('static', filename='files/geidelguerra_cv_en.pdf') }}">Download CV PDF</a>
+        <div id="clock">
+          <div class="dial">
+            <div class="seconds-hand"></div>
+            <div class="minutes-hand"></div>
+            <div class="hours-hand"></div>
+            <div class="cap"></div>
+          </div>
+        </div>
       </div>
+      <a class="download-cv" target="_blank" rel="noopener noreferrer" href="{{ url_for('static', filename='files/geidelguerra_cv_en.pdf') }}">Download CV PDF</a>
     </header>
     {% block body %}{% endblock %}
     <footer>
@@ -251,6 +323,30 @@
     </div>
   </div>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>
+    const clock = document.getElementById('clock');
+    const hoursHand = clock.querySelector('.hours-hand');
+    const minutesHand = clock.querySelector('.minutes-hand');
+    const secondsHand = clock.querySelector('.seconds-hand');
+
+    function updateClock() {
+      const time = new Date();
+      const hours = time.getHours();
+      const minutes = time.getMinutes();
+      const seconds = time.getSeconds();
+
+      const secondsAngle = (seconds / 60 * 360);
+      const minutesAngle = minutes / 60 * 360;
+      const hoursAngle = (hours - 12) / 12 * 360;
+
+      secondsHand.style.transform = `rotate(${secondsAngle}deg)`;
+      minutesHand.style.transform = `rotate(${minutesAngle}deg)`;
+      hoursHand.style.transform = `rotate(${hoursAngle}deg)`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
 </body>
 
 </html>
