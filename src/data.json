@@ -98,6 +98,22 @@
   ],
   "projects": [
     {
+      "name": "Boids",
+      "url": "https://github.com/geidelguerra/boids",
+      "startDate": "2024-08",
+      "endDate": "Present",
+      "image_url": "/static/images/boids.png",
+      "description": "A bunch of steering behaviours simulation in C with Raylib."
+    },
+    {
+      "name": "Space Invaders",
+      "url": "https://github.com/geidelguerra/space-invaders",
+      "startDate": "2024-08",
+      "endDate": "Present",
+      "image_url": "/static/images/space_invaders.png",
+      "description": "Clone of the classic space invaders game in C with Raylib."
+    },
+    {
       "name": "Know Your Craft Website",
       "url": "https://knowurcraft.com",
       "startDate": "2024-08",
