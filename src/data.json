@@ -98,6 +98,14 @@
   ],
   "projects": [
     {
+      "name": "Trigonometry",
+      "url": "https://github.com/geidelguerra/trigonometry",
+      "startDate": "2024-08",
+      "endDate": "Present",
+      "image_url": "/static/images/trigonometry.png",
+      "description": "Trigonometry visualizations in C with Raylib."
+    },
+    {
       "name": "Boids",
       "url": "https://github.com/geidelguerra/boids",
       "startDate": "2024-08",
