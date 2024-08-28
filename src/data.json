@@ -98,6 +98,14 @@
   ],
   "projects": [
     {
+      "name": "Platformer (Raylib)",
+      "url": "https://github.com/geidelguerra/platformer-raylib",
+      "startDate": "2024-08",
+      "endDate": "Present",
+      "image_url": "/static/images/platformer_raylib.png",
+      "description": "Platformer basics in Odin with Raylib"
+    },
+    {
       "name": "Trigonometry",
       "url": "https://github.com/geidelguerra/trigonometry",
       "startDate": "2024-08",
