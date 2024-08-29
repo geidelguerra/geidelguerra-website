@@ -51,7 +51,7 @@
       "startDate": "2023-02",
       "endDate": "2024-08",
       "description": "I worked on adding unit tests to existing projects in PHP. Improved MySQL queries performance by 400%. Created new internal tools from scratch using Python, Flask, MongoDB and OpenAI to improve customer support. Created internal Chrome extension to improve staff work.",
-      "tech": ["Python", "PHP", "MySQL", "MongoDB", "AWS", "Docker", "Browser Extensions", "AI Prompt", "Chatbot"]
+      "tech": ["Python", "PHP", "HTMX", "Flask", "MySQL", "MongoDB", "AWS", "Docker", "Browser Extensions", "AI Prompt", "Chatbot"]
     },
     {
       "name": "CTO / Senior Software Developer",

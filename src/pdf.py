@@ -16,7 +16,7 @@ class PDFGenerator:
 
   def generate_pdf(self, filename: str, data: dict):
     width = 540
-    height = 2400
+    height = 2600
     margin = 40
     styles = {
       'normal': ParagraphStyle(
