@@ -101,6 +101,14 @@
   ],
   "projects": [
     {
+      "name": "Tic Tac Toe (PHP)",
+      "url": "https://github.com/geidelguerra/tictactoe-php",
+      "startDate": "2024-08",
+      "endDate": "Present",
+      "image_url": "/static/images/tictactoe_php.png",
+      "description": "Tic Tac Toe game in one PHP file"
+    },
+    {
       "name": "Platformer (Raylib)",
       "url": "https://github.com/geidelguerra/platformer-raylib",
       "startDate": "2024-08",
