@@ -10,8 +10,11 @@
   ],
   "skills": [
     { "label": "Python", "url": "https://www.python.org/", "startDate": "2023-02" },
+    { "label": "Flask", "url": "https://flask.palletsprojects.com/en/3.0.x/", "startDate": "2023-02" },
     { "label": "PHP", "url": "https://php.net", "startDate": "2014-10" },
-    { "label": "JavaScript", "url": "https://php.net", "startDate": "2014-12" },
+    { "label": "Laravel", "url": "https://laravel.com/", "startDate": "2015-06" },
+    { "label": "JavaScript", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_overview", "startDate": "2014-12" },
+    { "label": "VueJs", "url": "https://vuejs.org/", "startDate": "2015-06" },
     { "label": "C", "url": "https://en.wikipedia.org/wiki/C_(programming_language)", "startDate": "2024-05" },
     { "label": "MongoDB", "url": "https://www.mongodb.com/", "startDate": "2023-02" },
     { "label": "MySQL", "url": "https://www.mysql.com", "startDate": "2014-12" }
