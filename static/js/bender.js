@@ -15,7 +15,7 @@
         if (mousePosition) {
             const leftEyeCenterAbsolute = {
                 x: bender.offsetLeft - (bender.offsetWidth / 2) + leftEyeCenter.x + (leftEye.offsetWidth / 2),
-                y: bender.offsetTop + bender.offsetHeight + 13 + leftEyeCenter.y
+                y: bender.offsetTop + leftEyeCenter.y
             }
             let leftAngle = -Math.atan2(mousePosition.y - leftEyeCenterAbsolute.y, mousePosition.x - leftEyeCenterAbsolute.x) * -1;
             let leftX = leftEyeCenter.x + Math.cos(leftAngle) * eyeRadius;
@@ -25,7 +25,7 @@
 
             const rightEyeCenterAbsolute = {
                 x: bender.offsetLeft - (bender.offsetWidth / 2) + rightEyeCenter.x + (rightEye.offsetWidth / 2),
-                y: bender.offsetTop + bender.offsetHeight + 13 + rightEyeCenter.y
+                y: bender.offsetTop + rightEyeCenter.y
             }
 
             let rightAngle = -Math.atan2(mousePosition.y - rightEyeCenterAbsolute.y, mousePosition.x - rightEyeCenterAbsolute.x) * -1;
@@ -33,7 +33,6 @@
             let rightY = rightEyeCenter.y + Math.sin(rightAngle) * eyeRadius;
             rightEye.style.left = `${rightX}px`
             rightEye.style.top = `${rightY}px`
-            console.log(mousePosition, leftEyeCenterAbsolute)
         } else {
             leftEye.style.left = `${leftEyeCenter.x}px`
             leftEye.style.top = `${leftEyeCenter.y}px`
@@ -43,7 +42,7 @@
     }
 
     function onMouseMove(e) {
-        mousePosition = {x: e.screenX, y: e.screenY}
+        mousePosition = {x: e.clientX, y: e.clientY}
         updateEyes()
     }
 
