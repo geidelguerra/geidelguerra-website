@@ -1,22 +1,23 @@
-const canvas = document.getElementById('canvas');
-const easter = document.getElementById('easter');
+(function () {
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return
+    // const easter = document.getElementById('easter');
 
-const numbOfBlocks = 100;
-const minBlockSize = 5;
-const maxBlockSize = 10;
-const tailSegmentMaxWidth = maxBlockSize * 0.2;
-const tailSegmentMinWidth = 2;
+    const numbOfBlocks = 100;
+    const minBlockSize = 5;
+    const maxBlockSize = 10;
+    const tailSegmentMaxWidth = maxBlockSize * 0.2;
+    const tailSegmentMinWidth = 2;
 
-let minSpeed = 5;
-let maxSpeed = 10;
-let maxForce = maxSpeed * 0.5;
-let tailMaxLength = 10;
-let tailSegmentLength = 30;
-let composite = 'exclude';
-let isRunning = false;
-let simulationDuration = 5000;
+    let minSpeed = 5;
+    let maxSpeed = 10;
+    let maxForce = maxSpeed * 0.5;
+    let tailMaxLength = 10;
+    let tailSegmentLength = 30;
+    let composite = 'exclude';
+    let isRunning = false;
+    let simulationDuration = 5000;
 
-if (canvas) {
     let time = 0;
     let startPosition = { x: 0, y: 0 };
     let ctx = canvas.getContext('2d', { antialias: true });
@@ -196,55 +197,55 @@ if (canvas) {
     window.addEventListener('mouseup', onMouseUp);
 
     resize();
-}
 
-/**
- *
- * @param {{x: number, y: number}} v1
- * @param {{x: number, y: number}} v2
- * @returns {number}
- */
-function vdistance(v1, v2) {
-    let dx = v1.x - v2.x;
-    let dy = v1.y - v2.y;
+    /**
+     *
+     * @param {{x: number, y: number}} v1
+     * @param {{x: number, y: number}} v2
+     * @returns {number}
+     */
+    function vdistance(v1, v2) {
+        let dx = v1.x - v2.x;
+        let dy = v1.y - v2.y;
 
-    return Math.sqrt(dx * dx + dy * dy);
-}
-
-/**
- *
- * @param {{x: number, y: number}} v
- * @returns {number}
- */
-function vmagnitude(v) {
-    return Math.sqrt(v.x * v.x + v.y * v.y);
-}
-
-/**
- * @param {{x: number, y: number}} v1
- * @param {{x: number, y: number}} v2
- * @returns {{x: number, y: number}}
- */
-function vsub(v1, v2) {
-    return { x: v1.x - v2.x, y: v1.y - v2.y };
-}
-
-/**
- * @param {{x: number, y: number}} v
- */
-function vnormalize(v) {
-    let mag = vmagnitude(v);
-    v.x /= mag;
-    v.y /= mag;
-}
-
-function onScroll() {
-    if (window.scrollY >= document.body.scrollHeight - document.documentElement.clientHeight) {
-        easter.classList.add('show');
-    } else {
-        easter.classList.remove('show');
+        return Math.sqrt(dx * dx + dy * dy);
     }
-}
 
-onScroll();
-window.addEventListener('scroll', onScroll);
+    /**
+     *
+     * @param {{x: number, y: number}} v
+     * @returns {number}
+     */
+    function vmagnitude(v) {
+        return Math.sqrt(v.x * v.x + v.y * v.y);
+    }
+
+    /**
+     * @param {{x: number, y: number}} v1
+     * @param {{x: number, y: number}} v2
+     * @returns {{x: number, y: number}}
+     */
+    function vsub(v1, v2) {
+        return { x: v1.x - v2.x, y: v1.y - v2.y };
+    }
+
+    /**
+     * @param {{x: number, y: number}} v
+     */
+    function vnormalize(v) {
+        let mag = vmagnitude(v);
+        v.x /= mag;
+        v.y /= mag;
+    }
+
+    // function onScroll() {
+    //     if (window.scrollY >= document.body.scrollHeight - document.documentElement.clientHeight) {
+    //         easter.classList.add('show');
+    //     } else {
+    //         easter.classList.remove('show');
+    //     }
+    // }
+
+    // onScroll();
+    // window.addEventListener('scroll', onScroll);
+})()

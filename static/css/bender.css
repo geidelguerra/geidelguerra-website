@@ -1,0 +1,28 @@
+#bender {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100px;
+    z-index: -10;
+    & img {
+      height: 100%;
+      width: auto;
+    }
+
+    & .left_eye {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: black;
+      transform: translate(-50%, -50%);
+    }
+
+    & .right_eye {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: black;
+      transform: translate(-50%, -50%);
+    }
+  }
