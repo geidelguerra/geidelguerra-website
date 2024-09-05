@@ -33,6 +33,7 @@
             let rightY = rightEyeCenter.y + Math.sin(rightAngle) * eyeRadius;
             rightEye.style.left = `${rightX}px`
             rightEye.style.top = `${rightY}px`
+            console.log(mousePosition, leftEyeCenterAbsolute)
         } else {
             leftEye.style.left = `${leftEyeCenter.x}px`
             leftEye.style.top = `${leftEyeCenter.y}px`
