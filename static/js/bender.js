@@ -47,5 +47,6 @@
     }
 
     window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mousedown', onMouseMove)
     updateEyes()
 })()

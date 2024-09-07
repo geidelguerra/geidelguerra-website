@@ -60,7 +60,7 @@
       "startDate": "2020-08",
       "endDate": "2023-02",
       "description": "I worked on Saas projects from scratch, with third-party integrations to social networks and multitenancy, using Laravel, Vue and MySQL. As CTO and Lead Programmer I was in charge of a very small team (two other developers).",
-      "tech": ["PHP", "JavaScript", "MySQL", "Vue", "Laravel", "Forge", "Vapor", "AWS", "SaaS", "API"]
+      "tech": ["PHP", "JavaScript", "MySQL", "VueJs", "Laravel", "Forge", "Vapor", "AWS", "SaaS", "API", "ChartsJs"]
     },
     {
       "name": "Content Manager / Maintainer",
@@ -180,7 +180,7 @@
       "startDate": "2022-02",
       "endDate": "2023-02",
       "image_url": "/static/images/klipers_saas.png",
-      "description": "A Saas made from 0 to production, I worked on the UI, adding integrations with third party APIs like Facebook, Instagram, Twitter, server configuration and deployment. Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Vapor"
+      "description": "A Saas made from 0 to production, I worked on the UI, adding integrations with third party APIs like Facebook, Instagram, Twitter, server configuration and deployment. Tech used: Laravel, VueJs, InertiaJs, TailwindCSS, ChartsJs. Hosted on AWS with Laravel Vapor"
     },
     {
       "name": "Contegy Saas",
@@ -188,7 +188,7 @@
       "startDate": "2020-08",
       "endDate": "2023-02",
       "image_url": "/static/images/contegy_saas.png",
-      "description": "A Saas made from 0 to production. I worked on the UI, adding multi-tenant architecture,  integrations with third party APIs like Facebook, Instagram, Google Analytics, Twitter, LinkedIn, server configuration and deployment. Tech used: Laravel + InertiaJs + TailwindCSS. Hosted on AWS with Laravel Forge and Envoyer"
+      "description": "A Saas made from 0 to production. I worked on the UI, adding multi-tenant architecture,  integrations with third party APIs like Facebook, Instagram, Google Analytics, Twitter, LinkedIn, server configuration and deployment. Tech used: Laravel, VueJs, InertiaJs, TailwindCSS, ChartsJs. Hosted on AWS with Laravel Forge and Envoyer"
     },
     {
       "name": "Tenza Website",
