@@ -88,7 +88,7 @@ class PDFGenerator:
       content.append(Paragraph(f"{label}{sep}<link href=\"{url}\">{value}</link>", styles['normal']))
     content.append(Paragraph('<br/><br/>', styles['normal']))
 
-    content.append(Paragraph('Studies', styles['h2']))
+    content.append(Paragraph('Education', styles['h2']))
     for item in data['studies']:
       content.append(Paragraph(item['name'], styles['h3']))
       content.append(Paragraph(item['school'], styles['normal']))

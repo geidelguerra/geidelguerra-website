@@ -1,5 +1,5 @@
 {
-  "about": "My name is Geidel Guerra. I'm a self taught developer with some formal studies, interested in low-level programming, web applications and making games.\n\nI started learning to code using Macromedia Flash 8's offline help, making a phone book app to store phone numbers of StarCraft players (back then we used dialup peer to peer connections to play using phone numbers). I did some other stuff I don't remember. Fast forward in time, after finishing school (IT Bachelor) and dropping out of University in third year (IT Engineer) my first job was making games with Unity. After that I have been developing web applications that range from simple portfolio websites to complex e-commerce multi-tenancy Saas, command line tools to automate processes, browser extensions, configuring CI pipelines and Linux servers.\n\nI'm a fast learner (everybody says that), highly autonomous and self motivated. I have a broad set of skills that makes me easy to align to any kind of task and the will to specialize in depth if needed.\n\nCurrently learning how to make games.",
+  "about": "My name is Geidel Guerra. I'm a self taught developer with formal studies, interested in low-level programming, web applications and making games.\n\nI started learning to code using Macromedia Flash 8's offline help, making a phone book app to store phone numbers of StarCraft players (back then we used dialup peer to peer connections to play using phone numbers). I did other stuff I don't remember. Fast forward in time, after finishing school (IT Bachelor) and dropping out of University in third year (IT Engineer) my first job was making games with Unity. After that I have been developing web applications that range from simple portfolio websites to complex e-commerce multi-tenancy Saas, command line tools to automate processes, browser extensions, configuring CI pipelines and Linux servers.\n\nI like my job and always do my best. I have a broad set of skills that makes me easy to align to any kind of task.\n\nCurrently learning how to make games.",
   "startDate": "2013-10",
   "networks": [
     { "label": "Website", "url": "https://geidelguerra.com" },
@@ -50,7 +50,7 @@
       "companyUrl": "https://cerberu.com",
       "startDate": "2023-02",
       "endDate": "2024-08",
-      "description": "I worked on adding unit tests to existing projects in PHP. Improved MySQL queries performance by 400%. Created new internal tools from scratch using Python, Flask, MongoDB and OpenAI to improve customer support. Created internal Chrome extension to improve staff work.",
+      "description": "Introduced unit tests to existing projects in PHP. Improved MySQL queries performance by 400%. Created new internal tools to improve customer support by adding AI to the mix. Created internal Chrome extension to improve customer support by leveraging the AI capabilites.",
       "tech": ["Python", "PHP", "HTMX", "Flask", "MySQL", "MongoDB", "AWS", "Docker", "Browser Extensions", "AI Prompt", "Chatbot"]
     },
     {
@@ -59,7 +59,7 @@
       "companyUrl": "https://lacaja.company",
       "startDate": "2020-08",
       "endDate": "2023-02",
-      "description": "I worked on Saas projects from scratch, with third-party integrations to social networks and multitenancy, using Laravel, Vue and MySQL. As CTO and Lead Programmer I was in charge of a very small team (two other developers).",
+      "description": "Developed two Saas projects from scratch, with third-party integrations to social networks and multitenancy, using Laravel, Vue and MySQL. As CTO and Lead Programmer I managed a small team of developers.",
       "tech": ["PHP", "JavaScript", "MySQL", "VueJs", "Laravel", "Forge", "Vapor", "AWS", "SaaS", "API", "ChartsJs"]
     },
     {
@@ -68,7 +68,7 @@
       "companyUrl": "https://artcronica.com",
       "startDate": "2018-06",
       "endDate": "2022-04",
-      "description": "I was in charge of the maintenance and content upload.",
+      "description": "Content administrator and overall maintenance.",
       "tech": ["Wordpress"]
     },
     {
@@ -77,7 +77,7 @@
       "companyUrl": "https://nextreality.digital",
       "startDate": "2019-02",
       "endDate": "2020-12",
-      "description": "I worked on the creation of a Saas product from scratch using Laravel, Vue and ThreeJs.",
+      "description": "Developed an ecommerce web application with a 3D viewers and a custom backend administration panel. I also configured all the services on AWS",
       "tech": ["JavaScript", "PHP", "MySQL", "ThreeJS", "Vue", "SaaS", "API"]
     },
     {
@@ -86,7 +86,7 @@
       "companyUrl": "https://fac.cu",
       "startDate": "2014-12",
       "endDate": "2018-05",
-      "description": "I worked on the creation of the official website and internal tooling for content administration",
+      "description": "Developed the official website and internal tooling for content administration",
       "tech": ["JavaScript", "PHP", "MySQL", "Vue", "Laravel"]
     },
     {
@@ -95,7 +95,7 @@
       "companyUrl": "https://www.jovenclub.cu",
       "startDate": "2013-10",
       "endDate": "2014-12",
-      "description": "I worked on the creation of games",
+      "description": "Implemented player movement and gameplay.",
       "tech": ["Unity3D"]
     }
   ],
@@ -122,7 +122,7 @@
       "startDate": "2024-08",
       "endDate": "Present",
       "image_url": "/static/images/trigonometry.png",
-      "description": "Trigonometry visualizations in C with Raylib."
+      "description": "Trigonometry visualizations in C with Raylib"
     },
     {
       "name": "Boids",
@@ -130,7 +130,7 @@
       "startDate": "2024-08",
       "endDate": "Present",
       "image_url": "/static/images/boids.png",
-      "description": "A bunch of steering behaviours simulation in C with Raylib."
+      "description": "Steering behaviours simulation in C with Raylib"
     },
     {
       "name": "Space Invaders",
@@ -138,7 +138,7 @@
       "startDate": "2024-08",
       "endDate": "Present",
       "image_url": "/static/images/space_invaders.png",
-      "description": "Clone of the classic space invaders game in C with Raylib."
+      "description": "Space invaders game in C with Raylib"
     },
     {
       "name": "Know Your Craft Website",
@@ -146,7 +146,7 @@
       "startDate": "2024-08",
       "endDate": "Present",
       "image_url": "/static/images/knowurcraft.png",
-      "description": "Website with a compilation of cheatsheets for different languages."
+      "description": "Website with a compilation of cheatsheets for different languages"
     },
     {
       "name": "Snake Game",
@@ -171,7 +171,7 @@
       "startDate": "2024-01",
       "endDate": "2024-01",
       "image_url": "/static/images/conway_python.png",
-      "description": "Python CLI Conway's Game of Life Algorithm simulation",
+      "description": " Conway's Game of Life Algorithm simulation CLI app",
       "personal": true
     },
     {
@@ -180,7 +180,7 @@
       "startDate": "2022-02",
       "endDate": "2023-02",
       "image_url": "/static/images/klipers_saas.png",
-      "description": "A Saas made from 0 to production, I worked on the UI, adding integrations with third party APIs like Facebook, Instagram, Twitter, server configuration and deployment. Tech used: Laravel, VueJs, InertiaJs, TailwindCSS, ChartsJs. Hosted on AWS with Laravel Vapor"
+      "description": "Saas to aggregate and display metrics from multiple sources. I developed the UI, added the integrations with third party APIs like Facebook, Instagram, Twitter, did server configuration and deployment. Tech used: Laravel, VueJs, InertiaJs, TailwindCSS, ChartsJs. Hosted on AWS with Laravel Vapor"
     },
     {
       "name": "Contegy Saas",
@@ -188,7 +188,7 @@
       "startDate": "2020-08",
       "endDate": "2023-02",
       "image_url": "/static/images/contegy_saas.png",
-      "description": "A Saas made from 0 to production. I worked on the UI, adding multi-tenant architecture,  integrations with third party APIs like Facebook, Instagram, Google Analytics, Twitter, LinkedIn, server configuration and deployment. Tech used: Laravel, VueJs, InertiaJs, TailwindCSS, ChartsJs. Hosted on AWS with Laravel Forge and Envoyer"
+      "description": "Saas to managed Content Marketing campaigns. I developed the UI, added multi-tenant architecture, integrations with third party APIs like Facebook, Instagram, Google Analytics, Twitter, LinkedIn, did server configuration and deployment. Tech used: Laravel, VueJs, InertiaJs, TailwindCSS, ChartsJs. Hosted on AWS with Laravel Forge and Envoyer"
     },
     {
       "name": "Tenza Website",
@@ -196,7 +196,7 @@
       "startDate": "2021-11",
       "endDate": "Present",
       "image_url": "/static/images/tenza_website.png",
-      "description": "Official website for Tenza Studio with some cool 3D animations and a 3D viewer. Tech used: NuxtJs + TailwindCSS + ThreeJs + AnimeJs and Lottie. Hosted on Netlify"
+      "description": "Official website for Tenza Studio with cool 3D animations and a 3D viewer. Tech used: NuxtJs + TailwindCSS + ThreeJs + AnimeJs and Lottie. Hosted on Netlify"
     },
     {
       "name": "Alberto Hernandez Reyes Personal Website",
@@ -220,7 +220,7 @@
       "startDate": "2019-02",
       "endDate": "2020-12",
       "image_url": "/static/images/placeart_saas.png",
-      "description": "A Saas for selling art online. A work on the frontend, backend, 3D viewer for art showcase and server configuration and deployment. Tech used: NuxtJs + Laravel + ThreeJs + AFrame"
+      "description": "Saas for selling art online. A work on the frontend, backend, 3D viewer for art showcase and server configuration and deployment. Tech used: NuxtJs + Laravel + ThreeJs + AFrame"
     },
     {
       "name": "Fábrica de Arte Cubano Website",
@@ -228,7 +228,7 @@
       "startDate": "2015-01",
       "endDate": "2018-06",
       "image_url": "/static/images/fac_website.png",
-      "description": "Official website. I worked on the frontend and backend (with a custom programming of events's calendar and editor). Tech used: Laravel 5 + Bootstrap + jQuery"
+      "description": "Official website. I developed both frontend and backend (with a custom programming of events's calendar and editor). Tech used: Laravel 5 + Bootstrap + jQuery"
     },
     {
       "name": "Gráfica Interactiva II (with Serones Art Group)",
@@ -236,7 +236,7 @@
       "startDate": "2017-01",
       "endDate": "2017-03",
       "image_url": "/static/images/grafica_interactiva_2.png",
-      "description": "A collaboration with the cuban art group called Serones. I was tasked with the coding of the 3D navigation system, event triggers and illumination. Tech used: Unity3D"
+      "description": "A collaboration with the cuban art group called Serones. I programmed the 3D navigation system, event triggers and illumination. Tech used: Unity3D"
     }
   ]
 }
