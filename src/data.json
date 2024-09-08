@@ -9,6 +9,7 @@
     { "label": "Manfred", "url": "https://mnf.red/928030c3-6502-47b4-bba7-5d4970f4bc59/timeline" }
   ],
   "skills": [
+    { "label": "Odin", "url": "https://odin-lang.org/", "startDate": "2024-09" },
     { "label": "Python", "url": "https://www.python.org/", "startDate": "2023-02" },
     { "label": "Flask", "url": "https://flask.palletsprojects.com/en/3.0.x/", "startDate": "2023-02" },
     { "label": "PHP", "url": "https://php.net", "startDate": "2014-10" },
