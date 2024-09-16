@@ -8,6 +8,7 @@
     { "label": "Twitter", "url": "https://twitter.com/geidelguerra" }
   ],
   "skills": [
+    { "label": "Go", "url": "https://go.dev/", "startDate": "2024-09" },
     { "label": "Odin", "url": "https://odin-lang.org/", "startDate": "2024-09" },
     { "label": "Python", "url": "https://www.python.org/", "startDate": "2023-02" },
     { "label": "Flask", "url": "https://flask.palletsprojects.com/en/3.0.x/", "startDate": "2023-02" },
