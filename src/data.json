@@ -102,6 +102,14 @@
   ],
   "projects": [
     {
+      "name": "Snake Game in the Terminal (Go)",
+      "url": "https://github.com/geidelguerra/snaketerm",
+      "startDate": "2024-09",
+      "endDate": "Present",
+      "image_url": "/static/images/snaketerm.png",
+      "description": "Snake game in the terminal with Go"
+    },
+    {
       "name": "Tic Tac Toe (PHP)",
       "url": "https://github.com/geidelguerra/tictactoe-php",
       "startDate": "2024-08",
