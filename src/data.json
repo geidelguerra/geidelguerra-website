@@ -46,6 +46,14 @@
   ],
   "experience": [
     {
+      "name": "Freelancer",
+      "company": "Freelancer",
+      "startDate": "2024-09",
+      "endDate": "Present",
+      "description": "",
+      "tech": ["PHP", "JavaScript", "Python", "Go", "MySQL", "Vue", "Laravel"]
+    },
+    {
       "name": "Senior Software Developer",
       "company": "Cerberu Telegestión Turística, S.L",
       "companyUrl": "https://cerberu.com",
