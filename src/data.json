@@ -22,7 +22,7 @@
   ],
   "toolkit": [
     { "category": "OS", "tools": ["Debian 12"]},
-    { "category": "Editor", "tools": ["VSCode"]},
+    { "category": "Editor", "tools": ["VSCode", "NeoVim"]},
     { "category": "Terminal", "tools": ["Tmux"]},
     { "category": "Shell", "tools": ["ZSH"] }
   ],
