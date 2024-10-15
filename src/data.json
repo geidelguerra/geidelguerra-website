@@ -46,6 +46,15 @@
   ],
   "experience": [
     {
+      "name": "Founder",
+      "company": "Kriu",
+      "companyUrl": "https://kriu.co",
+      "startDate": "2024-10",
+      "endDate": "Present",
+      "description": "Founder and Developer",
+      "tech": ["Laravel", "HTMX"]
+    },
+    {
       "name": "Freelancer",
       "company": "Freelancer",
       "startDate": "2024-09",
