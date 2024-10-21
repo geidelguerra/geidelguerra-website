@@ -51,7 +51,7 @@
       "companyUrl": "https://kriu.co",
       "startDate": "2024-10",
       "endDate": "Present",
-      "description": "Founder and Developer",
+      "description": "A lot of raw sql queries, server setup and HTMX for the win.",
       "tech": ["Laravel", "HTMX"]
     },
     {
@@ -118,6 +118,14 @@
     }
   ],
   "projects": [
+    {
+      "name": "Kriu",
+      "url": "https://kriu.co",
+      "startDate": "2024-09",
+      "endDate": "Present",
+      "image_url": "/static/images/kriu-saas.png",
+      "description": "Workforce management for marketing agencies Saas"
+    },
     {
       "name": "Matrix rain in the Terminal (Go)",
       "url": "https://github.com/geidelguerra/matrix-term",
