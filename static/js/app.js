@@ -1,251 +1,166 @@
 (function () {
     const canvas = document.getElementById('canvas');
-    if (!canvas) return
-    // const easter = document.getElementById('easter');
+    /** @type {CanvasRenderingContext2D} */
+    const ctx = canvas.getContext('2d');
 
-    const numbOfBlocks = 100;
-    const minBlockSize = 5;
-    const maxBlockSize = 10;
-    const tailSegmentMaxWidth = maxBlockSize * 0.2;
-    const tailSegmentMinWidth = 2;
+    let timestamp = null;
+    let frameTime = 0;
+    let frame = 0;
+    let fps = 0;
+    let score = 0;
 
-    let minSpeed = 5;
-    let maxSpeed = 10;
-    let maxForce = maxSpeed * 0.5;
-    let tailMaxLength = 10;
-    let tailSegmentLength = 30;
-    let composite = 'exclude';
-    let isRunning = false;
-    let simulationDuration = 5000;
-
-    let time = 0;
-    let startPosition = { x: 0, y: 0 };
-    let ctx = canvas.getContext('2d', { antialias: true });
-    let blocks = Array(numbOfBlocks).fill();
-
-    function init() {
-        for (let i = 0; i < blocks.length; i++) {
-            let width = minBlockSize + Math.random() * maxBlockSize;
-            let height = width;
-            let position = { x: startPosition.x - width / 2, y: startPosition.y - height / 2 };
-            let velocity = {
-                x: minSpeed * Math.random() * maxSpeed,
-                y: minSpeed + Math.random() * maxSpeed
-            };
-            let acceleration = { x: 0, y: 0 };
-            let r = Math.round(200 + Math.random() * 255);
-            let g = Math.round(200 + Math.random() * 255);
-            let b = Math.round(200 + Math.random() * 255);
-            let a = 1;
-            let color = { r, g, b, a };
-            let tail = [];
-            let perceptionRadius = width;
-
-            blocks[i] = { position, width, height, perceptionRadius, velocity, acceleration, color, tail };
-        }
+    let mousePos = { x: 0, y: 0 };
+    let mouseMoved = false;
+    let input = {
+        direction: 0,
+        shoot: false,
     }
 
-    function update() {
+    let leftEye = { centerX: 0, centerY: 0, x: 0, y: 0, size: 4 };
+    let rightEye = { centerX: 0, centerY: 0, x: 0, y: 0, size: 4 };
+
+    let ships = [];
+
+    let shipImage = new Image(50, 50);
+    shipImage.src = '/static/images/ship.png';
+
+    let benderImage = new Image(93, 100);
+    benderImage.onload = init;
+    benderImage.src = '/static/images/bender_eye_tracking.png';
+
+    let player  = {
+        x: 0,
+        y: 0,
+        width: 93,
+        height: 100,
+    };
+
+    let laser = {
+        x: 0,
+        y: 0,
+        width: 4,
+        length: 20,
+        speed: 15,
+        active: false,
+    };
+
+    function update(time) {
+        timestamp = time;
+
+        ctx.fillStyle = 'rgb(0, 0, 0)';
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        if (!isRunning) {
-            return;
+        if (input.direction !== 0) {
+            player.x += input.direction * 93 * 0.2;
         }
 
-        let elapsed = Date.now() - time;
+        ctx.drawImage(benderImage, player.x, player.y, player.width, player.height);
 
-        if (elapsed >= simulationDuration) {
-            stopSimulation();
-            elapsed = simulationDuration;
+        leftEye.centerX = player.x + 35;
+        leftEye.centerY = player.y + 48;
+
+        rightEye.centerX = player.x + 55;
+        rightEye.centerY = player.y + 48;
+
+        leftEye.x = leftEye.centerX;
+        leftEye.y = leftEye.centerY;
+        rightEye.x = rightEye.centerX;
+        rightEye.y = rightEye.centerY;
+
+        if (input.shoot) {
+            if (laser.active) {
+                // do nothing
+            } else {
+                laser.x = player.x + player.width * 0.5 - laser.width * 0.5;
+                laser.y = player.y;
+                laser.active = true;
+            }
         }
 
-        let simulationDecay = (1.0 - (elapsed / simulationDuration));
+        if (laser.active) {
+            laser.y -= laser.speed;
 
-        for (let block of blocks) {
-            let separateForce = { x: 0, y: 0 };
-            // let alignForce = { x: 0, y: 0 };
-            // let cohesionForce = { x: 0, y: 0 };
-            let count = 0;
-
-            for (let other of blocks) {
-                if (other === block) {
-                    continue;
-                }
-
-                let distance = vdistance(block.position, other.position);
-
-                if (distance > 0 && distance < block.perceptionRadius) {
-                    let delta = vsub(block.position, other.position);
-                    vnormalize(delta);
-                    delta.x /= distance;
-                    delta.y /= distance;
-                    separateForce.x += delta.x;
-                    separateForce.y += delta.y;
-                    count++;
-                }
+            if (laser.y + laser.length <= 0) {
+                laser.active = false;
+            } else {
+                ctx.fillStyle = 'rgb(255, 0, 0)';
+                ctx.fillRect(laser.x, laser.y - laser.length, laser.width, laser.length);
             }
+        }
 
-            if (count > 0) {
-                separateForce.x /= count;
-                separateForce.y /= count;
-            }
+        ctx.fillStyle = 'rgba(255, 0, 0)';
+        ctx.fillRect(leftEye.x, leftEye.y, leftEye.size, leftEye.size);
+        ctx.fillRect(rightEye.x, rightEye.y, rightEye.size, rightEye.size);
 
-            if (vmagnitude(separateForce) > 0) {
-                vnormalize(separateForce);
-                separateForce.x *= maxForce;
-                separateForce.y *= maxForce;
-                separateForce = vsub(separateForce, block.velocity);
-            }
+        ctx.font = '700 48px Fira Code';
+        ctx.fillStyle = 'rgb(255, 255, 255)';
+        let scoreMeasure = ctx.measureText(score);
+        let scoreX = canvas.width * 0.5 - scoreMeasure.width * 0.5;
+        let scoreY = 20 + scoreMeasure.hangingBaseline;
 
-            block.acceleration.x += separateForce.x;
-            block.acceleration.y += separateForce.y;
+        ctx.fillText(score, scoreX, scoreY, canvas.width);
 
-            if (block.position.y + block.height / 2 >= canvas.height || block.position.y - block.height / 2 < 0) {
-                block.velocity.y *= -1;
-            }
+        ctx.font = '700 18px Fira Code';
+        ctx.fillStyle = 'rgb(255, 255, 255)';
+        let fpsMeasure = ctx.measureText(fps);
+        let fpsX = 20;
+        let fpsY = 20 + fpsMeasure.hangingBaseline;
 
-            if (block.position.x + block.width / 2 >= canvas.width || block.position.x - block.width / 2 < 0) {
-                block.velocity.x *= -1;
-            }
+        ctx.fillText(fps, fpsX, fpsY, canvas.width);
 
-            block.velocity.x += block.acceleration.x;
-            block.velocity.y += block.acceleration.y;
+        input.direction = 0;
+        input.shoot = false;
 
-            let position = { x: block.position.x, y: block.position.y };
-
-            block.position.x += block.velocity.x;
-            block.position.y += block.velocity.y;
-            block.color.a = simulationDecay;
-
-            if (block.tail.length === 0 || Math.abs(vdistance(position, block.tail[0])) >= tailSegmentLength) {
-                block.tail.unshift(position);
-            }
-
-            if (block.tail.length > tailMaxLength) {
-                block.tail.pop();
-            }
-
-            block.acceleration.x = 0;
-            block.acceleration.y = 0;
-            block.color.a = 1 * simulationDecay;
-
-            ctx.globalCompositeOperation = composite;
-
-            ctx.beginPath();
-            ctx.moveTo(block.position.x + block.width / 2, block.position.y + block.height / 2);
-
-            for (let i = 0; i < block.tail.length; i++) {
-                let point = block.tail[i];
-                let alpha = (block.color.a / (i + 1));
-                ctx.lineWidth = tailSegmentMinWidth + (tailSegmentMaxWidth / (i + 1)) * 2;
-                ctx.strokeStyle = `rgba(${block.color.r}, ${block.color.g}, ${block.color.b}, ${alpha})`;
-                ctx.lineTo(point.x + block.width / 2, point.y + block.height / 2);
-                ctx.stroke();
-            }
-
-            ctx.fillStyle = `rgba(${block.color.r}, ${block.color.g}, ${block.color.b}, ${block.color.a})`;
-            ctx.beginPath();
-            ctx.roundRect(block.position.x, block.position.y, block.width, block.height, block.width);
-            ctx.fill();
+        if (time - frameTime > 1000) {
+            fps = frame;
+            frame = 0;
+            frameTime = time;
+        } else {
+            frame++;
         }
 
         requestAnimationFrame(update);
-    }
-
-    /**
-     * @param {MouseEvent} event
-     * @param {HTMLCanvasElement}
-     */
-    function onMouseUp(event) {
-        if (event.target !== canvas) {
-            return;
-        }
-
-        startPosition.x = event.clientX;
-        startPosition.y = event.clientY;
-
-        init();
-        startSimulation();
     }
 
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        startPosition.x = (canvas.width / 2);
-        startPosition.y = (canvas.height / 2);
     }
 
-    function startSimulation() {
-        if (isRunning) {
-            return;
+    function keyDown(e) {
+        switch (e.code) {
+            case 'KeyA':
+            case 'ArrowLeft':
+                input.direction = -1;
+                break;
+            case 'KeyD':
+            case 'ArrowRight':
+                input.direction = 1;
+                break;
         }
 
-        isRunning = true;
-        time = Date.now();
-        requestAnimationFrame(update);
-    }
-
-    function stopSimulation() {
-        if (!isRunning) {
-            return;
+        if (e.code === 'Space') {
+            input.shoot = true;
         }
-
-        isRunning = false;
     }
 
-    window.addEventListener('resize', resize);
-    window.addEventListener('mouseup', onMouseUp);
-
-    resize();
-
-    /**
-     *
-     * @param {{x: number, y: number}} v1
-     * @param {{x: number, y: number}} v2
-     * @returns {number}
-     */
-    function vdistance(v1, v2) {
-        let dx = v1.x - v2.x;
-        let dy = v1.y - v2.y;
-
-        return Math.sqrt(dx * dx + dy * dy);
+    function keyUp(e) {
+        console.log(e);
     }
 
-    /**
-     *
-     * @param {{x: number, y: number}} v
-     * @returns {number}
-     */
-    function vmagnitude(v) {
-        return Math.sqrt(v.x * v.x + v.y * v.y);
+    function reset() {
+        player.x = canvas.width / 2 - benderImage.width / 2;
+        player.y = canvas.height - benderImage.height;
     }
 
-    /**
-     * @param {{x: number, y: number}} v1
-     * @param {{x: number, y: number}} v2
-     * @returns {{x: number, y: number}}
-     */
-    function vsub(v1, v2) {
-        return { x: v1.x - v2.x, y: v1.y - v2.y };
+    function init() {
+        resize();
+        reset();
+        update();
+
+        window.addEventListener('resize', resize);
+        window.addEventListener('keydown', keyDown);
+        window.addEventListener('keyup', keyUp);
     }
-
-    /**
-     * @param {{x: number, y: number}} v
-     */
-    function vnormalize(v) {
-        let mag = vmagnitude(v);
-        v.x /= mag;
-        v.y /= mag;
-    }
-
-    // function onScroll() {
-    //     if (window.scrollY >= document.body.scrollHeight - document.documentElement.clientHeight) {
-    //         easter.classList.add('show');
-    //     } else {
-    //         easter.classList.remove('show');
-    //     }
-    // }
-
-    // onScroll();
-    // window.addEventListener('scroll', onScroll);
-})()
+})();

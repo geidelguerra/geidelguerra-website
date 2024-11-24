@@ -1,93 +1,24 @@
-{% extends 'layout.html' %}
-{% block body %}
-<main>
-  <section id="about" class="section">
-    <h2>Who am I?</h2>
-    {% markdown %}{{ data.about }}{% endmarkdown %}
-  </section>
-  <section id="skills" class="section">
-    <h2>Skills</h2>
-    <ul>
-      {% for skill in data.skills %}
-      <li>
-        <a href="{{ skill.url }}" target="_blank" rel="noopener noreferrer">{{ skill.label }}</a>
-        <span class="sep"></span>
-        <span>{{ skill.years }}</span>
-      </li>
-      {% endfor %}
-    </ul>
-  </section>
-  <section id="languages" class="section">
-    <h2>Languages</h2>
-    <ul>
-      {% for language in data.languages %}
-      <li>
-        <span>{{ language.label }}</span>
-        <span class="sep"></span>
-        {% if language.url %}
-        <a href="{{ language.url }}" target="_blank" rel="noopener noreferrer">{{ language.score }}</a>
-        {% else %}
-        <span>{{ language.score }}</span>
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-  </section>
-  <section id="toolkit" class="section">
-    <h2>Toolkit</h2>
-    <ul>
-      {% for tool in data.toolkit %}
-      <li>
-        <span>{{ tool.category }}</span>
-        <span class="sep"></span>
-        <span>{{ tool.tools|join(', ') }}</span>
-      </li>
-      {% endfor %}
-    </ul>
-  </section>
-  <section id="studies" class="section">
-    <h2>Education</h2>
-    <ul>
-      {% for item in data.studies %}
-      <li>
-        <h3>{{ item.name }}</h3>
-        <div>{{ item.school }}</div>
-        <div>{{ item.startDate }} - {{ item.endDate }} ({{ item.years }})</div>
-      </li>
-      {% endfor %}
-    </ul>
-  </section>
-  <section id="experience" class="section">
-    <h2>Experience ({{ data.experienceYears }})</h2>
-    <ul>
-      {% for job in data.experience %}
-      <li>
-        <h3>{{ job.name }}</h3>
-        <div><a href="{{ job.companyUrl }}" target="_blank" rel="noopener noreferrer">{{ job.company }}</a></div>
-        <div>{{ job.startDate }} - {{ job.endDate }} ({{ job.years }})</div>
-        <div>{{ job.description }}</div>
-        <div>Tech: {{ job.tech|join(', ') }}</div>
-      </li>
-      {% endfor %}
-    </ul>
-  </section>
-  <section id="projects" class="section">
-    <h2>Projects</h2>
-    <ul>
-      {% for project in data.projects %}
-      <li>
-        <div>
-          {% if 'image_url' in project %}
-          <img src="{{ project.image_url }}" alt="{{ project.name }}">
-          {% endif %}
-        </div>
-        <div>
-          <h3><a href="{{ project.url }}" target="_blank" rel="noopener noreferrer">{{ project.name }}</a></h3>
-          <div>{{ project.description }}</div>
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-  </section>
-</main>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ header_data['title'] }}</title>
+  {% for item in header_data['meta'] %}
+  <meta {{ item|xmlattr }}>
+  {% endfor %}
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link rel="stylesheet" href="https://fonts.bunny.net/css?family=fira-code:400|fira-sans:100,300,400,700">
+  <link rel="stylesheet" href="/static/css/style.css">
+  {% for item in header_data['icons'] %}
+  <link {{ item|xmlattr }}>
+  {% endfor %}
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <script src="/static/js/app.js"></script>
+</body>
+
+</html>
