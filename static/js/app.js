@@ -1,7 +1,8 @@
 (function () {
+    /** @type {HTMLCanvasElement} */
     const canvas = document.getElementById('canvas');
     /** @type {CanvasRenderingContext2D} */
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false, colorSpace: 'srgb' });
 
     let frameTime = 0;
     let frame = 0;
@@ -89,8 +90,8 @@
     loadAssets().then(init).catch((errors) => console.log('Failed to load assets', errors));
 
     function update(time) {
-        ctx.fillStyle = 'rgb(0, 0, 0)';
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgb(0, 0, 0)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         if (input.changed) {
@@ -102,6 +103,8 @@
                 player.x = window.innerWidth - player.width;
             }
         }
+
+        player.y = canvas.height - player.height;
 
         ctx.drawImage(assets.bender.texture, player.x, player.y, player.width, player.height);
 
@@ -133,6 +136,7 @@
                 if (ship.y + ship.height >= canvas.height) {
                     ship.active = false;
                     activeShipsCount--;
+                    score = Math.max(0, score - 3);
                 }
 
                 if (ship.active) {
@@ -159,7 +163,8 @@
                             laser.active = false;
                             ship.explodingStartTime = time;
                             let explosionIndex = Math.round(1 + Math.random() * 3);
-                            assets[`explosion${explosionIndex}`].sound.volume(0.5);
+                            let explosionVolume = (1 - Math.abs(ship.y - player.y) / player.y) * 0.3;
+                            assets[`explosion${explosionIndex}`].sound.volume(explosionVolume);
                             assets[`explosion${explosionIndex}`].sound.play();
                             ship.exploding = true;
                             score += 10;
@@ -258,6 +263,7 @@
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        console.log('resized');
     }
 
     function mouseMove(e) {
@@ -338,6 +344,5 @@
         window.addEventListener('mousemove', mouseMove);
         window.addEventListener('mousedown', mouseDown);
         window.addEventListener('mouseup', mouseUp);
-        window.addEventListener('', mouseUp);
     }
 })();
