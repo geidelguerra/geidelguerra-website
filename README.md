@@ -11,4 +11,5 @@ Check back later if you don't see any of that yet. All sync adapters will be in 
 You are free to use this code as a template for your own website.
 
 References
-- https://processing.org/examples/flocking.html
+- (Sound) https://github.com/goldfire/howler.js
+- (Render) https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas
