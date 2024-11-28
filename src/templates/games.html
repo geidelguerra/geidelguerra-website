@@ -1,0 +1,11 @@
+{% extends 'layouts/main.html' %} {% block main %}
+<div class="container">
+    <ul class="games-list">
+        {% for game in games %}
+        <li>
+            <a hx-boost="true" href="/games/{{ game.slug }}">{{ game.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

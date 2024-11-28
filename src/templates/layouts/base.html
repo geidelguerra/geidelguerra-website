@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{{ header_data['title'] }}</title>
+        {% for item in header_data['meta'] %}
+        <meta {{ item|xmlattr }} />
+        {% endfor %}
+        <link rel="preconnect" href="https://fonts.bunny.net" />
+        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=fira-code:400|fira-sans:100,300,400,700"/>
+        <link rel="stylesheet" href="/static/css/style.css" />
+        {% for item in header_data['icons'] %}
+        <link {{ item|xmlattr }} />
+        {% endfor %}
+        <script src="/static/js/htmx.min.js" defer></script>
+        <script src="/static/js/app.js" defer></script>
+    </head>
+
+    <body>
+        {% block body %}{% endblock %}
+    </body>
+</html>

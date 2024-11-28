@@ -8,6 +8,14 @@ import random
 
 static_folder = pathlib.Path(__name__).parent.parent.joinpath('static').absolute()
 
+games = [
+    {
+        'name': 'Complexity Invaders',
+        'slug': 'complexity-invaders',
+        'script': '/static/js/games/complexity-invaders.js'
+    },
+]
+
 app = Flask('website', root_path='src', static_folder=static_folder)
 app.jinja_env.add_extension(MarkdownExtension)
 
@@ -100,7 +108,24 @@ def inject_shared_data():
 
 @app.get('/')
 def home_page():
-  data = get_data()
-  return render_template('home.html', data=data)
+    data = get_data()
+    return render_template('home.html', data=data)
+
+@app.get('/games')
+def games_page():
+    return render_template('games.html', games=games)
+
+@app.get('/games/<slug>')
+def game_page(slug: str):
+    game = None
+    for g in games:
+        if g['slug'] == slug:
+            game = g
+            break
+
+    if game is None:
+        return "Game not found", 404
+
+    return render_template('game.html', game=game)
 
 app = WsgiToAsgi(app)

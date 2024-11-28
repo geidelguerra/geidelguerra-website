@@ -22,7 +22,7 @@
   ],
   "toolkit": [
     { "category": "OS", "tools": ["Debian 12"]},
-    { "category": "Editor", "tools": ["VSCode", "NeoVim"]},
+    { "category": "Editor", "tools": ["Zed", "VSCode", "NeoVim"]},
     { "category": "Terminal", "tools": ["Tmux"]},
     { "category": "Shell", "tools": ["ZSH"] }
   ],
@@ -51,8 +51,8 @@
       "companyUrl": "https://kriu.co",
       "startDate": "2024-10",
       "endDate": "Present",
-      "description": "A lot of raw sql queries, server setup and HTMX for the win.",
-      "tech": ["Laravel", "HTMX"]
+      "description": "Lead Developer and CTO. In charge of all technical decisions, development and maintenance",
+      "tech": ["Laravel", "HTMX", "SQLite"]
     },
     {
       "name": "Freelancer",
