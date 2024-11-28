@@ -46,7 +46,7 @@ class PDFGenerator:
     content.append(Paragraph('Links: ' + ', '.join(networks), styles['normal']))
     content.append(Paragraph('<br/><br/>', styles['normal']))
 
-    content.append(Paragraph('Who Am I?', styles['h2']))
+    content.append(Paragraph('About me', styles['h2']))
     content.append(Paragraph(data['about'].replace('\n', '<br/>'), styles['normal']))
     content.append(Paragraph('<br/><br/>', styles['normal']))
 
