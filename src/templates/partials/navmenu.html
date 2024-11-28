@@ -1,4 +1,5 @@
 <ul class="nav-menu">
-    <li><a hx-boost="true" href="/">Home</a></li>
-    <li><a hx-boost="true" href="/games">Games</a></li>
+    {% for item in nav_menu %}
+    <li><a hx-boost="true" href="{{ item.url }}">{{ item.text }}</a></li>
+    {% endfor %}
 </ul>

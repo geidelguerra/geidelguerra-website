@@ -14,7 +14,8 @@ body {
     position: relative;
     display: flex;
     flex-flow: column;
-    min-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 h1,
@@ -84,6 +85,7 @@ footer {
 
 main {
     flex: 1 1 auto;
+    overflow-y: auto;
 
     .download-cv {
         display: block;
