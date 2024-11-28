@@ -2,11 +2,31 @@ from flask import Flask, render_template, url_for
 from asgiref.wsgi import WsgiToAsgi
 from web.extensions.markdown import MarkdownExtension
 from utils import get_data
-from pdf import PDFGenerator
 import pathlib
-import random
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 static_folder = pathlib.Path(__name__).parent.parent.joinpath('static').absolute()
+
+if os.getenv('APP_ENV') == 'local':
+    nav_menu = [
+        {'text': 'Home', 'url': '/'},
+        {'text': 'Games', 'url': '/games'},
+    ]
+
+    games_list = [
+        {
+            'name': 'Complexity Invaders',
+            'slug': 'complexity-invaders',
+            'script': '/static/js/games/complexity-invaders.js'
+        },
+    ]
+else:
+    nav_menu = [
+        {'text': 'Home', 'url': '/'},
+    ]
+    games_list = []
 
 app = Flask('website', root_path='src', static_folder=static_folder)
 app.jinja_env.add_extension(MarkdownExtension)
@@ -14,33 +34,6 @@ app.jinja_env.add_extension(MarkdownExtension)
 @app.context_processor
 def inject_shared_data():
   data = get_data()
-  easter_entries = [
-    {
-      'image_url': url_for('static', filename='easter/fry_02.png'),
-      'text': 'There is something odd with this bug.',
-      'offset_top': 70,
-    },
-    {
-      'image_url': url_for('static', filename='easter/zoidberg_02.png'),
-      'text': 'Do you wanna see my shell script?',
-      'offset_top': 70,
-    },
-    {
-      'image_url': url_for('static', filename='easter/bender_01.png'),
-      'text': 'Do you need a bot? I have one right here!',
-      'offset_top': 70,
-    },
-    {
-      'image_url': url_for('static', filename='easter/zap_01.png'),
-      'text': 'I marble at my own magnificent coding skills.',
-      'offset_top': 85,
-    },
-    {
-      'image_url': url_for('static', filename='easter/professor_01.png'),
-      'text': 'Good news! I fixed the bug.',
-      'offset_top': 70,
-    },
-  ]
 
   return {
     'header_data': {
@@ -95,12 +88,30 @@ def inject_shared_data():
     'footer_data': {
       'networks': data['networks']
     },
-    'easter_entry': random.choice(easter_entries)
+    'nav_menu': nav_menu,
   }
 
 @app.get('/')
 def home_page():
-  data = get_data()
-  return render_template('home.html', data=data)
+    data = get_data()
+    return render_template('home.html', data=data)
+
+if os.getenv('APP_ENV') == 'local':
+    @app.get('/games')
+    def games_page():
+        return render_template('games.html', games=games_list)
+
+    @app.get('/games/<slug>')
+    def game_page(slug: str):
+        game = None
+        for g in games_list:
+            if g['slug'] == slug:
+                game = g
+                break
+
+        if game is None:
+            return "Game not found", 404
+
+        return render_template('game.html', game=game)
 
 app = WsgiToAsgi(app)

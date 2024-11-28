@@ -1,0 +1,5 @@
+<ul class="nav-menu">
+    {% for item in nav_menu %}
+    <li><a hx-boost="true" href="{{ item.url }}">{{ item.text }}</a></li>
+    {% endfor %}
+</ul>
