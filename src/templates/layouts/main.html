@@ -1,8 +1,10 @@
 {% extends 'layouts/base.html' %} {% block body %}
-<header class="container">
-    {% include 'partials/navmenu.html' %}
+<header>
+    <div class="container">
+        {% include 'partials/navmenu.html' %}
+    </div>
 </header>
-<main>
+<main style="padding-top: 106px;">
     {% block main %}{% endblock %}
 </main>
 <footer class="container">
