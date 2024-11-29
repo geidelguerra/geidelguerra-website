@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, json, render_template, url_for
 from asgiref.wsgi import WsgiToAsgi
 from web.extensions.markdown import MarkdownExtension
 from utils import get_data
@@ -9,27 +9,34 @@ import os
 
 static_folder = pathlib.Path(__name__).parent.parent.joinpath('static').absolute()
 
-if os.getenv('APP_ENV') == 'local':
-    nav_menu = [
-        {'text': 'Home', 'url': '/'},
-        {'text': 'Games', 'url': '/games'},
-    ]
+def asset_func(path: str):
+    manifest_path = static_folder.joinpath('manifest.json')
+    if manifest_path.exists():
+        manifest = None
+        with open(manifest_path, 'r') as f:
+            manifest = json.loads(f.read())
+        for item in manifest:
+            if item['path'] == path:
+                return '/static/' + item['hash']
 
-    games_list = [
-        {
-            'name': 'Complexity Invaders',
-            'slug': 'complexity-invaders',
-            'script': '/static/js/games/complexity-invaders.js'
-        },
-    ]
-else:
-    nav_menu = [
-        {'text': 'Home', 'url': '/'},
-    ]
-    games_list = []
+    return '/static/' + path
+
+nav_menu = [
+    {'text': 'Home', 'url': '/'},
+    {'text': 'Games', 'url': '/games'},
+]
+
+games_list = [
+    {
+        'name': 'Complexity Invaders',
+        'slug': 'complexity-invaders',
+        'script': asset_func('js/games/complexity-invaders.js')
+    },
+]
 
 app = Flask('website', root_path='src', static_folder=static_folder)
 app.jinja_env.add_extension(MarkdownExtension)
+app.jinja_env.globals.update(asset=asset_func)
 
 @app.context_processor
 def inject_shared_data():
@@ -96,22 +103,21 @@ def home_page():
     data = get_data()
     return render_template('home.html', data=data)
 
-if os.getenv('APP_ENV') == 'local':
-    @app.get('/games')
-    def games_page():
-        return render_template('games.html', games=games_list)
+@app.get('/games')
+def games_page():
+    return render_template('games.html', games=games_list)
 
-    @app.get('/games/<slug>')
-    def game_page(slug: str):
-        game = None
-        for g in games_list:
-            if g['slug'] == slug:
-                game = g
-                break
+@app.get('/games/<slug>')
+def game_page(slug: str):
+    game = None
+    for g in games_list:
+        if g['slug'] == slug:
+            game = g
+            break
 
-        if game is None:
-            return "Game not found", 404
+    if game is None:
+        return "Game not found", 404
 
-        return render_template('game.html', game=game)
+    return render_template('game.html', game=game)
 
 app = WsgiToAsgi(app)

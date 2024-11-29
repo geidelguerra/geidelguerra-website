@@ -12,5 +12,6 @@ cd $WORK_TREE_PATH
 rm -rf .venv
 /root/.local/bin/poetry install --without dev
 .venv/bin/python src/cli.py gen-pdf
+.venv/bin/python src/cli.py generate-manifest
 supervisorctl restart geidelguerra-website
 EOF
