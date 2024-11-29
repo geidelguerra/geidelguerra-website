@@ -25,6 +25,7 @@ def generate_manifest():
     manifest = [
         { 'path': 'css/style.css', 'hash': ''},
         { 'path': 'js/app.js', 'hash': ''},
+        { 'path': 'js/htmx.min.js', 'hash': ''},
         { 'path': 'js/howler.min.js', 'hash': ''},
         { 'path': 'js/games/complexity-invaders.js', 'hash': ''},
     ]
