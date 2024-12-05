@@ -3,9 +3,6 @@ from asgiref.wsgi import WsgiToAsgi
 from web.extensions.markdown import MarkdownExtension
 from utils import get_data
 import pathlib
-from dotenv import load_dotenv
-load_dotenv()
-import os
 
 static_folder = pathlib.Path(__name__).parent.parent.joinpath('static').absolute()
 
