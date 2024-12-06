@@ -183,7 +183,7 @@
     let enemyLasers = Array(1).fill().map(() => new Laser());
     let enemyFormation = new EnemyFormation();
     let gameStarted = false;
-    let gameOver = true;
+    let gameOver = false;
 
     loadAssets().then(init).catch((errors) => console.log('Failed to load assets', errors));
 
