@@ -1,4 +1,62 @@
 (function () {
+    const STATE_INACTIVE = 'inactive';
+    const STATE_ACTIVE = 'active';
+    const STATE_EXPLODING = 'exploding';
+    const DIR_NONE = 'non';
+    const DIR_LEFT = 'left';
+    const DIR_RIGHT = 'right';
+    const DIR_DOWN = 'down';
+    const COLS = 11;
+    const ROWS = 5;
+    const MAX_LASERS = 10;
+
+    class Vector2 {
+        constructor(x = 0, y = 0) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    class Enemy {
+        constructor() {
+            this.position = new Vector2();
+            this.width = 50;
+            this.height = 50;
+            this.textureName = null;
+            this.health = 1;
+            this.canShoot = false;
+            this.state = STATE_INACTIVE;
+            this.stateStartTime = null;
+            this.lastMoveTime = 0;
+            this.moveDuration = 0.025;
+            this.fliped = false;
+            this.direction = DIR_NONE;
+        }
+    }
+
+    class EnemyFormation {
+        constructor() {
+            this.direction = DIR_NONE;
+            this.previousDirection = DIR_NONE;
+            this.horizontalSpeed = 5;
+            this.verticalSpeed = 2;
+            this.fireRate = 0.5;
+            this.lastFireTime = 0;
+            this.lastMoveTime = 0;
+            this.moveDuration = 0.5;
+        }
+    }
+
+    class Laser {
+        constructor() {
+            this.position = new Vector2(0, 0);
+            this.width = 4;
+            this.height = 20;
+            this.speed = 20;
+            this.state = STATE_INACTIVE;
+        }
+    }
+
     /** @type {HTMLCanvasElement} */
     const canvas = document.getElementById('game');
     /** @type {CanvasRenderingContext2D} */
@@ -15,34 +73,26 @@
         firePressed: false,
         paused: false,
         showHelpers: false,
-    }
-    let enemyTemplates = [
-        {
-            textureName: 'react',
-            health: 50,
-            scorePoints: 30,
-        },
-        {
-            textureName: 'vue',
-            health: 40,
-            scorePoints: 20,
-        },
-        {
-            textureName: 'svelte',
-            health: 30,
-            scorePoints: 15,
-        },
-        {
-            textureName: 'angular',
-            health: 35,
-            scorePoints: 25,
-        },
-        {
-            textureName: 'solidjs',
-            health: 20,
+    };
+
+    let enemyTemplates = {
+        scout: {
             scorePoints: 10,
-        }
-    ]
+            textureName: 'solidjs'
+        },
+        grunt: {
+            scorePoints: 20,
+            textureName: 'sveltejs'
+        },
+        officer: {
+            scorePoints: 30,
+            textureName: 'vuejs'
+        },
+        boss: {
+            scorePoints: 30,
+            textureName: 'reactjs'
+        },
+    };
 
     let assets = {
         bender: {
@@ -93,15 +143,15 @@
             type: 'audio',
             url: '/static/game/assets/audio/forceField_001.ogg',
         },
-        react: {
+        reactjs: {
             type: 'texture',
             url: '/static/game/assets/textures/react.png',
         },
-        vue: {
+        vuejs: {
             type: 'texture',
             url: '/static/game/assets/textures/vue.png',
         },
-        svelte: {
+        sveltejs: {
             type: 'texture',
             url: '/static/game/assets/textures/svelte.png',
         },
@@ -128,37 +178,11 @@
         lastFireTime: 0,
     };
 
-    let lasers = Array(10).fill().map(() => ({
-        x: 0,
-        y: 0,
-        speed: 15,
-        width: 5,
-        length: 20,
-        active: false,
-    }));
-
-    let activeEnemyCount = 0;
-    let enemySpawnRate = 1;
-    let lastEnemySpawnTime = 0;
-    let enemies = Array(5).fill().map(() => ({
-        x: 0,
-        y: 0,
-        width: 50,
-        height: 50,
-        speed: 3,
-        health: 1,
-        scorePoints: 5,
-        exploding: false,
-        explodingStartTime: 0,
-        explodingDuration: 1,
-        textureName: null,
-        stunned: false,
-        lastHitTime: 0,
-        stunDuration: 1,
-        angle: 0,
-        active: false,
-    }));
-    let closestEnemy = null;
+    let enemies = Array(ROWS * COLS).fill().map(() => new Enemy());
+    let playerLasers = Array(1).fill().map(() => new Laser());
+    let enemyLasers = Array(1).fill().map(() => new Laser());
+    let enemyFormation = new EnemyFormation();
+    let gameStarted = false;
     let gameOver = true;
 
     loadAssets().then(init).catch((errors) => console.log('Failed to load assets', errors));
@@ -168,7 +192,19 @@
         ctx.fillStyle = 'rgb(24, 24, 27)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        if (gameOver) {
+        if (!gameStarted) {
+            if (input.firePressed) {
+                gameStarted = true;
+                restart();
+            } else {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.font = '700 48px Fira Sans';
+                ctx.fillStyle = 'rgb(255, 255, 128)';
+                ctx.fillText('Click to start', canvas.width * 0.5 - ctx.measureText('Click to start').width * 0.5, canvas.height * 0.5 - ctx.measureText('Click to start').hangingBaseline * 0.5)
+            }
+        } else if (gameOver) {
             if (input.firePressed) {
                 gameOver = false;
                 restart();
@@ -176,158 +212,264 @@
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                ctx.font = '700 48px Fira Sans';
+                let gameOverText = 'Complexity beated you! Good luck next time.';
+                ctx.font = '700 38px Fira Sans';
                 ctx.fillStyle = 'rgb(255, 0, 0)';
-                ctx.fillText('Click to start', canvas.width * 0.5 - ctx.measureText('Click to start').width * 0.5, canvas.height * 0.5 - ctx.measureText('Click to start').hangingBaseline * 0.5)
+                ctx.fillText(gameOverText, canvas.width * 0.5 - ctx.measureText(gameOverText).width * 0.5, canvas.height * 0.5 - ctx.measureText(gameOverText).hangingBaseline * 0.5)
+
+                let restartText = 'Click to restart'
+                ctx.font = '700 48px Fira Sans';
+                ctx.fillStyle = 'rgb(255, 255, 128)';
+                ctx.fillText(restartText, canvas.width * 0.5 - ctx.measureText(restartText).width * 0.5, canvas.height * 0.5 + ctx.measureText(gameOverText).hangingBaseline)
             }
         } else {
-            if (input.changed && !input.paused) {
-                player.x = input.mousePosition.x - player.width * 0.5;
+            if (!input.paused) {
+                if (input.changed) {
+                    player.x = input.mousePosition.x - player.width * 0.5;
 
-                if (player.x < 0) {
-                    player.x = 0;
-                } else if (player.x + player.width >= window.innerWidth) {
-                    player.x = window.innerWidth - player.width;
+                    if (player.x < 0) {
+                        player.x = 0;
+                    } else if (player.x + player.width >= window.innerWidth) {
+                        player.x = window.innerWidth - player.width;
+                    }
                 }
-            }
 
-            if (!input.paused) {
                 player.y = canvas.height - player.height;
-            }
 
-            ctx.drawImage(assets.bender.texture, player.x, player.y, player.width, player.height);
-
-            if (!input.paused) {
                 leftEye.centerX = player.x + 35;
                 leftEye.centerY = player.y + 48;
 
                 rightEye.centerX = player.x + 55;
                 rightEye.centerY = player.y + 48;
-            }
 
-            if (input.firePressed && !input.paused) {
-                if (time - player.lastFireTime >= 1000 / player.fireRate) {
-                    fire();
-                    player.lastFireTime = time;
-                }
-            }
-
-            for (let enemy of enemies) {
-                if (enemy.active) {
-                    if (!input.paused) {
-                        if (enemy.exploding) {
-                            if (time - enemy.explodingStartTime >= enemy.explodingDuration * 1000) {
-                                enemy.exploding = false;
-                                enemy.active = false;
-                                activeEnemyCount--;
-                            }
-                        } else {
-                            if (enemy.stunned && time - enemy.lastHitTime >= enemy.stunDuration * 1000) {
-                                enemy.stunned = false;
-                            }
-
-                            enemy.x += Math.sin(time * 0.01) * enemy.speed * 0.5 * enemy.angle;
-                            enemy.y += (enemy.stunned ? 0.5 : 1) * enemy.speed;
-                        }
+                if (input.firePressed) {
+                    if (time - player.lastFireTime >= 1000 / player.fireRate) {
+                        firePlayerLaser();
+                        player.lastFireTime = time;
                     }
+                }
 
-                    if (enemy.y + enemy.height >= canvas.height) {
-                        enemy.active = false;
-                        activeEnemyCount--;
-                        player.health = Math.max(0, player.health - 5);
-                        assets.playerHit1.sound.volume(0.2);
-                        assets.playerHit1.sound.play();
+                let newDirection = enemyFormation.direction;
+                let newDirectionSetted = false;
 
-                        if (player.health === 0) {
+                for (let enemy of enemies) {
+                    if (enemy.state === STATE_EXPLODING) {
+                        enemy.canShoot = false;
+
+                        if (time - enemy.stateStartTime > 2000) {
+                            enemy.state = STATE_INACTIVE;
+                        }
+                    } else if (enemy.state === STATE_ACTIVE) {
+                        enemy.canShoot = true;
+
+                        let rayStartY = enemy.position.y + enemy.height;
+                        let rayY = rayStartY;
+                        let maxRayDistance = Math.abs(canvas.height - rayStartY);
+                        let collided = false;
+
+                        while(rayY - rayStartY < maxRayDistance) {
+                            rayY += 5;
+
+                            for (let other of enemies) {
+                                if (other !== enemy && other.state === STATE_ACTIVE) {
+                                    if (collide(enemy.position.x, rayY, 50, 50, other.position.x, other.position.y, other.width, other.height)) {
+                                        collided = true;
+                                        enemy.canShoot = false;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (collided) {
+                                break;
+                            }
+                        }
+
+                        enemy.direction = enemyFormation.direction;
+
+                        switch(enemyFormation.direction) {
+                            case DIR_RIGHT:
+                                if (time - enemy.lastMoveTime >= enemy.moveDuration * 1000) {
+                                    enemy.position.x += enemyFormation.horizontalSpeed;
+                                    enemy.lastMoveTime = time;
+                                    enemy.fliped = !enemy.fliped;
+                                }
+
+                                if (enemy.position.x + enemy.width >= canvas.width && !newDirectionSetted) {
+                                    newDirection = DIR_DOWN;
+                                    newDirectionSetted = true;
+                                }
+
+                                enemy.position.y += Math.sin(time * 0.01) * 1.65;
+                                break;
+                            case DIR_LEFT:
+                                if (time - enemy.lastMoveTime >= enemy.moveDuration * 1000) {
+                                    enemy.position.x -= enemyFormation.horizontalSpeed;
+                                    enemy.lastMoveTime = time;
+                                    enemy.fliped = !enemy.fliped;
+                                }
+
+                                if (enemy.position.x <= 0 && !newDirectionSetted) {
+                                    newDirection = DIR_DOWN;
+                                    newDirectionSetted = true;
+                                }
+
+                                enemy.position.y += Math.sin(time * 0.01) * 1.65;
+                                break;
+                            case DIR_DOWN:
+                                enemy.position.x += Math.cos(time * 0.01) * 1.65;
+                                enemy.position.y += enemyFormation.verticalSpeed;
+                                break;
+                        }
+
+                        if (collide(enemy.position.x, enemy.position.y, enemy.width, enemy.height, player.x, player.y, player.width, player.height)) {
+                            gameOver = true;
+                        } else if (enemy.position.y >= player.y) {
                             gameOver = true;
                         }
                     }
-
-                    if (enemy.active) {
-                        if (closestEnemy) {
-                            if (Math.min(distance(player.x, player.y, enemy.x, enemy.y), distance(player.x, player.y, closestEnemy.x, closestEnemy.y))) {
-                                closestEnemy = enemy;
-                            }
-                        } else {
-                            closestEnemy = enemy;
-                        }
-
-                        let textureAspectRatio = assets[enemy.textureName].texture.height / assets[enemy.textureName].texture.width;
-                        ctx.drawImage(assets[enemy.textureName].texture, enemy.x, enemy.y, enemy.width, enemy.height * textureAspectRatio);
-
-                        if (input.showHelpers) {
-                            ctx.strokeStyle = enemy.stunned ? 'rgb(128, 128, 128)' : 'rgb(255, 0, 0)';
-                            ctx.strokeRect(enemy.x, enemy.y, enemy.width, enemy.height);
-                        }
-                    }
                 }
-            }
 
-            for (let laser of lasers) {
-                if (laser.active) {
-                    if (!input.paused) {
-                        laser.y -= laser.speed;
+                if (enemyFormation.direction === DIR_DOWN && time - enemyFormation.lastMoveTime >= enemyFormation.moveDuration * 1000) {
+                    enemyFormation.lastMoveTime = time;
 
-                        for (let enemy of enemies) {
-                            if (enemy.active && !enemy.exploding) {
-                                if (collide(enemy.x, enemy.y, enemy.width, enemy.height, laser.x, laser.y, laser.width, laser.length)) {
-                                    laser.active = false;
-                                    enemy.stunned = true;
-                                    enemy.lastHitTime = time;
-                                    enemy.health = Math.max(0, enemy.health - 20);
-                                    let hitSoundIndex = Math.round(1 + Math.random() * 1);
-                                    assets[`enemyHit${hitSoundIndex}`].sound.volume(0.5);
-                                    assets[`enemyHit${hitSoundIndex}`].sound.play();
+                    if (enemyFormation.previousDirection === DIR_LEFT) {
+                        enemyFormation.direction = DIR_RIGHT;
+                    } else if (enemyFormation.previousDirection === DIR_RIGHT) {
+                        enemyFormation.direction = DIR_LEFT;
+                    }
+                } else if(newDirectionSetted) {
+                    enemyFormation.previousDirection = enemyFormation.direction;
+                    enemyFormation.direction = newDirection;
+                    enemyFormation.lastMoveTime = time;
+                }
 
-                                    if (enemy.health === 0) {
-                                        score += enemy.scorePoints;
-                                        enemy.explodingStartTime = time;
-                                        enemy.exploding = true;
-                                        let explosionIndex = Math.round(1 + Math.random() * 3);
-                                        let explosionVolume = (1 - Math.abs(enemy.y - player.y) / player.y) * 0.3;
-                                        assets[`explosion${explosionIndex}`].sound.volume(explosionVolume);
-                                        assets[`explosion${explosionIndex}`].sound.play();
+                let canShootEnemies = enemies.filter((enemy) => enemy.canShoot);
+                if (canShootEnemies.length > 0 && time - enemyFormation.lastFireTime >= 1000 / enemyFormation.fireRate) {
+                    enemyFormation.lastFireTime = time;
+                    let enemy = canShootEnemies[Math.floor(Math.random() * canShootEnemies.length)];
+                    fireEnemyLaser(enemy);
+                }
+
+                for (let laser of playerLasers) {
+                    if (laser.state === STATE_ACTIVE) {
+                        if (!input.paused) {
+                            laser.position.y -= laser.speed;
+
+                            for (let enemy of enemies) {
+                                if (enemy.state === STATE_ACTIVE) {
+                                    if (collide(enemy.position.x, enemy.position.y, enemy.width, enemy.height, laser.position.x, laser.position.y, laser.width, laser.height)) {
+                                        laser.state = STATE_INACTIVE;
+                                        enemy.health = Math.max(0, enemy.health - 20);
+                                        let hitSoundIndex = Math.round(1 + Math.random() * 1);
+                                        assets[`enemyHit${hitSoundIndex}`].sound.volume(0.5);
+                                        assets[`enemyHit${hitSoundIndex}`].sound.play();
+
+                                        if (enemy.health === 0) {
+                                            score += enemy.scorePoints;
+                                            enemy.state = STATE_EXPLODING;
+                                            enemy.stateStartTime = time;
+                                            let explosionIndex = Math.round(1 + Math.random() * 3);
+                                            let explosionVolume = (1 - Math.abs(enemy.y - player.y) / player.y) * 0.3;
+                                            assets[`explosion${explosionIndex}`].sound.volume(explosionVolume);
+                                            assets[`explosion${explosionIndex}`].sound.play();
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    if (laser.y + laser.length <= 0) {
-                        laser.active = false;
-                    } else {
-                        ctx.fillStyle = 'rgb(128, 128, 0)';
-                        ctx.fillRect(laser.x, laser.y - laser.length, laser.width, laser.length);
+                        if (laser.position.y + laser.height <= 0) {
+                            laser.state = STATE_INACTIVE;
+                        }
+                    }
+                }
+
+                for (let laser of enemyLasers) {
+                    if (laser.state === STATE_ACTIVE) {
+                        laser.position.y += laser.speed;
+
+                        if (collide(player.x, player.y, player.width, player.height, laser.position.x, laser.position.y, laser.width, laser.height)) {
+                            laser.state = STATE_INACTIVE;
+                            player.health = Math.max(0, player.health - 10);
+
+                            let explosionIndex = Math.round(1 + Math.random() * 3);
+                            assets[`explosion${explosionIndex}`].sound.volume(0.2);
+                            assets[`explosion${explosionIndex}`].sound.play();
+
+                            if (player.health === 0) {
+                                gameOver = true;
+                            }
+                        } else if (laser.position.y >= canvas.height) {
+                            laser.state = STATE_INACTIVE;
+                        }
                     }
                 }
             }
 
-            if (time - lastEnemySpawnTime >= 1000 / enemySpawnRate) {
-                spawnEnemy();
-                lastEnemySpawnTime = time;
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.25)';
+            ctx.fillRect(0, player.y, canvas.width, player.height);
+
+            ctx.drawImage(assets.bender.texture, player.x, player.y, player.width, player.height);
+
+            for (let enemy of enemies) {
+                if (enemy.state === STATE_ACTIVE || enemy.state === STATE_EXPLODING) {
+                    let texture = assets[enemy.textureName].texture;
+                    let textureX = enemy.position.x;
+                    let textureY = enemy.position.y;
+                    let textureWidth = enemy.width;
+                    let textureHeight = enemy.height;
+
+                    if (enemy.direction === DIR_LEFT) {
+                        ctx.save();
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(texture, -textureWidth - textureX, textureY, textureWidth, textureHeight);
+                        ctx.restore();
+                    } else {
+                        ctx.drawImage(texture, textureX, textureY, textureWidth, textureHeight);
+                    }
+
+
+                    if (input.showHelpers) {
+                        ctx.lineWidth = 2;
+                        let color = 'rgb(255, 0, 0)';
+                        if (enemy.state === STATE_EXPLODING) {
+                            color = 'rgb(128, 128, 128)';
+                        } else if (enemy.canShoot) {
+                            color = 'rgb(0, 255, 128)';
+                        }
+
+                        ctx.strokeStyle = color;
+                        ctx.strokeRect(enemy.position.x, enemy.position.y, enemy.width, enemy.height);
+                    }
+                }
             }
 
-            if (closestEnemy && closestEnemy.active && !closestEnemy.exploding) {
-                let leftEyeAngle = -Math.atan2(closestEnemy.y - leftEye.centerY, closestEnemy.x - leftEye.centerX) * -1;
-                leftEye.x = leftEye.centerX + Math.cos(leftEyeAngle) * 5;
-                leftEye.y = leftEye.centerY + Math.sin(leftEyeAngle) * 5;
-
-                let rightEyeAngle = -Math.atan2(closestEnemy.y - rightEye.centerY, closestEnemy.x - rightEye.centerX) * -1;
-                rightEye.x = rightEye.centerX + Math.cos(rightEyeAngle) * 5;
-                rightEye.y = rightEye.centerY + Math.sin(rightEyeAngle) * 5;
-            } else {
-                leftEye.x = leftEye.centerX;
-                leftEye.y = leftEye.centerY;
-                rightEye.x = rightEye.centerX;
-                rightEye.y = rightEye.centerY;
+            for (let laser of playerLasers) {
+                if (laser.state === STATE_ACTIVE) {
+                    ctx.fillStyle = 'rgb(128, 128, 0)';
+                    ctx.fillRect(laser.position.x, laser.position.y - laser.height, laser.width, laser.height);
+                }
             }
+
+            for (let laser of enemyLasers) {
+                if (laser.state === STATE_ACTIVE) {
+                    ctx.fillStyle = 'rgb(0, 128, 128)';
+                    ctx.fillRect(laser.position.x, laser.position.y - laser.height, laser.width, laser.height);
+                }
+            }
+
+            leftEye.x = leftEye.centerX;
+            leftEye.y = leftEye.centerY;
+            rightEye.x = rightEye.centerX;
+            rightEye.y = rightEye.centerY;
 
             ctx.fillStyle = input.firePressed ? 'rgb(128, 128, 0)' : 'rgb(0, 0, 0)';
             ctx.fillRect(leftEye.x, leftEye.y, leftEye.size, leftEye.size);
             ctx.fillRect(rightEye.x, rightEye.y, rightEye.size, rightEye.size);
 
             ctx.font = '700 48px Fira Code';
-            ctx.fillStyle = 'rgb(255, 0, 0)';
+            ctx.fillStyle = 'rgb(255, 255, 255)';
             ctx.fillText(player.health, 20, canvas.height - ctx.measureText(player.health).hangingBaseline, canvas.width);
 
             ctx.font = '700 48px Fira Code';
@@ -351,6 +493,10 @@
             ctx.fillStyle = 'rgb(255, 255, 255)';
             ctx.fillText(fps, 20, 20 + ctx.measureText(fps).hangingBaseline, canvas.width);
 
+            ctx.font = '700 18px Fira Code';
+            ctx.fillStyle = 'rgb(255, 255, 255)';
+            ctx.fillText(enemyFormation.direction, 60, 20 + ctx.measureText(enemyFormation.direction).hangingBaseline, canvas.width);
+
             if (time - frameTime > 1000) {
                 fps = frame;
                 frame = 0;
@@ -365,12 +511,12 @@
         requestAnimationFrame(update);
     }
 
-    function fire() {
-        for (let laser of lasers) {
-            if (!laser.active) {
-                laser.x = player.x + player.width * 0.5;
-                laser.y = player.y;
-                laser.active = true;
+    function firePlayerLaser() {
+        for (let laser of playerLasers) {
+            if (laser.state === STATE_INACTIVE) {
+                laser.position.x = player.x + player.width * 0.5 - laser.width * 0.5;
+                laser.position.y = player.y;
+                laser.state = STATE_ACTIVE;
                 let soundIndex = Math.round(1 + Math.random() * 1);
                 assets[`laser${soundIndex}`].sound.volume(0.2);
                 assets[`laser${soundIndex}`].sound.play();
@@ -379,17 +525,15 @@
         }
     }
 
-    function spawnEnemy() {
-        for (let enemy of enemies) {
-            if (!enemy.active) {
-                let template = enemyTemplates[Math.round(Math.random() * (enemyTemplates.length - 1))];
-                enemy.textureName = template.textureName;
-                enemy.health = template.health;
-                enemy.x = 100 + Math.random() * (canvas.width - 200);
-                enemy.y = -enemy.height;
-                enemy.angle = Math.random() * 2;
-                enemy.active = true;
-                activeEnemyCount++;
+    function fireEnemyLaser(enemy) {
+        for (let laser of enemyLasers) {
+            if (laser.state === STATE_INACTIVE) {
+                laser.position.x = enemy.position.x + enemy.width * 0.5 - laser.width * 0.5;
+                laser.position.y = enemy.position.y + enemy.height + 5;
+                laser.state = STATE_ACTIVE;
+                let soundIndex = Math.round(1 + Math.random() * 1);
+                assets[`laser${soundIndex}`].sound.volume(0.2);
+                assets[`laser${soundIndex}`].sound.play();
                 break;
             }
         }
@@ -464,9 +608,35 @@
         player.score = 0;
         input.firePressed = false;
 
-        for (let enemy of enemies) {
-            enemy.active = false;
+        let gap = 40;
+        let maxWidth = enemies[0].width * COLS + gap * COLS;
+
+        for (let i = 0; i < enemies.length; i++) {
+            const enemy = enemies[i];
+
+            let row = Math.floor(i / COLS);
+            let col = i % COLS;
+            let startX = canvas.width * 0.5 - (maxWidth * 0.5);
+            let startY = 80;
+
+            enemy.position.x = startX + enemy.width * col + gap * col;
+            enemy.position.y = startY + enemy.height * row + gap * row;
+
+            if (row === 0) {
+                enemy.textureName = enemyTemplates.officer.textureName;
+                enemy.scorePoints = enemyTemplates.officer.scorePoints;
+            } else if (row > 0 && row <= 2) {
+                enemy.textureName = enemyTemplates.grunt.textureName;
+                enemy.scorePoints = enemyTemplates.grunt.scorePoints;
+            } else if (row > 2) {
+                enemy.textureName = enemyTemplates.scout.textureName;
+                enemy.scorePoints = enemyTemplates.scout.scorePoints;
+            }
+
+            enemy.state = STATE_ACTIVE;
         }
+
+        enemyFormation.direction = DIR_RIGHT;
     }
 
     function loadAssets() {
