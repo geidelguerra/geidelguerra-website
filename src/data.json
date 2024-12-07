@@ -18,7 +18,9 @@
     { "label": "VueJs", "url": "https://vuejs.org/", "startDate": "2015-06" },
     { "label": "C", "url": "https://en.wikipedia.org/wiki/C_(programming_language)", "startDate": "2024-05" },
     { "label": "MongoDB", "url": "https://www.mongodb.com/", "startDate": "2023-02" },
-    { "label": "MySQL", "url": "https://www.mysql.com", "startDate": "2014-12" }
+    { "label": "MySQL", "url": "https://www.mysql.com", "startDate": "2014-12" },
+    { "label": "SQLite", "url": "https://www.sqlite.org/index.html", "startDate": "2024-10" },
+    { "label": "Docker", "url": "https://www.docker.com/", "startDate": "2023-02" }
   ],
   "toolkit": [
     { "category": "OS", "tools": ["Debian 12"]},
