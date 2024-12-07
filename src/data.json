@@ -52,7 +52,7 @@
       "startDate": "2024-10",
       "endDate": "Present",
       "description": "Lead Developer and CTO. In charge of all technical decisions, development and maintenance",
-      "tech": ["Laravel", "HTMX", "SQLite"]
+      "tech": ["Laravel", "HTMX", "SQLite", "Docker"]
     },
     {
       "name": "Freelancer",
