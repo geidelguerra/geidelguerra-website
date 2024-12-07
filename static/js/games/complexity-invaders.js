@@ -362,7 +362,7 @@
                                         laser.state = STATE_INACTIVE;
                                         enemy.health = Math.max(0, enemy.health - 20);
                                         let hitSoundIndex = Math.round(1 + Math.random() * 1);
-                                        assets[`enemyHit${hitSoundIndex}`].sound.volume(0.5);
+                                        assets[`enemyHit${hitSoundIndex}`].sound.volume(0.2);
                                         assets[`enemyHit${hitSoundIndex}`].sound.play();
 
                                         if (enemy.health === 0) {
@@ -370,8 +370,7 @@
                                             enemy.state = STATE_EXPLODING;
                                             enemy.stateStartTime = time;
                                             let explosionIndex = Math.round(1 + Math.random() * 3);
-                                            let explosionVolume = (1 - Math.abs(enemy.y - player.y) / player.y) * 0.3;
-                                            assets[`explosion${explosionIndex}`].sound.volume(explosionVolume);
+                                            assets[`explosion${explosionIndex}`].sound.volume(0.1);
                                             assets[`explosion${explosionIndex}`].sound.play();
                                         }
                                     }
@@ -394,7 +393,7 @@
                             player.health = Math.max(0, player.health - 10);
 
                             let explosionIndex = Math.round(1 + Math.random() * 3);
-                            assets[`explosion${explosionIndex}`].sound.volume(0.2);
+                            assets[`explosion${explosionIndex}`].sound.volume(0.1);
                             assets[`explosion${explosionIndex}`].sound.play();
 
                             if (player.health === 0) {
