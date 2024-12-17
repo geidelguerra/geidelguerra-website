@@ -1,5 +1,5 @@
 {
-  "about": "My name is Geidel Guerra. I'm a self taught developer with formal studies, interested in low-level programming, web applications and making games.\n\nI started learning to code using Macromedia Flash 8's offline help, making a phone book app to store phone numbers of StarCraft players (back then we used dialup peer to peer connections to play using phone numbers). I did other stuff I don't remember. Fast forward in time, after finishing school (IT Bachelor) and dropping out of University in third year (IT Engineer) my first job was making games with Unity. After that I have been developing web applications that range from simple portfolio websites to complex e-commerce multi-tenancy Saas, command line tools to automate processes, browser extensions, configuring CI pipelines and Linux servers.\n\nI like my job and always do my best. I have a broad set of skills that makes me easy to align to any kind of task.\n\nCurrently learning how to make games.",
+  "about": "My name is Geidel Guerra. I'm a self-taught developer with formal studies, interested in low-level programming, web applications, and game development. I started learning to code using Macromedia Flash 8's offline help, creating a phone book app to store phone numbers of StarCraft players during the dial-up peer-to-peer gaming era. After finishing my IT Bachelor's degree and leaving my IT Engineer program in my third year, my first job was developing games with Unity. Since then, I've been involved in developing web applications ranging from simple portfolio websites to complex e-commerce multi-tenancy SaaS, command-line tools for process automation, browser extensions, and configuring CI pipelines and Linux servers.\n\nI'm a generalist with a curiosity for many things, passionate about learning new skills and broadening my development capabilities. I occasionally play video games and have continued my journey in game development, exploring new possibilities. Some of my very crude games can be found on my GitHub, and you can play some of them on my website.",
   "startDate": "2013-10",
   "networks": [
     { "label": "Website", "url": "https://geidelguerra.com" },
@@ -48,21 +48,13 @@
   ],
   "experience": [
     {
-      "name": "Founder / Developer",
+      "name": "Co-Founder / Developer",
       "company": "Kriu",
       "companyUrl": "https://kriu.co",
       "startDate": "2024-10",
       "endDate": "Present",
-      "description": "Lead Developer and CTO. In charge of all technical decisions, development and maintenance",
+      "description": "Kriu is a Workforce Management for Marketing Agencies Startup. As a Lead Developer and CTO I'm in charge of all technical decisions, development and maintenance of our MVP. We are using combination of HTMX and vanilla JavaScript for our frontend. As for the backend we are using PHP with Laravel and SQLite as our database. So far I have done all the development which includes lot of CRUD forms, a lot of reports, several charts using ChartJs. We are using Digital Ocean for our hosting, with Cloudflare as DNS upfront and GitHub as our repository provider. We have a deployment pipeline that uses docker compose building/pulling images to GitHub Container Registry and GitHub Actions with a little bash scripts run things.",
       "tech": ["Laravel", "HTMX", "SQLite", "Docker"]
-    },
-    {
-      "name": "Freelancer",
-      "company": "Freelancer",
-      "startDate": "2024-09",
-      "endDate": "Present",
-      "description": "",
-      "tech": ["PHP", "JavaScript", "Python", "Go", "MySQL", "Vue", "Laravel"]
     },
     {
       "name": "Senior Software Developer",
@@ -70,7 +62,7 @@
       "companyUrl": "https://cerberu.com",
       "startDate": "2023-02",
       "endDate": "2024-08",
-      "description": "Introduced unit tests to existing projects in PHP. Improved MySQL queries performance by 400%. Created new internal tools to improve customer support by adding AI to the mix. Created internal Chrome extension to improve customer support by leveraging the AI capabilites.",
+      "description": "Cerberu is a company that applies technological solutions to hotel management. They take care of all management aspects, including the installation of secure digital locks. Here, the first thing I did was to create the foundation for unit tests for their main platform's extensive codebase and contributed to small features. Later, I integrated AI into their existing support channels, primarily for email and messaging services. I also developed a browser extension to integrate AI into their users' reviews channel. When working here, I used PHP with Yii, then Laravel, and a lot of Python with Flask and FastAPI. Another project I worked on, which was later discarded, was an invoice analysis automation service using AWS Textract and Python.",
       "tech": ["Python", "PHP", "HTMX", "Flask", "MySQL", "MongoDB", "AWS", "Docker", "Browser Extensions", "AI Prompt", "Chatbot"]
     },
     {
@@ -79,7 +71,7 @@
       "companyUrl": "https://lacaja.company",
       "startDate": "2020-08",
       "endDate": "2023-02",
-      "description": "Developed two Saas projects from scratch, with third-party integrations to social networks and multitenancy, using Laravel, Vue and MySQL. As CTO and Lead Programmer I managed a small team of developers.",
+      "description": "La Caja Company is a Digital Marketing Agency in Spain. Here, I started as a Full Stack hire. As a Full Stack developer, I worked on an internal SaaS product created to serve as a tool for the company in their workflow and content management. This was developed as a multi-tenant SaaS application (with the intention of possibly making this internal tool public in the future) using Laravel and MySQL at the backend and Vue.js with Inertia.js in our frontend. I worked on creating features like multi-tenancy, implementing a multi-database approach, and handling most of the third-party API integrations including with Facebook, LinkedIn, X, and Google. I also set up the deployment pipeline using Laravel Forge and Envoyer, which we later migrated to Laravel Vapor. A year later, I was promoted to CTO of the company. As CTO, I was in charge of all technology decisions and continued as a Full Stack developer, this time also serving as a Lead Developer and mentor to our new hires. In this new role, I started another SaaS project, this time an analytics tool for social media that presented a simple and easy way to view metrics. For this, we used Laravel with Vapor, which was chart-intensive and heavily relied on third-party API integrations, also using Vue.js and Inertia.js.",
       "tech": ["PHP", "JavaScript", "MySQL", "VueJs", "Laravel", "Forge", "Vapor", "AWS", "SaaS", "API", "ChartsJs"]
     },
     {
@@ -88,7 +80,7 @@
       "companyUrl": "https://artcronica.com",
       "startDate": "2018-06",
       "endDate": "2022-04",
-      "description": "Content administrator and overall maintenance.",
+      "description": "Artcronica, a digital cuban magazine about art. Here I worked as content administrator and overall maintainer of their Wordpress website.",
       "tech": ["Wordpress"]
     },
     {
@@ -97,7 +89,7 @@
       "companyUrl": "https://nextreality.digital",
       "startDate": "2019-02",
       "endDate": "2020-12",
-      "description": "Developed an ecommerce web application with a 3D viewers and a custom backend administration panel. I also configured all the services on AWS",
+      "description": "This was a startup focused on selling physical art online. Here, I worked on yet another SaaS, also multi-tenant. We used Laravel for our backend and Vue.js for the frontend. I worked on the project from the beginning, setting up the project, creating the deployment pipeline, configuring servers, etc. This site featured a 3D viewer which I developed from scratch using Three.js. I also handled the cart and payment integration, in this case with Stripe.",
       "tech": ["JavaScript", "PHP", "MySQL", "ThreeJS", "Vue", "SaaS", "API"]
     },
     {
@@ -106,7 +98,7 @@
       "companyUrl": "https://fac.cu",
       "startDate": "2014-12",
       "endDate": "2018-05",
-      "description": "Developed the official website and internal tooling for content administration",
+      "description": "Fabrica De Arte Cubano. The art hub of Cuba. Here, I remade their website initially using Yii and later discovered Laravel, migrating the site to it. I discovered and used Vue.js during this project. My main accomplishment was creating their internal content management system to edit and update their scheduled concerts and art presentations. This system was integrated with the website, so the public had access to the programming of shows and events.",
       "tech": ["JavaScript", "PHP", "MySQL", "Vue", "Laravel"]
     },
     {
@@ -115,19 +107,11 @@
       "companyUrl": "https://www.jovenclub.cu",
       "startDate": "2013-10",
       "endDate": "2014-12",
-      "description": "Implemented player movement and gameplay.",
+      "description": "My first job as a junior game developer. Here, I banged my head against Unity for the first time while working on a game inspired by the Tanks game for the Famicom. During my time there, I developed some of the gameplay mechanics for the game.",
       "tech": ["Unity3D"]
     }
   ],
   "projects": [
-    {
-      "name": "Kriu",
-      "url": "https://kriu.co",
-      "startDate": "2024-09",
-      "endDate": "Present",
-      "image_url": "/static/images/kriu-saas.png",
-      "description": "Workforce management for marketing agencies Saas"
-    },
     {
       "name": "Matrix rain in the Terminal (Go)",
       "url": "https://github.com/geidelguerra/matrix-term",
@@ -217,22 +201,6 @@
       "image_url": "/static/images/conway_python.png",
       "description": " Conway's Game of Life Algorithm simulation CLI app",
       "personal": true
-    },
-    {
-      "name": "Klipers Saas",
-      "url": "https://web.archive.org/web/20230506224344/https://klipers.com/",
-      "startDate": "2022-02",
-      "endDate": "2023-02",
-      "image_url": "/static/images/klipers_saas.png",
-      "description": "Saas to aggregate and display metrics from multiple sources. I developed the UI, added the integrations with third party APIs like Facebook, Instagram, Twitter, did server configuration and deployment. Tech used: Laravel, VueJs, InertiaJs, TailwindCSS, ChartsJs. Hosted on AWS with Laravel Vapor"
-    },
-    {
-      "name": "Contegy Saas",
-      "url": "https://web.archive.org/web/20230204173727/https://contegy.io/",
-      "startDate": "2020-08",
-      "endDate": "2023-02",
-      "image_url": "/static/images/contegy_saas.png",
-      "description": "Saas to managed Content Marketing campaigns. I developed the UI, added multi-tenant architecture, integrations with third party APIs like Facebook, Instagram, Google Analytics, Twitter, LinkedIn, did server configuration and deployment. Tech used: Laravel, VueJs, InertiaJs, TailwindCSS, ChartsJs. Hosted on AWS with Laravel Forge and Envoyer"
     },
     {
       "name": "Tenza Website",
