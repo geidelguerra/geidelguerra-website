@@ -30,6 +30,12 @@ ul {
     list-style: none;
 }
 
+#copycenter {
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+}
+
 & a {
     color: #93c5fd;
     text-decoration: none;
