@@ -4,22 +4,24 @@ set -xe
 # using the 'zip-it and ship-it' strategy
 
 # Required variables
-WORK_DIR=/root/apps/geidelguerra-website
+APP_NAME=geidelguerra-website
+APP_DIR=/apps/$APP_NAME
 
-zip -r geidelguerra-website.zip .env src static .venv -x '**/*__pycache__/*'
-scp geidelguerra-website.zip $SERVER_USER@$SERVER_HOST:/root/geidelguerra-website.zip
-rm geidelguerra-website.zip
+zip -r $APP_NAME.zip .env src static .venv -x '**/*__pycache__/*'
+scp $APP_NAME.zip $SERVER_USER@$SERVER_HOST:$APP_NAME.zip
+rm $APP_NAME.zip
 
 ssh -T "$SERVER_USER@$SERVER_HOST" << EOF
 set -xe
-mkdir -p $WORK_DIR
-rm -rf $WORK_DIR-new
-unzip /root/geidelguerra-website.zip -d $WORK_DIR-new
-rm -rf $WORK_DIR
-mv $WORK_DIR-new $WORK_DIR
-cd $WORK_DIR
-export PYTHONPATH=$WORK_DIR/.venv/lib/python3.11/site-packages
+mkdir -p $APP_DIR/current
+rm -rf $APP_DIR/new
+unzip $APP_NAME.zip -d $APP_DIR/new
+chown -R root:www-data $APP_DIR/new
+rm -rf $APP_DIR/current
+mv $APP_DIR/new $APP_DIR/current
+cd $APP_DIR/current
+export PYTHONPATH=$APP_DIR/current/.venv/lib/python3.11/site-packages
 python3 src/cli.py gen-pdf
 python3 src/cli.py generate-manifest
-systemctl restart geidelguerra-website.service
+systemctl restart $APP_NAME.service
 EOF

@@ -8,17 +8,17 @@ User=root
 Group=root
 
 # Set the working directory
-WorkingDirectory=/root/apps/geidelguerra-website
+WorkingDirectory=/apps/geidelguerra-website/current
 
 # Environment variables can be set here if needed
 Environment="APP_ENV=production"
 Environment="APP_PORT=8001"
 Environment="FLASK_ENV=production"
 Environment="FLASK_APP=geidelguerra-website"
-Environment="PYTHONPATH=/root/apps/geidelguerra-website/.venv/lib/python3.11/site-packages"
+Environment="PYTHONPATH=/apps/geidelguerra-website/current/.venv/lib/python3.11/site-packages"
 
 # The command to start your Python application
-ExecStart=python3 /root/apps/geidelguerra-website/src/web.py
+ExecStart=python3 /apps/geidelguerra-website/current/src/web.py
 
 # Configure restart behavior (optional)
 Restart=always
