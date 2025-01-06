@@ -7,7 +7,7 @@ set -xe
 APP_NAME=geidelguerra-website
 APP_DIR=/apps/$APP_NAME
 
-zip -r $APP_NAME.zip .env src static .venv -x '**/*__pycache__/*'
+zip -q -r $APP_NAME.zip .env src static .venv -x '**/*__pycache__/*'
 scp $APP_NAME.zip $SERVER_USER@$SERVER_HOST:$APP_NAME.zip
 rm $APP_NAME.zip
 
@@ -15,7 +15,7 @@ ssh -T "$SERVER_USER@$SERVER_HOST" << EOF
 set -xe
 mkdir -p $APP_DIR/current
 rm -rf $APP_DIR/new
-unzip $APP_NAME.zip -d $APP_DIR/new
+unzip -q $APP_NAME.zip -d $APP_DIR/new
 chown -R root:www-data $APP_DIR/new
 rm -rf $APP_DIR/current
 mv $APP_DIR/new $APP_DIR/current
