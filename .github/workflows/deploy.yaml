@@ -21,7 +21,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} > ~/.ssh/known_hosts
           export SERVER_HOST=${{ secrets.SERVER_HOST }}
           export SERVER_USER=${{ secrets.SERVER_USER }}
-          export GIT_DIR_PATH=${{ secrets.GIT_DIR_PATH }}
-          export WORK_TREE_PATH=${{ secrets.WORK_TREE_PATH }}
+          echo "${{ secrets.ENV }}" > .env
           /bin/bash scripts/deploy.sh
+          rm -f .env
           rm -rf ~/.ssh/*

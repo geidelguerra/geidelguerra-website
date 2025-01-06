@@ -1,17 +1,24 @@
 #!/usr/bin/bash
-
 set -xe
+# This script deploys the app to the server
+# using the 'zip-it and ship-it' strategy
 
-git push --force "ssh://$SERVER_USER@$SERVER_HOST$GIT_DIR_PATH"
+# Required variables
+WORK_DIR=/root/apps/geidelguerra-website
+
+zip -r geidelguerra-website.zip .env src static .venv -x '**/*__pycache__/*'
+scp geidelguerra-website.zip $SERVER_USER@$SERVER_HOST:/root/geidelguerra-website.zip
+rm geidelguerra-website.zip
 
 ssh -T "$SERVER_USER@$SERVER_HOST" << EOF
 set -xe
-mkdir -p $WORK_TREE_PATH
-git --work-tree=$WORK_TREE_PATH --git-dir=$GIT_DIR_PATH checkout -f master
-cd $WORK_TREE_PATH
-rm -rf .venv
-/root/.local/bin/poetry install --without dev
+mkdir -p $WORK_DIR
+rm -rf $WORK_DIR-new
+unzip /root/geidelguerra-website.zip -d $WORK_DIR-new
+rm -rf $WORK_DIR
+mv $WORK_DIR-new $WORK_DIR
+cd $WORK_DIR
 .venv/bin/python src/cli.py gen-pdf
 .venv/bin/python src/cli.py generate-manifest
-supervisorctl restart geidelguerra-website
+systemctl restart geidelguerra-website.service
 EOF

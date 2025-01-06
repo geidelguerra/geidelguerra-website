@@ -1,0 +1,32 @@
+[Unit]
+Description=Geidel Guerra Website
+After=network.target
+
+[Service]
+# Specify the user and group under which the service should run
+User=root
+Group=root
+
+# Set the working directory
+WorkingDirectory=/root/apps/geidelguerra-website
+
+# Environment variables can be set here if needed
+Environment="APP_ENV=production"
+Environment="APP_PORT=8001"
+Environment="FLASK_ENV=production"
+Environment="FLASK_APP=geidelguerra-website"
+
+# The command to start your Python application
+ExecStart=/root/apps/geidelguerra-website/.venv/bin/python /root/apps/geidelguerra-website/src/web.py
+
+# Configure restart behavior (optional)
+Restart=always
+RestartSec=10
+
+# Specify stdout and stderr logging (optional)
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=geidelguerra-website
+
+[Install]
+WantedBy=multi-user.target
