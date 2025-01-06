@@ -18,7 +18,8 @@ unzip /root/geidelguerra-website.zip -d $WORK_DIR-new
 rm -rf $WORK_DIR
 mv $WORK_DIR-new $WORK_DIR
 cd $WORK_DIR
-.venv/bin/python src/cli.py gen-pdf
-.venv/bin/python src/cli.py generate-manifest
+export PYTHONPATH=/root/apps/geidelguerra/.venv/lib/python3.11/site-packages
+python3 src/cli.py gen-pdf
+python3 src/cli.py generate-manifest
 systemctl restart geidelguerra-website.service
 EOF
