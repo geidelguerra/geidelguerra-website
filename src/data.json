@@ -25,7 +25,7 @@
   "toolkit": [
     { "category": "OS", "tools": ["Debian 12"]},
     { "category": "Editor", "tools": ["Zed", "VSCode", "NeoVim"]},
-    { "category": "Terminal", "tools": ["Tmux"]},
+    { "category": "Terminal", "tools": ["Ghostty"]},
     { "category": "Shell", "tools": ["ZSH"] }
   ],
   "languages": [
