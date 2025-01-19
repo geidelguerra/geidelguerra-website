@@ -3,6 +3,7 @@ from asgiref.wsgi import WsgiToAsgi
 from web.extensions.markdown import MarkdownExtension
 from utils import get_data
 import pathlib
+import datetime
 
 static_folder = pathlib.Path(__name__).parent.parent.joinpath('static').absolute()
 
@@ -116,5 +117,10 @@ def game_page(slug: str):
         return "Game not found", 404
 
     return render_template('game.html', game=game)
+
+@app.get('/sussy/happy-birthday')
+def birthday_card():
+    year = datetime.datetime.now().year
+    return render_template(f"birthdays/{year}.html")
 
 app = WsgiToAsgi(app)
