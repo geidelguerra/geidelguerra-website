@@ -12,58 +12,129 @@
                 height: 100vh;
                 margin: 0;
             }
-            .birthday-card {
+
+            #content {
                 position: relative;
-                width: fit-content;
+                /* transform-origin: center; */
+                width: 100%;
+                height: 100%;
+            }
+
+            .card {
+                position: absolute;
                 border-radius: 20px;
                 transition: all ease-in 0.2s;
                 box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
                 padding: 20px;
                 overflow: hidden;
-                transform: skew(-2deg) scaleY(0.9);
-                transform-origin: bottom;
                 cursor: pointer;
-
-                .gloss {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: linear-gradient(to bottom right, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 100%);
-                }
-
-                .title {
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%, -70px);
-                    font-family: 'Alex Brush', handwriting;
-                    font-size: 45px;
-                    text-align: center;
-                    line-height: 1;
-                }
+                transform-origin: bottom center;
+                box-sizing: content-box;
+                background: white;
 
                 img {
+                    box-sizing: content-box;
+                    object-fit: contain;
                     border-radius: 10px;
-                    max-width: 400px;
-                    height: auto;
-                    opacity: 0;
-                    transition: all ease-out 0.2s;
+                    width: 400px;
+                    filter: grayscale(100%);
+                    transition: all ease-in 0.2s;
                 }
 
                 &:hover {
-                    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-                    transform: rotate(0deg) translateY(-2px);
+                    z-index: 100;
+
+                    img {
+                        filter: grayscale(0);
+                    }
                 }
+            }
+
+            #text {
+                position: absolute;
+                font-family: 'Alex Brush', handwriting;
+                font-size: 45px;
+                font-weight: bold;
+                color: white;
+                text-align: center;
+                text-shadow: 0 0 10px rgba(0, 0, 0, 1);
+                z-index: 101;
+            }
+
+            #center {
+                position: absolute;
+                background: red;
+                /* mix-blend-mode: color-burn; */
+                border-radius: 100%;
             }
         </style>
     </head>
     <body>
-        <div class="birthday-card">
-            <h1 class="title">Happy Birthday</h1>
-            <img src="/static/images/birthday_card.jpg">
-            <div class="gloss"></div>
-        </div>
+        <div class="card"><img src="/static/birthdays/2025/01.jpg"></div>
+        <!-- <div class="card"><img src="/static/birthdays/2025/02.jpg"></div>
+        <div class="card"><img src="/static/birthdays/2025/03.jpg"></div>
+        <div class="card"><img src="/static/birthdays/2025/04.jpg"></div> -->
+        <div id="center"></div>
+        <div id="text">Feliz cumpleaños mi amor</div>
+        <script type="text/javascript">
+            const cards = Array.from(document.querySelectorAll('.card'));
+            const textEl = document.querySelector('#text');
+            const centerEl = document.querySelector('#center');
+
+            const loadingPromises = [];
+            const radius = 100;
+
+            cards.forEach((cardEl) => {
+                cardEl.onmouseover = (e) => {
+                    // cardEl.style.transform = 'translateY(-20px)';
+                }
+
+                cardEl.onmouseout = (e) => {
+                    // cardEl.style.transform = `rotate(${cardEl._data.angle}px)`;
+                }
+
+                const imageEl = cardEl.querySelector('img');
+
+                if (!imageEl.complete) {
+                    loadingPromises.push(new Promise((resolve) => imageEl.onload = resolve));
+                }
+            });
+
+            Promise.all(loadingPromises).then(() => {
+                console.log('Loaded');
+                update();
+            });
+
+            function update() {
+                centerEl.style.left = `${center.x - radius}px`;
+                centerEl.style.top = `${center.y - radius}px`;
+                centerEl.style.width = `${radius * 2}px`;
+                centerEl.style.height = `${radius * 2}px`;
+                const startAngle = -45;
+                const endAngle = 45;
+                let angleIncrement = (endAngle - startAngle) / cards.length;
+
+                for (let i = 0; i < cards.length; i++) {
+                    const cardEl = cards[i];
+                    // const angle = startAngle + i * angleIncrement;
+                    const centerX = window.innerWidth / 2;
+                    const centerY = window.innerHeight / 2;
+                    const angle = 45;
+                    const angleRadian = angle * (Math.PI / 180);
+                    let cardWidth = cardEl.clientWidth;
+                    let cardHeight = cardEl.clientHeight;
+                    let cardX = radius * Math.cos(angleRadian);
+                    let cardY = radius * Math.sin(angleRadian) + center.y - cardHeight;
+                    // cardEl.style.transform = `rotate(${angle}deg)`;
+                    cardEl.style.left = `${cardX}px`;
+                    cardEl.style.top = `${cardY}px`;
+                    cardEl.dataset.angle = angle;
+                    cardEl.dataset.width = cardWidth;
+                    cardEl.dataset.height = cardHeight;
+                }
+            }
+
+            window.addEventListener('resize', update);
+        </script>
     </body>
 </html>
