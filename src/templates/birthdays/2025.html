@@ -11,28 +11,25 @@
                 align-items: center;
                 height: 100vh;
                 margin: 0;
-            }
-
-            #content {
-                position: relative;
-                /* transform-origin: center; */
-                width: 100%;
-                height: 100%;
+                overflow: hidden;
+                background: url('/static/images/paper_text.jpg') repeat 128px 128px;
+                /* background-blend-mode: multiply; */
             }
 
             .card {
                 position: absolute;
+                display: flex;
                 border-radius: 20px;
                 transition: all ease-in 0.2s;
-                box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-                padding: 20px;
+                box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
                 overflow: hidden;
                 cursor: pointer;
                 transform-origin: bottom center;
                 box-sizing: content-box;
-                background: white;
+                background: transparent;
 
                 img {
+                    opacity: 1;
                     box-sizing: content-box;
                     object-fit: contain;
                     border-radius: 10px;
@@ -41,11 +38,34 @@
                     transition: all ease-in 0.2s;
                 }
 
-                &:hover {
-                    z-index: 100;
+                &.hovered {
+                    padding: 5px;
+                    z-index: 99;
+                    border-color: transparent;
+                    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+                    background-color: white;
 
                     img {
+                        border-radius: 14px;
+                        opacity: 1;
                         filter: grayscale(0);
+                    }
+                }
+
+                &.blurred {
+                }
+
+                &.active {
+                    position: relative;
+                    transform: rotate(0) !important;
+                    transform-origin: center center;
+                    top: unset !important;
+                    left: unset !important;
+                    z-index: 200;
+                    padding: 20px;
+
+                    img {
+                        width: 100vh;
                     }
                 }
             }
@@ -57,25 +77,29 @@
                 font-weight: bold;
                 color: white;
                 text-align: center;
-                text-shadow: 0 0 10px rgba(0, 0, 0, 1);
                 z-index: 101;
+                width: 200px;
+                line-height: 1;
             }
 
             #center {
                 position: absolute;
-                background: red;
-                /* mix-blend-mode: color-burn; */
+                background: radial-gradient(circle at bottom right, #da012d, #da012d, #dc012d88);
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.6), inset 1px -1px 2px #da012d;
+                mix-blend-mode: color-burn;
                 border-radius: 100%;
+                z-index: 100;
+                pointer-events: none;
             }
         </style>
     </head>
     <body>
         <div class="card"><img src="/static/birthdays/2025/01.jpg"></div>
-        <!-- <div class="card"><img src="/static/birthdays/2025/02.jpg"></div>
+        <div class="card"><img src="/static/birthdays/2025/02.jpg"></div>
         <div class="card"><img src="/static/birthdays/2025/03.jpg"></div>
-        <div class="card"><img src="/static/birthdays/2025/04.jpg"></div> -->
+        <div class="card"><img src="/static/birthdays/2025/04.jpg"></div>
         <div id="center"></div>
-        <div id="text">Feliz cumpleaños mi amor</div>
+        <div id="text">Feliz cumpleaños 2025</div>
         <script type="text/javascript">
             const cards = Array.from(document.querySelectorAll('.card'));
             const textEl = document.querySelector('#text');
@@ -86,11 +110,35 @@
 
             cards.forEach((cardEl) => {
                 cardEl.onmouseover = (e) => {
-                    // cardEl.style.transform = 'translateY(-20px)';
+                    if (cardEl.classList.contains('active')) {
+                        return;
+                    }
+
+                    cardEl.classList.add('hovered');
+
+                    cards.forEach((otherCardEl) => {
+                        if (otherCardEl !== cardEl) {
+                            otherCardEl.classList.add('blurred');
+                        }
+                    });
                 }
 
                 cardEl.onmouseout = (e) => {
-                    // cardEl.style.transform = `rotate(${cardEl._data.angle}px)`;
+                    if (cardEl.classList.contains('active')) {
+                        return;
+                    }
+
+                    cardEl.classList.remove('hovered');
+
+                    cards.forEach((otherCardEl) => {
+                        if (otherCardEl !== cardEl) {
+                            otherCardEl.classList.remove('blurred');
+                        }
+                    });
+                }
+
+                cardEl.onclick = (e) => {
+                    cardEl.classList.toggle('active');
                 }
 
                 const imageEl = cardEl.querySelector('img');
@@ -100,37 +148,32 @@
                 }
             });
 
-            Promise.all(loadingPromises).then(() => {
-                console.log('Loaded');
-                update();
-            });
+            Promise.all(loadingPromises).then(update);
 
             function update() {
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+
                 centerEl.style.left = `${center.x - radius}px`;
                 centerEl.style.top = `${center.y - radius}px`;
                 centerEl.style.width = `${radius * 2}px`;
                 centerEl.style.height = `${radius * 2}px`;
-                const startAngle = -45;
-                const endAngle = 45;
-                let angleIncrement = (endAngle - startAngle) / cards.length;
+
+                const startAngle = -180;
+                const endAngle = 180
+                let angleIncrement = (endAngle - startAngle) / (cards.length);
 
                 for (let i = 0; i < cards.length; i++) {
                     const cardEl = cards[i];
-                    // const angle = startAngle + i * angleIncrement;
-                    const centerX = window.innerWidth / 2;
-                    const centerY = window.innerHeight / 2;
-                    const angle = 45;
+                    const angle = startAngle + i * angleIncrement + 45;
                     const angleRadian = angle * (Math.PI / 180);
                     let cardWidth = cardEl.clientWidth;
                     let cardHeight = cardEl.clientHeight;
-                    let cardX = radius * Math.cos(angleRadian);
-                    let cardY = radius * Math.sin(angleRadian) + center.y - cardHeight;
-                    // cardEl.style.transform = `rotate(${angle}deg)`;
+                    let cardX = centerX + Math.cos(angleRadian) * radius - cardWidth / 2;
+                    let cardY = centerY + Math.sin(angleRadian) * radius - cardHeight;
+                    cardEl.style.transform = `rotate(${angle + 1}deg) skewX(${2}deg)`;
                     cardEl.style.left = `${cardX}px`;
                     cardEl.style.top = `${cardY}px`;
-                    cardEl.dataset.angle = angle;
-                    cardEl.dataset.width = cardWidth;
-                    cardEl.dataset.height = cardHeight;
                 }
             }
 
