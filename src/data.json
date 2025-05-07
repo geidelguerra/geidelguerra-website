@@ -53,7 +53,7 @@
       "companyUrl": "https://www.mixologyice.com",
       "startDate": "2025-02",
       "endDate": "Present",
-      "description": "Mixology Ice is a gourmet ice company based in Miami, Florida. Here, I am working on a new project that involves automating their internal processes. Here I am working with microcontroller, developing APIs and connecting all together. I am also working on a new project that involves automating their internal processes. Here I am working with microcontrollers, internal APIs and connecting all together.",
+      "description": "Mixology Ice is a gourmet ice company based in Miami, Florida. Here, I'm working on new projects that involves APIs, automation, microcontrollers and scanners.",
       "tech": ["Laravel", "HTMX", "SQLite", "C", "NodeJs", "PostgreSQL"]
     },
     {
