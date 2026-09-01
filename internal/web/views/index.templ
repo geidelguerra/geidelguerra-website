@@ -229,7 +229,7 @@ templ Skills(d *data.Data) {
 			<ul class="skill-grid">
 				for _, s := range d.Skills {
 					<li class={ "skill-chip", templ.KV("skill-chip-preferred", s.Preferred) }>
-						<a href={ templ.SafeURL(s.URL) } target="_blank" rel="noopener noreferrer">{ s.Label }</a>
+						<a href={ templ.SafeURL(s.URL) } target="_blank" rel="noopener noreferrer" aria-label={ s.Label + " official website" }>{ s.Label }</a>
 						<span class="skill-years">{ s.Years } yr</span>
 					</li>
 				}

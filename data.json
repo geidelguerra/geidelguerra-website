@@ -121,7 +121,6 @@
       "url": "https://github.com/geidelguerra/matrix-term",
       "startDate": "2024-09",
       "endDate": "Present",
-      "image_url": "/static/images/matrix-term.png",
       "description": "Crappy implementation of the Matrix rain with Go"
     },
     {
@@ -129,7 +128,6 @@
       "url": "https://github.com/geidelguerra/snaketerm",
       "startDate": "2024-09",
       "endDate": "Present",
-      "image_url": "/static/images/snaketerm.png",
       "description": "Snake game in the terminal with Go"
     },
     {
@@ -137,7 +135,6 @@
       "url": "https://github.com/geidelguerra/tictactoe-php",
       "startDate": "2024-08",
       "endDate": "Present",
-      "image_url": "/static/images/tictactoe_php.png",
       "description": "Tic Tac Toe game in one PHP file"
     },
     {
@@ -145,7 +142,6 @@
       "url": "https://github.com/geidelguerra/platformer-raylib",
       "startDate": "2024-08",
       "endDate": "Present",
-      "image_url": "/static/images/platformer_raylib.png",
       "description": "Platformer basics in Odin with Raylib"
     },
     {
@@ -153,7 +149,6 @@
       "url": "https://github.com/geidelguerra/trigonometry",
       "startDate": "2024-08",
       "endDate": "Present",
-      "image_url": "/static/images/trigonometry.png",
       "description": "Trigonometry visualizations in C with Raylib"
     },
     {
@@ -161,7 +156,6 @@
       "url": "https://github.com/geidelguerra/boids",
       "startDate": "2024-08",
       "endDate": "Present",
-      "image_url": "/static/images/boids.png",
       "description": "Steering behaviours simulation in C with Raylib"
     },
     {
@@ -169,7 +163,6 @@
       "url": "https://github.com/geidelguerra/space-invaders",
       "startDate": "2024-08",
       "endDate": "Present",
-      "image_url": "/static/images/space_invaders.png",
       "description": "Space invaders game in C with Raylib"
     },
     {
@@ -177,7 +170,6 @@
       "url": "https://knowurcraft.com",
       "startDate": "2024-08",
       "endDate": "Present",
-      "image_url": "/static/images/knowurcraft.png",
       "description": "Website with a compilation of cheatsheets for different languages"
     },
     {
@@ -185,7 +177,6 @@
       "url": "https://github.com/geidelguerra/snake-game",
       "startDate": "2024-05",
       "endDate": "2024-06",
-      "image_url": "/static/images/snake_c.png",
       "description": "Snake game made in C with Raylib",
       "personal": true
     },
@@ -202,7 +193,6 @@
       "url": "https://github.com/geidelguerra/conway-python",
       "startDate": "2024-01",
       "endDate": "2024-01",
-      "image_url": "/static/images/conway_python.png",
       "description": " Conway's Game of Life Algorithm simulation CLI app",
       "personal": true
     },
@@ -211,7 +201,6 @@
       "url": "https://tenza.us",
       "startDate": "2021-11",
       "endDate": "Present",
-      "image_url": "/static/images/tenza_website.png",
       "description": "Official website for Tenza Studio with cool 3D animations and a 3D viewer. Tech used: NuxtJs + TailwindCSS + ThreeJs + AnimeJs and Lottie. Hosted on Netlify"
     },
     {
@@ -219,7 +208,6 @@
       "url": "https://web.archive.org/web/20220613222648/https://albertohreyes.com/",
       "startDate": "2018-06",
       "endDate": "2021-12",
-      "image_url": "/static/images/albertohr_website.png",
       "description": "Official website for a Cuban painter. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify"
     },
     {
@@ -227,7 +215,6 @@
       "url": "https://web.archive.org/web/20210119105411/https://www.latintamagazine.com/",
       "startDate": "2018-03",
       "endDate": "2021-01",
-      "image_url": "/static/images/latinta_website.png",
       "description": "Official website for the first body art magazine in Cuba. Tech used: NuxtJs + TailwindCSS. Hosted on Netlify"
     },
     {
@@ -235,7 +222,6 @@
       "url": "https://web.archive.org/web/20200815065239/https://www.placeart.app/",
       "startDate": "2019-02",
       "endDate": "2020-12",
-      "image_url": "/static/images/placeart_saas.png",
       "description": "Saas for selling art online. A work on the frontend, backend, 3D viewer for art showcase and server configuration and deployment. Tech used: NuxtJs + Laravel + ThreeJs + AFrame"
     },
     {
@@ -243,7 +229,6 @@
       "url": "https://web.archive.org/web/20180618093513/https://fac.cu/",
       "startDate": "2015-01",
       "endDate": "2018-06",
-      "image_url": "/static/images/fac_website.png",
       "description": "Official website. I developed both frontend and backend (with a custom programming of events's calendar and editor). Tech used: Laravel 5 + Bootstrap + jQuery"
     },
     {
@@ -251,7 +236,6 @@
       "url": "https://www.youtube.com/watch?v=4kQNjOp4UJ8",
       "startDate": "2017-01",
       "endDate": "2017-03",
-      "image_url": "/static/images/grafica_interactiva_2.png",
       "description": "A collaboration with the cuban art group called Serones. I programmed the 3D navigation system, event triggers and illumination. Tech used: Unity3D"
     }
   ]
