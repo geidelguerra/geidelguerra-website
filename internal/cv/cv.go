@@ -1,12 +1,14 @@
-// Package cv renders a printable PDF resume from the site content. The PDF
-// always uses the site's light color palette, regardless of the visitor's
-// theme preference on the website, since it's meant to be printed/shared.
+// Package cv renders a printable, single-page PDF resume from the site
+// content. The PDF always uses the site's light color palette, regardless
+// of the visitor's theme preference on the website, since it's meant to be
+// printed/shared.
 package cv
 
 import (
 	"bytes"
 	_ "embed"
 	"fmt"
+	"strings"
 
 	"github.com/go-pdf/fpdf"
 
@@ -36,10 +38,15 @@ const (
 	colorChipBg          = "#f2f0fb" // --bg-alt
 )
 
-const pageMargin = 18.0
+const pageMargin = 15.0
 
-// Generate renders d (and its profile photo, JPEG bytes) into a single/multi
-// page PDF CV: photo + name + title + bio, then education, then skills.
+// maxExperienceEntries caps how many jobs are listed, oldest dropped first,
+// so the resume reliably fits a single page even if more are added later.
+const maxExperienceEntries = 8
+
+// Generate renders d (and its profile photo, JPEG bytes) into a single-page
+// PDF CV: photo + name + title + networks, then bio, experience, education
+// and skills.
 func Generate(d *data.Data, photo []byte) ([]byte, error) {
 	pdf := fpdf.New("P", "mm", "A4", "")
 	pdf.AddUTF8FontFromBytes(fontFamily, "", fontRegular)
@@ -57,6 +64,7 @@ func Generate(d *data.Data, photo []byte) ([]byte, error) {
 
 	renderHeader(pdf, d, photo, contentWidth)
 	renderAbout(pdf, d, contentWidth)
+	renderExperience(pdf, d, contentWidth)
 	renderStudies(pdf, d, contentWidth)
 	renderSkills(pdf, d, contentWidth)
 
@@ -71,10 +79,9 @@ func Generate(d *data.Data, photo []byte) ([]byte, error) {
 func renderHeader(pdf *fpdf.Fpdf, d *data.Data, photo []byte, width float64) {
 	left, top, _, _ := pdf.GetMargins()
 	textX := left
+	const diameter = 23.0
 
 	if len(photo) > 0 {
-		const diameter = 30.0
-
 		opts := fpdf.ImageOptions{ImageType: "JPG", ReadDpi: true}
 		pdf.RegisterImageOptionsReader("profile", opts, bytes.NewReader(photo))
 
@@ -82,49 +89,49 @@ func renderHeader(pdf *fpdf.Fpdf, d *data.Data, photo []byte, width float64) {
 		pdf.ImageOptions("profile", left, top, diameter, diameter, false, opts, 0, "")
 		pdf.ClipEnd()
 
-		textX = left + diameter + 8
+		textX = left + diameter + 7
 	}
 
-	pdf.SetXY(textX, top+2)
+	pdf.SetXY(textX, top+1)
 	setTextColor(pdf, colorText)
-	pdf.SetFont(fontFamily, "B", 22)
-	pdf.CellFormat(width-(textX-left), 9, d.Name, "", 2, "L", false, 0, "")
+	pdf.SetFont(fontFamily, "B", 18.5)
+	pdf.CellFormat(width-(textX-left), 7.2, d.Name, "", 2, "L", false, 0, "")
 
 	pdf.SetX(textX)
 	setTextColor(pdf, colorAccentStrong)
-	pdf.SetFont(fontFamily, "B", 12)
-	pdf.CellFormat(width-(textX-left), 7, d.Title, "", 2, "L", false, 0, "")
+	pdf.SetFont(fontFamily, "B", 10.8)
+	pdf.CellFormat(width-(textX-left), 5.8, d.Title, "", 2, "L", false, 0, "")
 
 	if len(d.Networks) > 0 {
 		pdf.SetXY(textX, pdf.GetY()+1)
-		pdf.SetFont(fontFamily, "", 9.5)
+		pdf.SetFont(fontFamily, "", 8.5)
 
 		for i, n := range d.Networks {
 			if i > 0 {
 				setTextColor(pdf, colorMuted)
 				sep := "   \u00b7   "
-				pdf.CellFormat(pdf.GetStringWidth(sep), 6, sep, "", 0, "L", false, 0, "")
+				pdf.CellFormat(pdf.GetStringWidth(sep), 5, sep, "", 0, "L", false, 0, "")
 			}
 
 			setTextColor(pdf, colorAccent2Contrast)
-			pdf.SetFont(fontFamily, "U", 9.5)
-			pdf.CellFormat(pdf.GetStringWidth(n.Label)+1, 6, n.Label, "", 0, "L", false, 0, n.URL)
-			pdf.SetFont(fontFamily, "", 9.5)
+			pdf.SetFont(fontFamily, "U", 8.5)
+			pdf.CellFormat(pdf.GetStringWidth(n.Label)+1, 5, n.Label, "", 0, "L", false, 0, n.URL)
+			pdf.SetFont(fontFamily, "", 8.5)
 		}
 
-		pdf.Ln(6)
+		pdf.Ln(5)
 	}
 
-	headerBottom := top + 32.0
+	headerBottom := top + diameter
 	if y := pdf.GetY(); y > headerBottom {
 		headerBottom = y
 	}
 
-	pdf.SetXY(left, headerBottom+6)
+	pdf.SetXY(left, headerBottom+3)
 	setDrawColor(pdf, colorBorder)
 	pdf.SetLineWidth(0.4)
 	pdf.Line(left, pdf.GetY(), left+width, pdf.GetY())
-	pdf.Ln(8)
+	pdf.Ln(4)
 }
 
 func renderAbout(pdf *fpdf.Fpdf, d *data.Data, width float64) {
@@ -134,17 +141,61 @@ func renderAbout(pdf *fpdf.Fpdf, d *data.Data, width float64) {
 
 	sectionHeading(pdf, "About")
 
-	pdf.SetFont(fontFamily, "", 10.5)
+	pdf.SetFont(fontFamily, "", 9.3)
 	setTextColor(pdf, colorMuted)
 
 	for i, p := range d.AboutParagraphs {
-		pdf.MultiCell(width, 5.6, p, "", "L", false)
+		pdf.MultiCell(width, 4.2, p, "", "L", false)
 		if i != len(d.AboutParagraphs)-1 {
-			pdf.Ln(2)
+			pdf.Ln(1)
 		}
 	}
 
-	pdf.Ln(6)
+	pdf.Ln(3.5)
+}
+
+func renderExperience(pdf *fpdf.Fpdf, d *data.Data, width float64) {
+	if len(d.Experience) == 0 {
+		return
+	}
+
+	sectionHeading(pdf, "Experience")
+
+	left, _, _, _ := pdf.GetMargins()
+	entries := d.Experience
+	if len(entries) > maxExperienceEntries {
+		entries = entries[:maxExperienceEntries]
+	}
+
+	roleWidth := width * 0.7
+	dateWidth := width - roleWidth
+
+	for i, e := range entries {
+		pdf.SetX(left)
+		pdf.SetFont(fontFamily, "B", 9.6)
+		setTextColor(pdf, colorText)
+		pdf.CellFormat(roleWidth, 4.1, e.Name, "", 0, "L", false, 0, "")
+
+		pdf.SetFont(fontFamily, "", 7.9)
+		setTextColor(pdf, colorMuted)
+		pdf.CellFormat(dateWidth, 4.1, e.DateRange, "", 2, "R", false, 0, "")
+
+		pdf.SetX(left)
+		pdf.SetFont(fontFamily, "B", 8.7)
+		setTextColor(pdf, colorAccent2Contrast)
+		pdf.CellFormat(width, 3.9, e.Company, "", 2, "L", false, 0, e.CompanyURL)
+
+		pdf.SetX(left)
+		pdf.SetFont(fontFamily, "", 8.1)
+		setTextColor(pdf, colorMuted)
+		pdf.CellFormat(width, 3.9, summarize(pdf, e.Description, width), "", 2, "L", false, 0, "")
+
+		if i != len(entries)-1 {
+			pdf.Ln(1.6)
+		}
+	}
+
+	pdf.Ln(3.5)
 }
 
 func renderStudies(pdf *fpdf.Fpdf, d *data.Data, width float64) {
@@ -155,24 +206,24 @@ func renderStudies(pdf *fpdf.Fpdf, d *data.Data, width float64) {
 	sectionHeading(pdf, "Education")
 
 	for i, s := range d.Studies {
-		pdf.SetFont(fontFamily, "B", 11.5)
-		setTextColor(pdf, colorText)
-		pdf.CellFormat(width, 6, s.Name, "", 2, "L", false, 0, "")
-
 		pdf.SetFont(fontFamily, "B", 10)
-		setTextColor(pdf, colorAccent2Contrast)
-		pdf.CellFormat(width, 5.5, s.School, "", 2, "L", false, 0, "")
+		setTextColor(pdf, colorText)
+		pdf.CellFormat(width, 4.4, s.Name, "", 2, "L", false, 0, "")
 
-		pdf.SetFont(fontFamily, "", 9.5)
+		pdf.SetFont(fontFamily, "B", 8.8)
+		setTextColor(pdf, colorAccent2Contrast)
+		pdf.CellFormat(width, 4, s.School, "", 2, "L", false, 0, "")
+
+		pdf.SetFont(fontFamily, "", 8)
 		setTextColor(pdf, colorMuted)
-		pdf.CellFormat(width, 5.5, s.DateRange+"   \u00b7   "+s.Duration, "", 2, "L", false, 0, "")
+		pdf.CellFormat(width, 4, s.DateRange+"   \u00b7   "+s.Duration, "", 2, "L", false, 0, "")
 
 		if i != len(d.Studies)-1 {
-			pdf.Ln(4)
+			pdf.Ln(1.8)
 		}
 	}
 
-	pdf.Ln(6)
+	pdf.Ln(3.5)
 }
 
 func renderSkills(pdf *fpdf.Fpdf, d *data.Data, width float64) {
@@ -185,18 +236,18 @@ func renderSkills(pdf *fpdf.Fpdf, d *data.Data, width float64) {
 	left, _, _, _ := pdf.GetMargins()
 	rightLimit := left + width
 	x, y := pdf.GetXY()
-	const lineHeight = 7.2
-	const gapX = 3.0
-	const gapY = 3.0
+	const lineHeight = 6.0
+	const gapX = 2.5
+	const gapY = 2.0
 
-	pdf.SetFont(fontFamily, "B", 9.5)
+	pdf.SetFont(fontFamily, "B", 8.6)
 
 	for _, s := range d.Skills {
 		label := s.Label
 		if s.Years != "" {
 			label = fmt.Sprintf("%s   \u00b7   %s yr", s.Label, s.Years)
 		}
-		w := pdf.GetStringWidth(label) + 7
+		w := pdf.GetStringWidth(label) + 6
 
 		if x+w > rightLimit {
 			x = left
@@ -222,34 +273,71 @@ func renderSkills(pdf *fpdf.Fpdf, d *data.Data, width float64) {
 
 		x += w + gapX
 	}
-
-	pdf.SetXY(left, y+lineHeight+8)
-}
-
-func sectionHeading(pdf *fpdf.Fpdf, text string) {
-	left, _, _, _ := pdf.GetMargins()
-
-	pdf.SetFont(fontFamily, "B", 15)
-	setTextColor(pdf, colorText)
-	pdf.CellFormat(0, 8, text, "", 2, "L", false, 0, "")
-
-	const underlineWidth = 16.0
-	y := pdf.GetY() + 1.5
-
-	setDrawColor(pdf, colorAccentStrong)
-	pdf.SetLineWidth(1.1)
-	pdf.Line(left, y, left+underlineWidth/2, y)
-	setDrawColor(pdf, colorAccent2Contrast)
-	pdf.Line(left+underlineWidth/2, y, left+underlineWidth, y)
-	pdf.SetLineWidth(0.2)
-
-	pdf.SetXY(left, y+6)
 }
 
 func pageBottomLimit(pdf *fpdf.Fpdf) float64 {
 	_, pageHeight := pdf.GetPageSize()
 	_, _, _, bottom := pdf.GetMargins()
 	return pageHeight - bottom
+}
+
+func sectionHeading(pdf *fpdf.Fpdf, text string) {
+	left, _, _, _ := pdf.GetMargins()
+
+	pdf.SetX(left)
+	pdf.SetFont(fontFamily, "B", 12.5)
+	setTextColor(pdf, colorText)
+	pdf.CellFormat(0, 6.5, text, "", 2, "L", false, 0, "")
+
+	const underlineWidth = 14.0
+	y := pdf.GetY() + 1
+
+	setDrawColor(pdf, colorAccentStrong)
+	pdf.SetLineWidth(1.0)
+	pdf.Line(left, y, left+underlineWidth/2, y)
+	setDrawColor(pdf, colorAccent2Contrast)
+	pdf.Line(left+underlineWidth/2, y, left+underlineWidth, y)
+	pdf.SetLineWidth(0.2)
+
+	pdf.SetXY(left, y+3.5)
+}
+
+// summarize returns the description's first sentence if it fits within
+// maxWidth, otherwise it truncates the whole description with an ellipsis.
+// It relies on the font currently selected on pdf for width measurements.
+func summarize(pdf *fpdf.Fpdf, s string, maxWidth float64) string {
+	s = strings.TrimSpace(s)
+
+	if idx := strings.Index(s, ". "); idx > 0 {
+		candidate := s[:idx+1]
+		if pdf.GetStringWidth(candidate) <= maxWidth {
+			return candidate
+		}
+	}
+
+	return truncateToWidth(pdf, s, maxWidth)
+}
+
+// truncateToWidth shortens s (adding an ellipsis) until it fits maxWidth
+// using the font currently selected on pdf.
+func truncateToWidth(pdf *fpdf.Fpdf, s string, maxWidth float64) string {
+	s = strings.TrimSpace(s)
+	if pdf.GetStringWidth(s) <= maxWidth {
+		return s
+	}
+
+	const ellipsis = "\u2026"
+	r := []rune(s)
+
+	for len(r) > 0 {
+		r = r[:len(r)-1]
+		candidate := strings.TrimSpace(string(r)) + ellipsis
+		if pdf.GetStringWidth(candidate) <= maxWidth {
+			return candidate
+		}
+	}
+
+	return ellipsis
 }
 
 func setTextColor(pdf *fpdf.Fpdf, hex string) {
