@@ -48,7 +48,7 @@
       "companyUrl": "https://www.mixologyice.com",
       "startDate": "2025-02",
       "endDate": "Present",
-      "description": "Mixology Ice is a gourmet ice company based in Miami, Florida. Here, I'm working on new projects that involves APIs, automation, microcontrollers and scanners.",
+      "description": "Gourmet ice company in Miami, FL. Building automation tools that integrate APIs, microcontrollers, and scanners.",
       "tech": ["Go", "SQLite", "TypeScript", "PostgreSQL"]
     },
     {
@@ -57,7 +57,7 @@
       "companyUrl": "https://kriu.co",
       "startDate": "2024-10",
       "endDate": "Present",
-      "description": "Kriu is a Workforce Management for Marketing Agencies Startup. As a Lead Developer and CTO I'm in charge of all technical decisions, development and maintenance of our MVP. We are using combination of HTMX and vanilla JavaScript for our frontend. As for the backend we are using PHP with Laravel and SQLite as our database. So far I have done all the development which includes lot of CRUD forms, a lot of reports, several charts using ChartJs. We are using Digital Ocean for our hosting, with Cloudflare as DNS upfront and GitHub as our repository provider. We have a deployment pipeline that uses docker compose building/pulling images to GitHub Container Registry and GitHub Actions with a little bash scripts run things.",
+      "description": "Workforce management SaaS for marketing agencies. As Lead Developer/CTO, I own all technical decisions and solely built the MVP: HTMX + vanilla JS frontend, Laravel + SQLite backend, with CRUD forms, reports, and ChartJs dashboards. Hosted on Digital Ocean behind Cloudflare, with a Docker Compose + GitHub Actions pipeline publishing to GitHub Container Registry.",
       "tech": ["Laravel", "HTMX", "SQLite", "Docker"]
     },
     {
@@ -66,7 +66,7 @@
       "companyUrl": "https://cerberu.com",
       "startDate": "2023-02",
       "endDate": "2024-08",
-      "description": "Cerberu is a company that applies technological solutions to hotel management. They take care of all management aspects, including the installation of secure digital locks. Here, the first thing I did was to create the foundation for unit tests for their main platform's extensive codebase and contributed to small features. Later, I integrated AI into their existing support channels, primarily for email and messaging services. I also developed a browser extension to integrate AI into their users' reviews channel. When working here, I used PHP with Yii, then Laravel, and a lot of Python with Flask and FastAPI. Another project I worked on, which was later discarded, was an invoice analysis automation service using AWS Textract and Python.",
+      "description": "Hotel management tech company, including secure digital lock installations. Set up unit testing foundations for their core platform, integrated AI into support email/chat channels, and built a browser extension adding AI to their review responses. Also prototyped an AWS Textract + Python invoice automation service (later discarded). Stack: PHP (Yii, Laravel), Python (Flask, FastAPI).",
       "tech": ["Python", "PHP", "HTMX", "Flask", "MySQL", "MongoDB", "AWS", "Docker", "Browser Extensions", "AI Prompt", "Chatbot"]
     },
     {
@@ -75,7 +75,7 @@
       "companyUrl": "https://lacaja.company",
       "startDate": "2020-08",
       "endDate": "2023-02",
-      "description": "La Caja Company is a Digital Marketing Agency in Spain. Here, I started as a Full Stack hire. As a Full Stack developer, I worked on an internal SaaS product created to serve as a tool for the company in their workflow and content management. This was developed as a multi-tenant SaaS application (with the intention of possibly making this internal tool public in the future) using Laravel and MySQL at the backend and Vue.js with Inertia.js in our frontend. I worked on creating features like multi-tenancy, implementing a multi-database approach, and handling most of the third-party API integrations including with Facebook, LinkedIn, X, and Google. I also set up the deployment pipeline using Laravel Forge and Envoyer, which we later migrated to Laravel Vapor. A year later, I was promoted to CTO of the company. As CTO, I was in charge of all technology decisions and continued as a Full Stack developer, this time also serving as a Lead Developer and mentor to our new hires. In this new role, I started another SaaS project, this time an analytics tool for social media that presented a simple and easy way to view metrics. For this, we used Laravel with Vapor, which was chart-intensive and heavily relied on third-party API integrations, also using Vue.js and Inertia.js.",
+      "description": "Digital marketing agency in Spain. Started as Full Stack developer building a multi-tenant internal SaaS (Laravel, MySQL, Vue.js + Inertia.js) with a multi-database architecture and integrations for Facebook, LinkedIn, X, and Google; set up deployment via Laravel Forge/Envoyer, later migrated to Vapor. Promoted to CTO, owning all tech decisions and mentoring new hires while leading a second SaaS: a chart-heavy social media analytics tool (Laravel Vapor, Vue.js, Inertia.js).",
       "tech": ["PHP", "JavaScript", "MySQL", "VueJs", "Laravel", "Forge", "Vapor", "AWS", "SaaS", "API", "ChartsJs"]
     },
     {
@@ -84,7 +84,7 @@
       "companyUrl": "https://artcronica.com",
       "startDate": "2018-06",
       "endDate": "2022-04",
-      "description": "Artcronica, a digital cuban magazine about art. Here I worked as content administrator and overall maintainer of their Wordpress website.",
+      "description": "Digital Cuban art magazine. Content administrator and maintainer for their WordPress website.",
       "tech": ["Wordpress"]
     },
     {
@@ -93,7 +93,7 @@
       "companyUrl": "https://nextreality.digital",
       "startDate": "2019-02",
       "endDate": "2020-12",
-      "description": "This was a startup focused on selling physical art online. Here, I worked on yet another SaaS, also multi-tenant. We used Laravel for our backend and Vue.js for the frontend. I worked on the project from the beginning, setting up the project, creating the deployment pipeline, configuring servers, etc. This site featured a 3D viewer which I developed from scratch using Three.js. I also handled the cart and payment integration, in this case with Stripe.",
+      "description": "Startup selling physical art online. Built a multi-tenant SaaS from scratch (Laravel, Vue.js), including project setup, deployment pipeline, and server configuration. Developed a custom Three.js 3D viewer and integrated Stripe for cart and payments.",
       "tech": ["JavaScript", "PHP", "MySQL", "ThreeJS", "Vue", "SaaS", "API"]
     },
     {
@@ -102,7 +102,7 @@
       "companyUrl": "https://fac.cu",
       "startDate": "2014-12",
       "endDate": "2018-05",
-      "description": "Fabrica De Arte Cubano. The art hub of Cuba. Here, I remade their website initially using Yii and later discovered Laravel, migrating the site to it. I discovered and used Vue.js during this project. My main accomplishment was creating their internal content management system to edit and update their scheduled concerts and art presentations. This system was integrated with the website, so the public had access to the programming of shows and events.",
+      "description": "The art hub of Cuba. Rebuilt their website, migrating it from Yii to Laravel and introducing Vue.js. Main accomplishment: an internal CMS for managing concerts and art presentations, integrated with the public website.",
       "tech": ["JavaScript", "PHP", "MySQL", "Vue", "Laravel"]
     },
     {
@@ -111,7 +111,7 @@
       "companyUrl": "https://www.jovenclub.cu",
       "startDate": "2013-10",
       "endDate": "2014-12",
-      "description": "My first job as a junior game developer. Here, I banged my head against Unity for the first time while working on a game inspired by the Tanks game for the Famicom. During my time there, I developed some of the gameplay mechanics for the game.",
+      "description": "First job as a junior game developer. Built gameplay mechanics in Unity for a game inspired by Tanks (Famicom).",
       "tech": ["Unity3D"]
     }
   ],

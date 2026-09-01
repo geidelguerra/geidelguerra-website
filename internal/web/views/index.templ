@@ -65,7 +65,7 @@ func twitterSiteHandle(d *data.Data) string {
 // IndexPage renders the full single-page portfolio.
 templ IndexPage(d *data.Data) {
 	@Layout(SEO{
-		Title:         fmt.Sprintf("%s — %s", d.Name, d.Title),
+		Title:         fmt.Sprintf("%s - %s", d.Name, d.Title),
 		Description:   d.Summary,
 		CanonicalURL:  seo.SiteURL + "/",
 		SiteName:      d.Name,

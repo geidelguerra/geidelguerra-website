@@ -3,7 +3,7 @@
 Single-page portfolio site. Go + [chi](https://github.com/go-chi/chi) +
 [templ](https://templ.guide), vanilla CSS/JS (no frontend frameworks or
 libraries), all assets embedded into a single, statically-linked binary
-(`CGO_ENABLED=0`, no libc/dynamic dependencies — verify with `file`/`ldd`).
+(`CGO_ENABLED=0`, no libc/dynamic dependencies; verify with `file`/`ldd`).
 Supports light/dark theme via CSS variables.
 
 ## Requirements
@@ -61,11 +61,11 @@ static host without running Go at all.
 
 ## Machine-readable data & CV
 
-- `GET /data.json` — the same site content as pretty-printed JSON, with
+- `GET /data.json`: the same site content as pretty-printed JSON, with
   `Access-Control-Allow-Origin: *`, meant for scrapers/crawlers/AI agents.
   Linked from `<head>` via `<link rel="alternate" type="application/json">`
   and from a small link in the page footer.
-- `GET /cv.pdf` — a single-page printable PDF resume generated on the fly
+- `GET /cv.pdf`: a single-page printable PDF resume generated on the fly
   from the same data (`internal/cv`): photo, name, title, networks and bio,
   then experience, education, then skills. Always rendered in the site's
   light color palette. Also linked from the footer. `Generate()` refuses to
@@ -86,7 +86,7 @@ the live server.
 - **Structured data**: a `schema.org` `Person` JSON-LD block (name, url,
   image, jobTitle, description, `sameAs` linking to all `networks` in
   `data.json`), rendered safely via `templ.JSONScript` (which JSON-encodes
-  and escapes for a `<script>` context — don't hand-build this by
+  and escapes for a `<script>` context; don't hand-build this by
   interpolating a Go string into a `<script>` tag, that reliably breaks:
   templ's default HTML-escaping mangles JSON's quotes into invalid script
   content).
@@ -103,15 +103,15 @@ the live server.
 ## Performance
 
 - CSS and JS are minified once at startup/build time (`internal/web/minify.go`,
-  using `github.com/tdewolff/minify/v2`, pure Go) and served from memory
-  — no build step or external tool required.
+  using `github.com/tdewolff/minify/v2`, pure Go) and served from memory,
+  no build step or external tool required.
 - All static assets (`/static/*`, `/favicon.ico`) get
   `Cache-Control: public, max-age=2592000, immutable` directly from the Go
   server, so caching is correct even without nginx/Cloudflare in front
   (nginx adds the same header again when deployed, see Deployment below).
 - `internal/web/static/images/profile.jpg` and `favicon.png` are pre-sized
   for how they're actually displayed (160px hero avatar, favicon/touch
-  icon) rather than shipping the original photo resolution — if you
+  icon) rather than shipping the original photo resolution; if you
   replace either file, keep it reasonably close to its display size
   (roughly 320×320 and 180×180 respectively) to avoid regressing this.
 
@@ -125,7 +125,7 @@ wrong theme. The toggle button in the nav bar flips and persists the choice.
 
 ## Deployment
 
-`deploy.sh` builds nothing itself — run it via `task deploy`, which first
+`deploy.sh` builds nothing itself; run it via `task deploy`, which first
 cross-compiles `bin/website` for `linux/amd64`, then:
 
 1. Renders a systemd unit and an nginx server block to local temp files
@@ -141,7 +141,7 @@ cross-compiles `bin/website` for `linux/amd64`, then:
    `127.0.0.1:8080`), runs `nginx -t`, and reloads/restarts it.
 
 Since `data.json` is embedded in the binary, there's nothing else to copy or
-seed on the server — every deploy is a single self-contained binary plus its
+seed on the server; every deploy is a single self-contained binary plus its
 nginx front door.
 
 Requires `SERVER` (an SSH target with key-based access and root, or
@@ -163,7 +163,7 @@ The generated nginx config assumes the domain is proxied through Cloudflare
   Cloudflare's IP ranges plus localhost (`allow`/`deny` in the server
   block), so the origin can't be reached by hitting its IP directly,
   bypassing Cloudflare entirely. Opt in with
-  `RESTRICT_TO_CLOUDFLARE=true SERVER=... DOMAIN=... task deploy` — **only**
+  `RESTRICT_TO_CLOUDFLARE=true SERVER=... DOMAIN=... task deploy`, but **only**
   if `DOMAIN`'s DNS record is actually proxied through Cloudflare
   (orange-clouded), otherwise every request will get a 403.
 - Sets long-lived, immutable `Cache-Control` on `/static/*` and
@@ -175,7 +175,7 @@ The generated nginx config assumes the domain is proxied through Cloudflare
 
 Cloudflare's IP ranges are hardcoded in `deploy.sh` (`CLOUDFLARE_IPS`); check
 https://www.cloudflare.com/ips/ occasionally and update that list if they
-change. The generated nginx config is plain HTTP on port 80 — typically
+change. The generated nginx config is plain HTTP on port 80, typically
 paired with Cloudflare's "Flexible" SSL mode, or run `certbot --nginx -d
 <DOMAIN>` on the server for real TLS to the origin ("Full"/"Full strict").
 

@@ -3,7 +3,7 @@
 //
 // To replace the profile photo or favicon, simply overwrite the files at
 // static/images/profile.jpg / static/images/favicon.png / static/favicon.ico
-// and rebuild — no code changes required.
+// and rebuild; no code changes required.
 package web
 
 import (

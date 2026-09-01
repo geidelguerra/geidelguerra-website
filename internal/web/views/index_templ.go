@@ -147,7 +147,7 @@ func IndexPage(d *data.Data) templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = Layout(SEO{
-			Title:         fmt.Sprintf("%s — %s", d.Name, d.Title),
+			Title:         fmt.Sprintf("%s - %s", d.Name, d.Title),
 			Description:   d.Summary,
 			CanonicalURL:  seo.SiteURL + "/",
 			SiteName:      d.Name,
