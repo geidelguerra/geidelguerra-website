@@ -4,10 +4,9 @@
   "about": "My name is Geidel Guerra. I'm a self-taught developer with formal studies, interested in low-level programming, web applications, and game development. I started learning to code using Macromedia Flash 8's offline help, creating a phone book app to store phone numbers of StarCraft players during the dial-up peer-to-peer gaming era. After finishing my IT Bachelor's degree and leaving my IT Engineer program in my third year, my first job was developing games with Unity. Since then, I've been involved in developing web applications ranging from simple portfolio websites to complex e-commerce multi-tenancy SaaS, command-line tools for process automation, browser extensions, and configuring CI pipelines and Linux servers.\n\nI'm a generalist with a curiosity for many things, passionate about learning new skills and broadening my development capabilities. I occasionally play video games and have continued my journey in game development, exploring new possibilities. Some of my very crude games can be found on my GitHub, and you can play some of them on my website.",
   "startDate": "2013-10",
   "networks": [
-    { "label": "Website", "url": "https://geidelguerra.com" },
     { "label": "LinkedIn", "url": "https://linkedin.com/in/geidelguerra" },
     { "label": "GitHub", "url": "https://github.com/geidelguerra" },
-    { "label": "Twitter", "url": "https://twitter.com/geidelguerra" }
+    { "label": "X", "url": "https://x.com/geidelguerra" }
   ],
   "skills": [
     { "label": "Go", "url": "https://go.dev/", "years": "2", "preferred": true },
