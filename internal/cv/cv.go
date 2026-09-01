@@ -95,6 +95,26 @@ func renderHeader(pdf *fpdf.Fpdf, d *data.Data, photo []byte, width float64) {
 	pdf.SetFont(fontFamily, "B", 12)
 	pdf.CellFormat(width-(textX-left), 7, d.Title, "", 2, "L", false, 0, "")
 
+	if len(d.Networks) > 0 {
+		pdf.SetXY(textX, pdf.GetY()+1)
+		pdf.SetFont(fontFamily, "", 9.5)
+
+		for i, n := range d.Networks {
+			if i > 0 {
+				setTextColor(pdf, colorMuted)
+				sep := "   \u00b7   "
+				pdf.CellFormat(pdf.GetStringWidth(sep), 6, sep, "", 0, "L", false, 0, "")
+			}
+
+			setTextColor(pdf, colorAccent2Contrast)
+			pdf.SetFont(fontFamily, "U", 9.5)
+			pdf.CellFormat(pdf.GetStringWidth(n.Label)+1, 6, n.Label, "", 0, "L", false, 0, n.URL)
+			pdf.SetFont(fontFamily, "", 9.5)
+		}
+
+		pdf.Ln(6)
+	}
+
 	headerBottom := top + 32.0
 	if y := pdf.GetY(); y > headerBottom {
 		headerBottom = y

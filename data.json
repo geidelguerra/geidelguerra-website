@@ -11,17 +11,10 @@
   "skills": [
     { "label": "Go", "url": "https://go.dev/", "years": "2", "preferred": true },
     { "label": "TypeScript", "url": "https://www.typescriptlang.org//", "years": "2", "preferred": true },
-    { "label": "MySQL", "url": "https://www.mysql.com", "years": "10", "preferred": false },
-    { "label": "SQLite", "url": "https://www.sqlite.org/index.html", "years": "2", "preferred": true },
-    { "label": "PostgreSQL", "url": "https://www.postgresql.org/", "years": "1.5", "preferred": true },
-    { "label": "Odin", "url": "https://odin-lang.org/", "years": "0.5", "preferred": false },
-    { "label": "Python", "url": "https://www.python.org/", "years": "2" },
-    { "label": "Flask", "url": "https://flask.palletsprojects.com/en/3.0.x/", "years": "2" },
+    { "label": "SQLite", "url": "https://www.sqlite.org/index.html", "years": "4", "preferred": true },
+    { "label": "PostgreSQL", "url": "https://www.postgresql.org/", "years": "2", "preferred": true },
     { "label": "PHP", "url": "https://php.net", "years": "11" },
     { "label": "Laravel", "url": "https://laravel.com/", "years": "10" },
-    { "label": "JavaScript", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_overview", "years": "10" },
-    { "label": "VueJs", "url": "https://vuejs.org/", "years": "10" },
-    { "label": "MongoDB", "url": "https://www.mongodb.com/", "years": "1.5" },
     { "label": "Docker", "url": "https://www.docker.com/", "years": "2" }
   ],
   "toolkit": [
