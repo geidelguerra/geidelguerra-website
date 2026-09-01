@@ -242,12 +242,6 @@ a:hover {
 	font-weight: 600;
 }
 
-.hero-summary {
-	max-width: 640px;
-	margin: 20px auto 0;
-	color: var(--text-muted);
-	line-height: 1.65;
-}
 
 .hero-actions {
 	display: flex;
