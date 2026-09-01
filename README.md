@@ -121,12 +121,13 @@ The generated nginx config assumes the domain is proxied through Cloudflare
   ranges), instead of logging Cloudflare's edge IP for every request.
 - Trusts Cloudflare's `X-Forwarded-Proto` for the visitor's real scheme
   (falls back to nginx's own `$scheme` if it's ever missing).
-- **Restricts direct access to the origin to Cloudflare's IP ranges plus
-  localhost** (`allow`/`deny` in the server block), so the origin can't be
-  reached by hitting its IP directly, bypassing Cloudflare entirely. If the
-  domain (or a subdomain reusing this config) isn't proxied through
-  Cloudflare, remove this block from the rendered config, or it'll return
-  403 for every visitor.
+- Optionally (**off by default**) restricts direct access to the origin to
+  Cloudflare's IP ranges plus localhost (`allow`/`deny` in the server
+  block), so the origin can't be reached by hitting its IP directly,
+  bypassing Cloudflare entirely. Opt in with
+  `RESTRICT_TO_CLOUDFLARE=true SERVER=... DOMAIN=... task deploy` — **only**
+  if `DOMAIN`'s DNS record is actually proxied through Cloudflare
+  (orange-clouded), otherwise every request will get a 403.
 - Sets long-lived, immutable `Cache-Control` on `/static/*` and
   `/favicon.ico` so Cloudflare's edge and browsers cache them aggressively,
   and `Cache-Control: no-cache` on everything else (the page, `/data.json`,

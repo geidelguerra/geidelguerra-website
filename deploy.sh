@@ -60,6 +60,24 @@ for ip in "${CLOUDFLARE_IPS[@]}"; do
     CLOUDFLARE_ALLOW_DIRECTIVES+="    allow $ip;"$'\n'
 done
 
+# Off by default: only enable this if DOMAIN's DNS is actually proxied
+# through Cloudflare (orange-clouded). Otherwise every request bypasses
+# Cloudflare, hits the origin directly, and gets a 403 from the deny-all
+# below. Opt in with RESTRICT_TO_CLOUDFLARE=true.
+RESTRICT_TO_CLOUDFLARE="${RESTRICT_TO_CLOUDFLARE:-false}"
+if [ "$RESTRICT_TO_CLOUDFLARE" = "true" ]; then
+    CLOUDFLARE_ACCESS_BLOCK="    # Only Cloudflare (and localhost, for local health checks) may reach
+    # this origin directly, so Cloudflare's cache/WAF can't be bypassed by
+    # hitting the server's IP.
+$CLOUDFLARE_ALLOW_DIRECTIVES
+    allow 127.0.0.1;
+    allow ::1;
+    deny all;
+"
+else
+    CLOUDFLARE_ACCESS_BLOCK=""
+fi
+
 : "${SERVER:?SERVER environment variable must be set}"
 : "${DOMAIN:?DOMAIN environment variable must be set (e.g. DOMAIN=geidelguerra.com)}"
 
@@ -121,15 +139,7 @@ server {
     listen [::]:80;
     server_name $DOMAIN;
 
-    # Only Cloudflare (and localhost, for local health checks) may reach
-    # this origin directly, so Cloudflare's cache/WAF can't be bypassed by
-    # hitting the server's IP. Remove this allow/deny block if you need
-    # direct, non-Cloudflare access to this host.
-$CLOUDFLARE_ALLOW_DIRECTIVES
-    allow 127.0.0.1;
-    allow ::1;
-    deny all;
-
+$CLOUDFLARE_ACCESS_BLOCK
     # Long-lived, cacheable static assets: let Cloudflare's edge and
     # visitors' browsers cache these aggressively.
     location /static/ {
