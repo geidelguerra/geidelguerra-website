@@ -24,3 +24,9 @@ func Static() fs.FS {
 	}
 	return sub
 }
+
+// ProfilePhoto returns the embedded profile photo bytes (JPEG), used both on
+// the page itself and to build the PDF CV.
+func ProfilePhoto() ([]byte, error) {
+	return fs.ReadFile(Static(), "images/profile.jpg")
+}

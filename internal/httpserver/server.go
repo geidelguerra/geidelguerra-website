@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
+	"github.com/geidelguerra/website/internal/cv"
 	"github.com/geidelguerra/website/internal/data"
 	"github.com/geidelguerra/website/internal/web"
 	"github.com/geidelguerra/website/internal/web/views"
@@ -72,5 +74,41 @@ func New(load DataLoader) http.Handler {
 		w.Write(body)
 	})
 
+	// /cv.pdf renders a printable PDF resume (photo, name, title, bio,
+	// education, skills) from the same site content, always in light mode.
+	r.Get("/cv.pdf", func(w http.ResponseWriter, r *http.Request) {
+		d, err := load()
+		if err != nil {
+			log.Printf("load data: %v", err)
+			http.Error(w, "failed to load site data", http.StatusInternalServerError)
+			return
+		}
+
+		photo, err := web.ProfilePhoto()
+		if err != nil {
+			log.Printf("load profile photo: %v", err)
+		}
+
+		body, err := cv.Generate(d, photo)
+		if err != nil {
+			log.Printf("generate cv: %v", err)
+			http.Error(w, "failed to generate CV", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/pdf")
+		w.Header().Set("Content-Disposition", `inline; filename="`+cvFilename(d.Name)+`"`)
+		w.Header().Set("Cache-Control", "public, max-age=300")
+		w.Write(body)
+	})
+
 	return r
+}
+
+func cvFilename(name string) string {
+	slug := strings.ReplaceAll(strings.TrimSpace(name), " ", "-")
+	if slug == "" {
+		slug = "CV"
+	}
+	return slug + "-CV.pdf"
 }

@@ -56,6 +56,20 @@ website generate [-out dist] [-data data.json]
 static `index.html` plus its static assets, so the site can be hosted on any
 static host without running Go at all.
 
+## Machine-readable data & CV
+
+- `GET /data.json` — the same site content as pretty-printed JSON, with
+  `Access-Control-Allow-Origin: *`, meant for scrapers/crawlers/AI agents.
+  Linked from `<head>` via `<link rel="alternate" type="application/json">`
+  and from a small link in the page footer.
+- `GET /cv.pdf` — a printable PDF resume generated on the fly from the same
+  data (`internal/cv`): photo, name, title and bio, then education, then
+  skills. Always rendered in the site's light color palette. Also linked
+  from the footer.
+
+Both are also produced by `task generate` (`dist/data.json`, `dist/cv.pdf`),
+so the static export stays in sync with the live server.
+
 ## Theming
 
 Colors are defined as CSS variables in `internal/web/static/css/style.css`,
@@ -77,4 +91,6 @@ internal/
     views/                       templ components (layout + page sections)
   httpserver/                    chi router for the live server
   generator/                     static site exporter
+  cv/                            PDF resume generator (github.com/go-pdf/fpdf)
+    fonts/                       bundled Noto Sans (SIL OFL) for full Unicode/accent support
 ```

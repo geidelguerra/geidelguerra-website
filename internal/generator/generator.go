@@ -10,13 +10,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/geidelguerra/website/internal/cv"
 	"github.com/geidelguerra/website/internal/data"
 	"github.com/geidelguerra/website/internal/web"
 	"github.com/geidelguerra/website/internal/web/views"
 )
 
 // Generate renders d into outDir as a static site: outDir/index.html,
-// outDir/data.json, outDir/favicon.ico and outDir/static/**.
+// outDir/data.json, outDir/cv.pdf, outDir/favicon.ico and outDir/static/**.
 func Generate(d *data.Data, outDir string) error {
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		return fmt.Errorf("create output dir: %w", err)
@@ -27,6 +28,10 @@ func Generate(d *data.Data, outDir string) error {
 	}
 
 	if err := writeDataJSON(d, outDir); err != nil {
+		return err
+	}
+
+	if err := writeCV(d, outDir); err != nil {
 		return err
 	}
 
@@ -62,6 +67,26 @@ func writeDataJSON(d *data.Data, outDir string) error {
 
 	if err := os.WriteFile(filepath.Join(outDir, "data.json"), body, 0o644); err != nil {
 		return fmt.Errorf("write data.json: %w", err)
+	}
+
+	return nil
+}
+
+// writeCV renders the printable PDF resume, mirroring the /cv.pdf endpoint
+// served live, for consumers of the static export.
+func writeCV(d *data.Data, outDir string) error {
+	photo, err := web.ProfilePhoto()
+	if err != nil {
+		return fmt.Errorf("read profile photo: %w", err)
+	}
+
+	body, err := cv.Generate(d, photo)
+	if err != nil {
+		return fmt.Errorf("generate cv.pdf: %w", err)
+	}
+
+	if err := os.WriteFile(filepath.Join(outDir, "cv.pdf"), body, 0o644); err != nil {
+		return fmt.Errorf("write cv.pdf: %w", err)
 	}
 
 	return nil

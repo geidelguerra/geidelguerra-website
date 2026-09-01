@@ -6,3 +6,5 @@ require (
 	github.com/a-h/templ v0.3.1020
 	github.com/go-chi/chi/v5 v5.3.2
 )
+
+require github.com/go-pdf/fpdf v0.9.0
