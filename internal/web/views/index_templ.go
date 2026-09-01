@@ -305,7 +305,7 @@ func Hero(d *data.Data) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</p><div class=\"hero-actions\"><a class=\"btn btn-primary\" href=\"#projects\">See my work</a> <a class=\"btn btn-ghost\" href=\"#contact\">Get in touch</a></div><ul class=\"hero-networks\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</p><div class=\"hero-actions\"><a class=\"btn btn-primary\" href=\"#experience\">See my work</a> <a class=\"btn btn-ghost\" href=\"#contact\">Get in touch</a></div><ul class=\"hero-networks\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
