@@ -35,20 +35,22 @@ tasks:
       - go fmt ./...
 
   build:
-    desc: Build the website binary (single self-contained executable)
+    desc: Build the website binary (single statically-linked executable)
     deps:
       - templ:generate
-    cmd: go build -o {{.BIN_DIR}}/{{.BIN_NAME}} .
+    env:
+      CGO_ENABLED: 0
+    cmd: go build -ldflags="-s -w" -o {{.BIN_DIR}}/{{.BIN_NAME}} .
 
   build:linux:
-    desc: Cross-compile the binary for linux/amd64 (used for deployment)
+    desc: Cross-compile a statically-linked binary for linux/amd64 (used for deployment)
     deps:
       - templ:generate
     env:
       GOOS: linux
       GOARCH: amd64
       CGO_ENABLED: 0
-    cmd: go build -o {{.BIN_DIR}}/{{.BIN_NAME}} .
+    cmd: go build -ldflags="-s -w" -o {{.BIN_DIR}}/{{.BIN_NAME}} .
 
   run:
     desc: Run the live server (go run, no build artifact)

@@ -2,8 +2,9 @@
 
 Single-page portfolio site. Go + [chi](https://github.com/go-chi/chi) +
 [templ](https://templ.guide), vanilla CSS/JS (no frontend frameworks or
-libraries), all assets embedded into a single binary. Supports light/dark
-theme via CSS variables.
+libraries), all assets embedded into a single, statically-linked binary
+(`CGO_ENABLED=0`, no libc/dynamic dependencies — verify with `file`/`ldd`).
+Supports light/dark theme via CSS variables.
 
 ## Requirements
 
@@ -33,8 +34,8 @@ Just overwrite these files (keep the same names) and rebuild.
 ## Tasks
 
 ```sh
-task build           # go build a single binary into bin/website
-task build:linux      # cross-compile for linux/amd64 (used by deploy)
+task build           # build a static, stripped binary into bin/website
+task build:linux      # cross-compile a static binary for linux/amd64 (used by deploy)
 task run              # go run the live server (task run -- -addr :3000)
 task dev              # live server + templ --watch, regenerating on .templ changes
 task generate         # export a static build into dist/
