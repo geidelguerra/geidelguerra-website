@@ -1,7 +1,7 @@
 {
   "name": "Geidel Guerra",
   "title": "Software Developer / Tech Solutions",
-  "about": "I'm a generalist developer with a genuine curiosity for how things work, which keeps me comfortable moving across languages, stacks, and problem domains. Over more than a decade I've built tech solutions ranging from SaaS platforms and e-commerce systems to command-line tools, browser extensions, and CI/deployment pipelines.\n\nLately my focus has been on SaaS solutions for both B2B and B2C products, AI integrations, DevOps, and hardware integrations — connecting APIs, microcontrollers, and scanners into practical business tools. I enjoy turning ambiguous problems into reliable, working software.",
+  "about": "I'm a generalist developer with a genuine curiosity for how things work, which keeps me comfortable moving across languages, stacks, and problem domains. Over more than a decade I've built tech solutions ranging from SaaS platforms and e-commerce systems to command-line tools, browser extensions, and CI/deployment pipelines.\n\nLately my focus has been on SaaS solutions for both B2B and B2C products, AI integrations, DevOps, and hardware integrations, connecting APIs, microcontrollers, and scanners into practical business tools. I enjoy turning ambiguous problems into reliable, working software.",
   "startDate": "2013-10",
   "networks": [
     { "label": "LinkedIn", "url": "https://linkedin.com/in/geidelguerra" },
