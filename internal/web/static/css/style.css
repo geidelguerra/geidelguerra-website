@@ -316,6 +316,7 @@ a:hover {
 	transform: translateX(-50%);
 	color: var(--text-muted);
 	animation: bounce 2.2s infinite;
+	will-change: transform;
 }
 
 .scroll-cue svg {

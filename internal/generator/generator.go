@@ -143,6 +143,19 @@ func copyStatic(outDir string) error {
 			return fmt.Errorf("read %s: %w", path, err)
 		}
 
+		// Serve minified CSS/JS instead of the raw embedded sources, matching
+		// the live server.
+		switch path {
+		case "css/style.css":
+			if content, err = web.MinifyCSS(content); err != nil {
+				return fmt.Errorf("minify style.css: %w", err)
+			}
+		case "js/app.js":
+			if content, err = web.MinifyJS(content); err != nil {
+				return fmt.Errorf("minify app.js: %w", err)
+			}
+		}
+
 		if err := os.WriteFile(dest, content, 0o644); err != nil {
 			return fmt.Errorf("write %s: %w", dest, err)
 		}

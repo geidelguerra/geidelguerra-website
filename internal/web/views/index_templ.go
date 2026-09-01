@@ -153,8 +153,8 @@ func IndexPage(d *data.Data) templ.Component {
 			SiteName:      d.Name,
 			OGImage:       seo.SiteURL + "/static/images/profile.jpg",
 			OGImageType:   "image/jpeg",
-			OGImageWidth:  413,
-			OGImageHeight: 413,
+			OGImageWidth:  320,
+			OGImageHeight: 320,
 			TwitterSite:   twitterSiteHandle(d),
 			JSONLD:        templ.JSONScript("person-jsonld", buildPersonSchema(d)).WithType("application/ld+json"),
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
@@ -279,7 +279,7 @@ func Hero(d *data.Data) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" width=\"220\" height=\"220\"></div><h1 class=\"hero-name\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" width=\"160\" height=\"160\"></div><h1 class=\"hero-name\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -100,6 +100,21 @@ the live server.
 - Single `<h1>` (the name, in the hero) with one `<h2>` per section and
   descriptive link text/`alt` attributes throughout.
 
+## Performance
+
+- CSS and JS are minified once at startup/build time (`internal/web/minify.go`,
+  using `github.com/tdewolff/minify/v2`, pure Go) and served from memory
+  — no build step or external tool required.
+- All static assets (`/static/*`, `/favicon.ico`) get
+  `Cache-Control: public, max-age=2592000, immutable` directly from the Go
+  server, so caching is correct even without nginx/Cloudflare in front
+  (nginx adds the same header again when deployed, see Deployment below).
+- `internal/web/static/images/profile.jpg` and `favicon.png` are pre-sized
+  for how they're actually displayed (160px hero avatar, favicon/touch
+  icon) rather than shipping the original photo resolution — if you
+  replace either file, keep it reasonably close to its display size
+  (roughly 320×320 and 180×180 respectively) to avoid regressing this.
+
 ## Theming
 
 Colors are defined as CSS variables in `internal/web/static/css/style.css`,

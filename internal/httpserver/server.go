@@ -4,6 +4,7 @@ package httpserver
 import (
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"strings"
@@ -29,12 +30,47 @@ func New(d *data.Data) (http.Handler, error) {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	const staticCacheControl = "public, max-age=2592000, immutable"
+
 	staticFS := web.Static()
 	fileServer := http.FileServer(http.FS(staticFS))
 
-	r.Handle("/static/*", http.StripPrefix("/static/", fileServer))
+	r.Handle("/static/*", http.StripPrefix("/static/", withCacheControl(staticCacheControl, fileServer)))
 	r.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", staticCacheControl)
 		fileServer.ServeHTTP(w, r)
+	})
+
+	// Serve minified CSS/JS instead of the raw embedded sources. Registered
+	// as exact routes, which chi matches ahead of the /static/* wildcard
+	// above.
+	cssSrc, err := fs.ReadFile(staticFS, "css/style.css")
+	if err != nil {
+		return nil, fmt.Errorf("read style.css: %w", err)
+	}
+	minifiedCSS, err := web.MinifyCSS(cssSrc)
+	if err != nil {
+		return nil, fmt.Errorf("minify style.css: %w", err)
+	}
+
+	jsSrc, err := fs.ReadFile(staticFS, "js/app.js")
+	if err != nil {
+		return nil, fmt.Errorf("read app.js: %w", err)
+	}
+	minifiedJS, err := web.MinifyJS(jsSrc)
+	if err != nil {
+		return nil, fmt.Errorf("minify app.js: %w", err)
+	}
+
+	r.Get("/static/css/style.css", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/css; charset=utf-8")
+		w.Header().Set("Cache-Control", staticCacheControl)
+		w.Write(minifiedCSS)
+	})
+	r.Get("/static/js/app.js", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
+		w.Header().Set("Cache-Control", staticCacheControl)
+		w.Write(minifiedJS)
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -102,4 +138,11 @@ func cvFilename(name string) string {
 		slug = "CV"
 	}
 	return slug + "-CV.pdf"
+}
+
+func withCacheControl(value string, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", value)
+		next.ServeHTTP(w, r)
+	})
 }

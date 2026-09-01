@@ -71,8 +71,8 @@ templ IndexPage(d *data.Data) {
 		SiteName:      d.Name,
 		OGImage:       seo.SiteURL + "/static/images/profile.jpg",
 		OGImageType:   "image/jpeg",
-		OGImageWidth:  413,
-		OGImageHeight: 413,
+		OGImageWidth:  320,
+		OGImageHeight: 320,
 		TwitterSite:   twitterSiteHandle(d),
 		JSONLD:        templ.JSONScript("person-jsonld", buildPersonSchema(d)).WithType("application/ld+json"),
 	}) {
@@ -147,7 +147,7 @@ templ Hero(d *data.Data) {
 	<section id="home" class="hero">
 		<div class="container hero-inner">
 			<div class="hero-avatar-wrap">
-				<img class="hero-avatar" src="/static/images/profile.jpg" alt={ d.Name } width="220" height="220"/>
+				<img class="hero-avatar" src="/static/images/profile.jpg" alt={ d.Name } width="160" height="160"/>
 			</div>
 			<h1 class="hero-name">{ d.Name }</h1>
 			<p class="hero-title">{ d.Title }</p>
