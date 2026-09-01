@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-APP_NAME="geidelguerra-website"
+APP_NAME="website"
 BIN_NAME="website"
 BIN_PATH="./bin/$BIN_NAME"
 REMOTE_TEMP_BIN_PATH="/tmp/$BIN_NAME"
@@ -23,7 +23,7 @@ REMOTE_SERVICE_PATH="/etc/systemd/system/$REMOTE_SERVICE_FILENAME"
 
 SERVICE_FILE_CONTENT=$(cat << EOF
 [Unit]
-Description=Geidel Guerra Website
+Description=Website
 After=network.target
 
 [Service]
