@@ -85,7 +85,7 @@ tasks:
       - rm -rf {{.BIN_DIR}} {{.DIST_DIR}}
 
   deploy:
-    desc: 'Build for linux/amd64 and deploy the binary via SSH (requires SERVER=user@host)'
+    desc: 'Build for linux/amd64 and deploy via SSH, incl. nginx (requires SERVER=user@host and DOMAIN=example.com)'
     deps:
       - build:linux
     cmd: ./deploy.sh

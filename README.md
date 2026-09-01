@@ -90,24 +90,31 @@ wrong theme. The toggle button in the nav bar flips and persists the choice.
 `deploy.sh` builds nothing itself — run it via `task deploy`, which first
 cross-compiles `bin/website` for `linux/amd64`, then:
 
-1. Copies the binary to the server over `scp`.
-2. Over `ssh`, creates a dedicated `website` user/group (if missing),
-   installs the binary at `/apps/geidelguerra-website/website`, writes a
-   systemd unit (`geidelguerra-website.service`) that runs
-   `website serve -addr :8080`, and enables + restarts it.
+1. Renders a systemd unit and an nginx server block to local temp files
+   (kept as separate files, then `scp`'d verbatim, specifically to avoid
+   nginx's own `$host`/`$scheme`/etc. variables being mistaken for shell
+   variables and expanded away when embedded in a remote `ssh` command).
+2. Copies the binary + those two files to the server over `scp`.
+3. Over `ssh`: creates a dedicated `website` user/group (if missing),
+   installs the binary at `/apps/website/website`, writes/enables/restarts
+   a systemd unit (`website.service`) that runs `website serve -addr :8080`.
+4. Installs `nginx` if it's missing, writes the rendered server block to
+   `/etc/nginx/conf.d/website.conf` (reverse-proxying `DOMAIN` on port 80 to
+   `127.0.0.1:8080`), runs `nginx -t`, and reloads/restarts it.
 
 Since `data.json` is embedded in the binary, there's nothing else to copy or
-seed on the server — every deploy is a single self-contained binary.
+seed on the server — every deploy is a single self-contained binary plus its
+nginx front door.
 
-Requires `SERVER` to be set to an SSH target with key-based access and root
-(or equivalent) privileges, e.g.:
+Requires `SERVER` (an SSH target with key-based access and root, or
+equivalent, privileges) and `DOMAIN` (the hostname nginx should listen for):
 
 ```sh
-SERVER=root@geidelguerra.com task deploy
+SERVER=root@geidelguerra.com DOMAIN=geidelguerra.com task deploy
 ```
 
-Put a reverse proxy (e.g. nginx/Caddy) in front of port 8080 for TLS and to
-serve the domain on 443/80.
+The generated nginx config is plain HTTP on port 80. Run `certbot --nginx -d
+<DOMAIN>` (or similar) on the server afterwards to add TLS/443.
 
 ## Project layout
 
