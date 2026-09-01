@@ -7,6 +7,7 @@ package cv
 import (
 	"bytes"
 	_ "embed"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -44,6 +45,12 @@ const pageMargin = 15.0
 // so the resume reliably fits a single page even if more are added later.
 const maxExperienceEntries = 8
 
+// ErrTooManyPages is returned by Generate when the rendered content no
+// longer fits on a single page. This is meant to fail loudly (e.g. during
+// `task generate` or a live request) instead of silently shipping a
+// multi-page "CV", so growing data.json content gets noticed and trimmed.
+var ErrTooManyPages = errors.New("cv: content no longer fits on a single page")
+
 // Generate renders d (and its profile photo, JPEG bytes) into a single-page
 // PDF CV: photo + name + title + networks, then bio, experience, education
 // and skills.
@@ -67,6 +74,10 @@ func Generate(d *data.Data, photo []byte) ([]byte, error) {
 	renderExperience(pdf, d, contentWidth)
 	renderStudies(pdf, d, contentWidth)
 	renderSkills(pdf, d, contentWidth)
+
+	if pages := pdf.PageNo(); pages > 1 {
+		return nil, fmt.Errorf("%w: rendered %d pages; trim about/experience/education/skills in data.json (or lower maxExperienceEntries)", ErrTooManyPages, pages)
+	}
 
 	var buf bytes.Buffer
 	if err := pdf.Output(&buf); err != nil {
