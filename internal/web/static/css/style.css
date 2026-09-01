@@ -10,6 +10,7 @@
 	--accent-soft: #eee9ff;
 	--accent-2: #17c3b2;
 	--accent-2-soft: #dff7f3;
+	--accent-2-contrast: #0f766e;
 
 	--radius-sm: 6px;
 	--radius-md: 12px;
@@ -28,6 +29,8 @@
 	--text-muted: #5c5972;
 	--shadow: 0 10px 30px -12px rgba(45, 33, 110, 0.18);
 	--accent-soft: #eee9ff;
+	--accent-2-soft: #ccfbf1;
+	--accent-2-contrast: #0f766e;
 }
 
 [data-theme="dark"] {
@@ -39,6 +42,8 @@
 	--text-muted: #a7a3c4;
 	--shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.55);
 	--accent-soft: #241f47;
+	--accent-2-soft: #134e4a;
+	--accent-2-contrast: #5eead4;
 }
 
 * {
@@ -554,7 +559,7 @@ a:hover {
 	display: inline-block;
 	margin: 4px 0 12px;
 	font-weight: 600;
-	color: var(--accent-2);
+	color: var(--accent-2-contrast);
 	font-size: 0.9rem;
 }
 
@@ -576,7 +581,7 @@ a:hover {
 .tag {
 	font-size: 0.75rem;
 	font-weight: 600;
-	color: var(--accent-2);
+	color: var(--accent-2-contrast);
 	background: var(--accent-2-soft);
 	border-radius: 999px;
 	padding: 4px 10px;
@@ -689,7 +694,7 @@ a:hover {
 
 .study-school {
 	margin: 0 0 4px;
-	color: var(--accent-2);
+	color: var(--accent-2-contrast);
 	font-weight: 600;
 	font-size: 0.9rem;
 }
