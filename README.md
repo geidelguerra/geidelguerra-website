@@ -113,8 +113,33 @@ equivalent, privileges) and `DOMAIN` (the hostname nginx should listen for):
 SERVER=root@geidelguerra.com DOMAIN=geidelguerra.com task deploy
 ```
 
-The generated nginx config is plain HTTP on port 80. Run `certbot --nginx -d
-<DOMAIN>` (or similar) on the server afterwards to add TLS/443.
+The generated nginx config assumes the domain is proxied through Cloudflare
+(orange-clouded DNS) and:
+
+- Restores the real visitor IP from Cloudflare's `CF-Connecting-IP` header
+  (via `set_real_ip_from`/`real_ip_header`, using Cloudflare's published IP
+  ranges), instead of logging Cloudflare's edge IP for every request.
+- Trusts Cloudflare's `X-Forwarded-Proto` for the visitor's real scheme
+  (falls back to nginx's own `$scheme` if it's ever missing).
+- **Restricts direct access to the origin to Cloudflare's IP ranges plus
+  localhost** (`allow`/`deny` in the server block), so the origin can't be
+  reached by hitting its IP directly, bypassing Cloudflare entirely. If the
+  domain (or a subdomain reusing this config) isn't proxied through
+  Cloudflare, remove this block from the rendered config, or it'll return
+  403 for every visitor.
+- Sets long-lived, immutable `Cache-Control` on `/static/*` and
+  `/favicon.ico` so Cloudflare's edge and browsers cache them aggressively,
+  and `Cache-Control: no-cache` on everything else (the page, `/data.json`,
+  `/cv.pdf`) so a redeploy is visible immediately without needing a cache
+  purge.
+- Enables gzip for text-based responses.
+
+Cloudflare's IP ranges are hardcoded in `deploy.sh` (`CLOUDFLARE_IPS`); check
+https://www.cloudflare.com/ips/ occasionally and update that list if they
+change. The generated nginx config is plain HTTP on port 80 — typically
+paired with Cloudflare's "Flexible" SSL mode, or run `certbot --nginx -d
+<DOMAIN>` on the server for real TLS to the origin ("Full"/"Full strict").
+
 
 ## Project layout
 

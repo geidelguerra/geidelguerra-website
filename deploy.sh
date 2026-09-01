@@ -23,6 +23,43 @@ REMOTE_NGINX_FILENAME="$APP_NAME.conf"
 REMOTE_TEMP_NGINX_PATH="/tmp/$REMOTE_NGINX_FILENAME"
 REMOTE_NGINX_PATH="/etc/nginx/conf.d/$REMOTE_NGINX_FILENAME"
 
+# Cloudflare's published IP ranges (https://www.cloudflare.com/ips/). Used
+# below to (1) restore the real visitor IP from the CF-Connecting-IP header
+# and (2) restrict direct access to the origin to Cloudflare + localhost, so
+# Cloudflare's cache/WAF can't be bypassed by hitting the server's IP
+# directly. Update this list if Cloudflare changes their ranges.
+CLOUDFLARE_IPS=(
+    173.245.48.0/20
+    103.21.244.0/22
+    103.22.200.0/22
+    103.31.4.0/22
+    141.101.64.0/18
+    108.162.192.0/18
+    190.93.240.0/20
+    188.114.96.0/20
+    197.234.240.0/22
+    198.41.128.0/17
+    162.158.0.0/15
+    104.16.0.0/13
+    104.24.0.0/14
+    172.64.0.0/13
+    131.0.72.0/22
+    2400:cb00::/32
+    2606:4700::/32
+    2803:f800::/32
+    2405:b500::/32
+    2405:8100::/32
+    2a06:98c0::/29
+    2c0f:f248::/32
+)
+
+CLOUDFLARE_REAL_IP_DIRECTIVES=""
+CLOUDFLARE_ALLOW_DIRECTIVES=""
+for ip in "${CLOUDFLARE_IPS[@]}"; do
+    CLOUDFLARE_REAL_IP_DIRECTIVES+="set_real_ip_from $ip;"$'\n'
+    CLOUDFLARE_ALLOW_DIRECTIVES+="    allow $ip;"$'\n'
+done
+
 : "${SERVER:?SERVER environment variable must be set}"
 : "${DOMAIN:?DOMAIN environment variable must be set (e.g. DOMAIN=geidelguerra.com)}"
 
@@ -56,20 +93,73 @@ WantedBy=multi-user.target
 EOF
 
 cat > "$LOCAL_TEMP_NGINX_PATH" << EOF
+# --- Cloudflare integration --------------------------------------------
+# Trust CF-Connecting-IP only when the connection actually comes from a
+# Cloudflare IP, so \$remote_addr reflects the real visitor instead of
+# Cloudflare's edge node.
+$CLOUDFLARE_REAL_IP_DIRECTIVES
+real_ip_header CF-Connecting-IP;
+real_ip_recursive on;
+
+# Cloudflare forwards the visitor's real scheme via X-Forwarded-Proto
+# (nginx's own \$scheme here is always "http", since we only listen on
+# port 80). Fall back to \$scheme if that header is ever missing, e.g. a
+# direct, non-Cloudflare request.
+map \$http_x_forwarded_proto \$origin_scheme {
+    default \$http_x_forwarded_proto;
+    ""      \$scheme;
+}
+
+gzip on;
+gzip_vary on;
+gzip_proxied any;
+gzip_comp_level 5;
+gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript image/svg+xml;
+
 server {
     listen 80;
     listen [::]:80;
     server_name $DOMAIN;
 
+    # Only Cloudflare (and localhost, for local health checks) may reach
+    # this origin directly, so Cloudflare's cache/WAF can't be bypassed by
+    # hitting the server's IP. Remove this allow/deny block if you need
+    # direct, non-Cloudflare access to this host.
+$CLOUDFLARE_ALLOW_DIRECTIVES
+    allow 127.0.0.1;
+    allow ::1;
+    deny all;
+
+    # Long-lived, cacheable static assets: let Cloudflare's edge and
+    # visitors' browsers cache these aggressively.
+    location /static/ {
+        proxy_pass http://127.0.0.1:$PORT;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$origin_scheme;
+        add_header Cache-Control "public, max-age=2592000, immutable" always;
+    }
+
+    location = /favicon.ico {
+        proxy_pass http://127.0.0.1:$PORT;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Forwarded-Proto \$origin_scheme;
+        add_header Cache-Control "public, max-age=2592000, immutable" always;
+    }
+
+    # Everything else (the page, /data.json, /cv.pdf): avoid Cloudflare or
+    # browsers caching stale content after a redeploy without a purge.
     location / {
         proxy_pass http://127.0.0.1:$PORT;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header X-Forwarded-Proto \$origin_scheme;
         proxy_connect_timeout 60s;
         proxy_send_timeout 60s;
         proxy_read_timeout 60s;
+        add_header Cache-Control "no-cache" always;
     }
 }
 EOF
