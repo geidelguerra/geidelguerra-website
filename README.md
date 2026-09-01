@@ -34,12 +34,14 @@ Just overwrite these files (keep the same names) and rebuild.
 
 ```sh
 task build           # go build a single binary into bin/website
+task build:linux      # cross-compile for linux/amd64 (used by deploy)
 task run              # go run the live server (task run -- -addr :3000)
 task dev              # live server + templ --watch, regenerating on .templ changes
 task generate         # export a static build into dist/
 task serve:static      # serve dist/ locally for previewing the static export
 task fmt               # templ fmt + go fmt
 task test              # go test ./...
+task deploy            # build for linux/amd64 and deploy via deploy.sh
 task clean             # remove bin/ and dist/
 ```
 
@@ -62,13 +64,16 @@ static host without running Go at all.
   `Access-Control-Allow-Origin: *`, meant for scrapers/crawlers/AI agents.
   Linked from `<head>` via `<link rel="alternate" type="application/json">`
   and from a small link in the page footer.
-- `GET /cv.pdf` — a printable PDF resume generated on the fly from the same
-  data (`internal/cv`): photo, name, title and bio, then education, then
-  skills. Always rendered in the site's light color palette. Also linked
-  from the footer.
+- `GET /cv.pdf` — a single-page printable PDF resume generated on the fly
+  from the same data (`internal/cv`): photo, name, title, networks and bio,
+  then experience, education, then skills. Always rendered in the site's
+  light color palette. Also linked from the footer. `Generate()` refuses to
+  return a PDF that spills onto a second page (see `ErrTooManyPages`), so
+  content that no longer fits fails loudly instead of shipping broken.
 
-Both are also produced by `task generate` (`dist/data.json`, `dist/cv.pdf`),
-so the static export stays in sync with the live server.
+Both endpoints send `Cache-Control: no-store` and are also produced by
+`task generate` (`dist/data.json`, `dist/cv.pdf`), so the static export
+stays in sync with the live server.
 
 ## Theming
 
@@ -78,11 +83,38 @@ script in the page `<head>` sets the theme before first paint (from
 `localStorage`, falling back to the OS preference) to avoid a flash of the
 wrong theme. The toggle button in the nav bar flips and persists the choice.
 
+## Deployment
+
+`deploy.sh` builds nothing itself — run it via `task deploy`, which first
+cross-compiles `bin/website` for `linux/amd64`, then:
+
+1. Copies the binary and `data.json` to the server over `scp`.
+2. Over `ssh`, creates a dedicated `geidelguerra` user/group (if missing),
+   installs the binary at `/apps/geidelguerra-website/website`, writes a
+   systemd unit (`geidelguerra-website.service`) that runs
+   `website serve -addr :8080 -data /apps/geidelguerra-website/data.json`,
+   and enables + restarts it.
+3. `data.json` is only copied on the *first* deploy — the app re-reads it on
+   every request, so later deploys never clobber content edited directly on
+   the server. Delete `/apps/geidelguerra-website/data.json` on the server if
+   you want the next deploy to reseed it from the repo.
+
+Requires `SERVER` to be set to an SSH target with key-based access and root
+(or equivalent) privileges, e.g.:
+
+```sh
+SERVER=root@geidelguerra.com task deploy
+```
+
+Put a reverse proxy (e.g. nginx/Caddy) in front of port 8080 for TLS and to
+serve the domain on 443/80.
+
 ## Project layout
 
 ```
 data.json                        content for all sections
 main.go                          CLI entry point (serve / generate)
+deploy.sh                        deploy bin/website + data.json over ssh/scp (see task deploy)
 internal/
   data/                          data.json structs + parsing/formatting helpers
   web/
