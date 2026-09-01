@@ -1069,7 +1069,7 @@ func Footer(d *data.Data) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, ". All rights reserved.</p></div></footer>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, ". All rights reserved.</p><p class=\"footer-meta\"><a href=\"/data.json\" target=\"_blank\" rel=\"noopener noreferrer\">View page data as JSON</a></p></div></footer>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

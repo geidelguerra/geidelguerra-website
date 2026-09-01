@@ -741,6 +741,22 @@ a:hover {
 	color: var(--text-muted);
 }
 
+.footer-meta {
+	margin-top: 6px;
+	font-size: 0.78rem;
+}
+
+.footer-meta a {
+	color: var(--text-muted);
+	text-decoration: underline;
+	text-decoration-color: var(--surface-border);
+}
+
+.footer-meta a:hover {
+	color: var(--accent);
+	text-decoration-color: var(--accent);
+}
+
 /* ---------------------------------------------------------------------
    Responsive
 --------------------------------------------------------------------- */
