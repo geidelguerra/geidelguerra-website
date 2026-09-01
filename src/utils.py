@@ -32,9 +32,11 @@ def get_data() -> dict:
   data['experienceYears'] = date_diff(parse_date(data['startDate']), current_date)
 
   for item in data['skills']:
-    start_date = parse_date(item['startDate'])
-    end_date = current_date
-    item['years'] = date_diff(start_date, current_date)
+    if 'years' not in item:
+        start_date = parse_date(item['startDate'])
+        end_date = current_date
+        item['years'] = date_diff(start_date, current_date)
+    # data['skills'].sort(key=lambda x: float(x['years'].split()[0]), reverse=True)
 
   for item in data['studies']:
     start_date = parse_date(item['startDate'])

@@ -19,7 +19,7 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SERVER_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} > ~/.ssh/known_hosts
-          export SERVER_HOST=${{ secrets.SERVER_HOST }}
+          export SERVER=${{ secrets.SERVER_USER }}:${{ secrets.SERVER_HOST }}
           export SERVER_USER=${{ secrets.SERVER_USER }}
           echo "${{ secrets.ENV }}" > .env
           /bin/bash scripts/deploy.sh

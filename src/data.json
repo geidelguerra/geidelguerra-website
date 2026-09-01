@@ -8,23 +8,24 @@
     { "label": "Twitter", "url": "https://twitter.com/geidelguerra" }
   ],
   "skills": [
-    { "label": "Go", "url": "https://go.dev/", "startDate": "2024-09" },
-    { "label": "Odin", "url": "https://odin-lang.org/", "startDate": "2024-09" },
-    { "label": "Python", "url": "https://www.python.org/", "startDate": "2023-02" },
-    { "label": "Flask", "url": "https://flask.palletsprojects.com/en/3.0.x/", "startDate": "2023-02" },
-    { "label": "PHP", "url": "https://php.net", "startDate": "2014-10" },
-    { "label": "Laravel", "url": "https://laravel.com/", "startDate": "2015-06" },
-    { "label": "JavaScript", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_overview", "startDate": "2014-12" },
-    { "label": "VueJs", "url": "https://vuejs.org/", "startDate": "2015-06" },
-    { "label": "C", "url": "https://en.wikipedia.org/wiki/C_(programming_language)", "startDate": "2024-05" },
-    { "label": "MongoDB", "url": "https://www.mongodb.com/", "startDate": "2023-02" },
-    { "label": "MySQL", "url": "https://www.mysql.com", "startDate": "2014-12" },
-    { "label": "SQLite", "url": "https://www.sqlite.org/index.html", "startDate": "2024-10" },
-    { "label": "Docker", "url": "https://www.docker.com/", "startDate": "2023-02" }
+    { "label": "Go", "url": "https://go.dev/", "years": "1.5", "preferred": true },
+    { "label": "TypeScript", "url": "https://www.typescriptlang.org//", "years": "1.5", "preferred": true },
+    { "label": "MySQL", "url": "https://www.mysql.com", "years": "10", "preferred": true },
+    { "label": "SQLite", "url": "https://www.sqlite.org/index.html", "years": "2", "preferred": true },
+    { "label": "PostgreSQL", "url": "https://www.postgresql.org/", "years": "1.5", "preferred": true },
+    { "label": "Odin", "url": "https://odin-lang.org/", "years": "0.5", "preferred": true },
+    { "label": "Python", "url": "https://www.python.org/", "years": "2" },
+    { "label": "Flask", "url": "https://flask.palletsprojects.com/en/3.0.x/", "years": "2" },
+    { "label": "PHP", "url": "https://php.net", "years": "11" },
+    { "label": "Laravel", "url": "https://laravel.com/", "years": "10" },
+    { "label": "JavaScript", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_overview", "years": "10" },
+    { "label": "VueJs", "url": "https://vuejs.org/", "years": "10" },
+    { "label": "MongoDB", "url": "https://www.mongodb.com/", "years": "1.5" },
+    { "label": "Docker", "url": "https://www.docker.com/", "years": "2" }
   ],
   "toolkit": [
-    { "category": "OS", "tools": ["Debian 12"]},
-    { "category": "Editor", "tools": ["Zed", "VSCode", "NeoVim"]},
+    { "category": "OS", "tools": ["Omarchy"]},
+    { "category": "Editor", "tools": ["Zed", "NeoVim"]},
     { "category": "Terminal", "tools": ["Ghostty"]},
     { "category": "Shell", "tools": ["ZSH"] }
   ],
@@ -54,7 +55,7 @@
       "startDate": "2025-02",
       "endDate": "Present",
       "description": "Mixology Ice is a gourmet ice company based in Miami, Florida. Here, I'm working on new projects that involves APIs, automation, microcontrollers and scanners.",
-      "tech": ["Laravel", "HTMX", "SQLite", "C", "NodeJs", "PostgreSQL"]
+      "tech": ["Go", "SQLite", "TypeScript", "PostgreSQL"]
     },
     {
       "name": "Co-Founder / Developer",
