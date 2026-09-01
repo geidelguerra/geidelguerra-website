@@ -26,7 +26,7 @@
   ],
   "toolkit": [
     { "category": "OS", "tools": ["Omarchy"]},
-    { "category": "Editor", "tools": ["Zed", "NeoVim"]},
+    { "category": "Editor", "tools": ["Zed"]},
     { "category": "Terminal", "tools": ["Ghostty"]},
     { "category": "Shell", "tools": ["ZSH"] }
   ],
