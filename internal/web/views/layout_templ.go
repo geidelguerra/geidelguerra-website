@@ -183,7 +183,7 @@ func Layout(title, description, canonicalURL, ogImage string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\"><link rel=\"icon\" type=\"image/png\" href=\"/static/images/favicon.png\"><link rel=\"apple-touch-icon\" href=\"/static/images/favicon.png\"><link rel=\"stylesheet\" href=\"/static/css/style.css\"><script>\n\t\t\t\t(function () {\n\t\t\t\t\tvar stored = null;\n\t\t\t\t\ttry { stored = localStorage.getItem(\"theme\"); } catch (e) {}\n\t\t\t\t\tvar theme = stored || (window.matchMedia && window.matchMedia(\"(prefers-color-scheme: dark)\").matches ? \"dark\" : \"light\");\n\t\t\t\t\tdocument.documentElement.setAttribute(\"data-theme\", theme);\n\t\t\t\t})();\n\t\t\t</script></head><body>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<link rel=\"alternate\" type=\"application/json\" href=\"/data.json\" title=\"Site data (JSON)\"><link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\"><link rel=\"icon\" type=\"image/png\" href=\"/static/images/favicon.png\"><link rel=\"apple-touch-icon\" href=\"/static/images/favicon.png\"><link rel=\"stylesheet\" href=\"/static/css/style.css\"><script>\n\t\t\t\t(function () {\n\t\t\t\t\tvar stored = null;\n\t\t\t\t\ttry { stored = localStorage.getItem(\"theme\"); } catch (e) {}\n\t\t\t\t\tvar theme = stored || (window.matchMedia && window.matchMedia(\"(prefers-color-scheme: dark)\").matches ? \"dark\" : \"light\");\n\t\t\t\t\tdocument.documentElement.setAttribute(\"data-theme\", theme);\n\t\t\t\t})();\n\t\t\t</script></head><body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

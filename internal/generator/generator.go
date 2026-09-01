@@ -4,6 +4,7 @@ package generator
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/fs"
 	"os"
@@ -15,13 +16,17 @@ import (
 )
 
 // Generate renders d into outDir as a static site: outDir/index.html,
-// outDir/favicon.ico and outDir/static/**.
+// outDir/data.json, outDir/favicon.ico and outDir/static/**.
 func Generate(d *data.Data, outDir string) error {
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		return fmt.Errorf("create output dir: %w", err)
 	}
 
 	if err := writeIndex(d, outDir); err != nil {
+		return err
+	}
+
+	if err := writeDataJSON(d, outDir); err != nil {
 		return err
 	}
 
@@ -41,6 +46,22 @@ func writeIndex(d *data.Data, outDir string) error {
 
 	if err := views.IndexPage(d).Render(context.Background(), f); err != nil {
 		return fmt.Errorf("render index.html: %w", err)
+	}
+
+	return nil
+}
+
+// writeDataJSON exposes the same content as machine-readable JSON, mirroring
+// the /data.json endpoint served live, for scrapers/AI agents consuming the
+// static export.
+func writeDataJSON(d *data.Data, outDir string) error {
+	body, err := json.MarshalIndent(d, "", "  ")
+	if err != nil {
+		return fmt.Errorf("marshal data.json: %w", err)
+	}
+
+	if err := os.WriteFile(filepath.Join(outDir, "data.json"), body, 0o644); err != nil {
+		return fmt.Errorf("write data.json: %w", err)
 	}
 
 	return nil

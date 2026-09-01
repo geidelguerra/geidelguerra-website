@@ -27,6 +27,7 @@ templ Layout(title, description, canonicalURL, ogImage string) {
 			if ogImage != "" {
 				<meta name="twitter:image" content={ ogImage }/>
 			}
+			<link rel="alternate" type="application/json" href="/data.json" title="Site data (JSON)"/>
 			<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
 			<link rel="icon" type="image/png" href="/static/images/favicon.png"/>
 			<link rel="apple-touch-icon" href="/static/images/favicon.png"/>

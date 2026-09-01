@@ -2,6 +2,7 @@
 package httpserver
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -45,6 +46,30 @@ func New(load DataLoader) http.Handler {
 			log.Printf("render page: %v", err)
 			http.Error(w, "failed to render page", http.StatusInternalServerError)
 		}
+	})
+
+	// /data.json exposes the site content as machine-readable JSON, for
+	// scrapers, crawlers and AI agents that want structured data instead of
+	// scraping the HTML.
+	r.Get("/data.json", func(w http.ResponseWriter, r *http.Request) {
+		d, err := load()
+		if err != nil {
+			log.Printf("load data: %v", err)
+			http.Error(w, "failed to load site data", http.StatusInternalServerError)
+			return
+		}
+
+		body, err := json.MarshalIndent(d, "", "  ")
+		if err != nil {
+			log.Printf("marshal data: %v", err)
+			http.Error(w, "failed to encode site data", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Cache-Control", "public, max-age=300")
+		w.Write(body)
 	})
 
 	return r
