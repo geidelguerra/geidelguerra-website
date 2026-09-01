@@ -70,7 +70,7 @@ func New(load DataLoader) http.Handler {
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Cache-Control", "public, max-age=300")
+		w.Header().Set("Cache-Control", "no-store, must-revalidate")
 		w.Write(body)
 	})
 
@@ -98,7 +98,7 @@ func New(load DataLoader) http.Handler {
 
 		w.Header().Set("Content-Type", "application/pdf")
 		w.Header().Set("Content-Disposition", `inline; filename="`+cvFilename(d.Name)+`"`)
-		w.Header().Set("Cache-Control", "public, max-age=300")
+		w.Header().Set("Cache-Control", "no-store, must-revalidate")
 		w.Write(body)
 	})
 
