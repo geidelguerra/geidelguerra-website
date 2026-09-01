@@ -35,7 +35,7 @@
       "endDate": "2006"
     },
     {
-      "name": "Engineer's degree, Information Technology",
+      "name": "Engineer's degree, Information Technology (dropped out)",
       "school": "Universidad Tecnológica de La Habana \"José Antonio Echeverría\", CUJAE, Havana, Cuba",
       "startDate": "2006",
       "endDate": "2009"
@@ -56,7 +56,7 @@
       "company": "Kriu",
       "companyUrl": "https://kriu.co",
       "startDate": "2024-10",
-      "endDate": "Present",
+      "endDate": "2025-10",
       "description": "Workforce management SaaS for marketing agencies. As Lead Developer/CTO, I own all technical decisions and solely built the MVP: HTMX + vanilla JS frontend, Laravel + SQLite backend, with CRUD forms, reports, and ChartJs dashboards. Hosted on Digital Ocean behind Cloudflare, with a Docker Compose + GitHub Actions pipeline publishing to GitHub Container Registry.",
       "tech": ["Laravel", "HTMX", "SQLite", "Docker"]
     },
