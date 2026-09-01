@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -127,6 +128,11 @@ func (d *Data) enrich() {
 	if len(d.AboutParagraphs) > 0 {
 		d.Summary = d.AboutParagraphs[0]
 	}
+
+	// Preferred skills first, keeping the original relative order otherwise.
+	sort.SliceStable(d.Skills, func(i, j int) bool {
+		return d.Skills[i].Preferred && !d.Skills[j].Preferred
+	})
 
 	for i := range d.Studies {
 		s := &d.Studies[i]

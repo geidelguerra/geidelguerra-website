@@ -10,12 +10,12 @@
     { "label": "Twitter", "url": "https://twitter.com/geidelguerra" }
   ],
   "skills": [
-    { "label": "Go", "url": "https://go.dev/", "years": "1.5", "preferred": true },
-    { "label": "TypeScript", "url": "https://www.typescriptlang.org//", "years": "1.5", "preferred": true },
-    { "label": "MySQL", "url": "https://www.mysql.com", "years": "10", "preferred": true },
+    { "label": "Go", "url": "https://go.dev/", "years": "2", "preferred": true },
+    { "label": "TypeScript", "url": "https://www.typescriptlang.org//", "years": "2", "preferred": true },
+    { "label": "MySQL", "url": "https://www.mysql.com", "years": "10", "preferred": false },
     { "label": "SQLite", "url": "https://www.sqlite.org/index.html", "years": "2", "preferred": true },
     { "label": "PostgreSQL", "url": "https://www.postgresql.org/", "years": "1.5", "preferred": true },
-    { "label": "Odin", "url": "https://odin-lang.org/", "years": "0.5", "preferred": true },
+    { "label": "Odin", "url": "https://odin-lang.org/", "years": "0.5", "preferred": false },
     { "label": "Python", "url": "https://www.python.org/", "years": "2" },
     { "label": "Flask", "url": "https://flask.palletsprojects.com/en/3.0.x/", "years": "2" },
     { "label": "PHP", "url": "https://php.net", "years": "11" },
