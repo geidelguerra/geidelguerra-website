@@ -1,0 +1,73 @@
+version: "3"
+
+vars:
+  BIN_DIR: bin
+  BIN_NAME: website
+  DIST_DIR: dist
+
+tasks:
+  default:
+    desc: List available tasks
+    cmd: task --list-all
+
+  deps:
+    desc: Download and tidy Go module dependencies
+    cmds:
+      - go mod download
+      - go mod tidy
+
+  templ:generate:
+    desc: Generate Go code from .templ files
+    sources:
+      - internal/**/*.templ
+    generates:
+      - internal/**/*_templ.go
+    cmd: templ generate
+
+  templ:watch:
+    desc: Watch .templ files and regenerate on change
+    cmd: templ generate --watch
+
+  fmt:
+    desc: Format Go and templ source files
+    cmds:
+      - templ fmt .
+      - go fmt ./...
+
+  build:
+    desc: Build the website binary (single self-contained executable)
+    deps:
+      - templ:generate
+    cmd: go build -o {{.BIN_DIR}}/{{.BIN_NAME}} .
+
+  run:
+    desc: Run the live server (go run, no build artifact)
+    deps:
+      - templ:generate
+    cmd: go run . serve {{.CLI_ARGS}}
+
+  dev:
+    desc: Run the live server and watch .templ files for changes in parallel
+    deps:
+      - templ:watch
+      - run
+
+  generate:
+    desc: Export a static build of the site into dist/
+    deps:
+      - templ:generate
+    cmd: go run . generate -out {{.DIST_DIR}} {{.CLI_ARGS}}
+
+  serve:static:
+    desc: Serve the generated static build locally (for previewing dist/)
+    dir: "{{.DIST_DIR}}"
+    cmd: python3 -m http.server 8080
+
+  test:
+    desc: Run Go tests
+    cmd: go test ./...
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf {{.BIN_DIR}} {{.DIST_DIR}}

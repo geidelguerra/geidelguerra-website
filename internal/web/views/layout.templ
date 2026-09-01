@@ -1,0 +1,48 @@
+package views
+
+// Layout is the base HTML document shared by the site. It sets up the
+// document head (meta tags, favicon, styles/scripts) and renders content
+// inside <body>. The inline script sets the theme attribute before first
+// paint to avoid a light/dark flash.
+templ Layout(title, description, canonicalURL, ogImage string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ title }</title>
+			<meta name="description" content={ description }/>
+			<meta name="color-scheme" content="light dark"/>
+			<link rel="canonical" href={ canonicalURL }/>
+			<meta property="og:title" content={ title }/>
+			<meta property="og:type" content="website"/>
+			<meta property="og:url" content={ canonicalURL }/>
+			<meta property="og:description" content={ description }/>
+			if ogImage != "" {
+				<meta property="og:image" content={ ogImage }/>
+			}
+			<meta name="twitter:card" content="summary"/>
+			<meta name="twitter:title" content={ title }/>
+			<meta name="twitter:description" content={ description }/>
+			if ogImage != "" {
+				<meta name="twitter:image" content={ ogImage }/>
+			}
+			<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+			<link rel="icon" type="image/png" href="/static/images/favicon.png"/>
+			<link rel="apple-touch-icon" href="/static/images/favicon.png"/>
+			<link rel="stylesheet" href="/static/css/style.css"/>
+			<script>
+				(function () {
+					var stored = null;
+					try { stored = localStorage.getItem("theme"); } catch (e) {}
+					var theme = stored || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+					document.documentElement.setAttribute("data-theme", theme);
+				})();
+			</script>
+		</head>
+		<body>
+			{ children... }
+			<script src="/static/js/app.js" defer></script>
+		</body>
+	</html>
+}

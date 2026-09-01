@@ -1,0 +1,290 @@
+package views
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/geidelguerra/website/internal/data"
+)
+
+const siteURL = "https://geidelguerra.com"
+
+// IndexPage renders the full single-page portfolio.
+templ IndexPage(d *data.Data) {
+	@Layout(
+		fmt.Sprintf("%s — %s", d.Name, d.Title),
+		d.Summary,
+		siteURL,
+		siteURL+"/static/images/profile.jpg",
+	) {
+		@Nav()
+		<main>
+			@Hero(d)
+			@About(d)
+			@Skills(d)
+			@Experience(d)
+			@Projects(d)
+			@Studies(d)
+		</main>
+		@Footer(d)
+	}
+}
+
+type navLink struct {
+	Href  string
+	Label string
+}
+
+var navLinks = []navLink{
+	{"#home", "Home"},
+	{"#about", "About"},
+	{"#skills", "Skills"},
+	{"#experience", "Experience"},
+	{"#projects", "Projects"},
+	{"#studies", "Studies"},
+	{"#contact", "Contact"},
+}
+
+templ Nav() {
+	<header class="site-header">
+		<div class="container nav">
+			<a class="brand" href="#home">GG</a>
+			<button
+				id="nav-toggle"
+				class="nav-toggle"
+				type="button"
+				aria-label="Toggle navigation menu"
+				aria-expanded="false"
+				aria-controls="nav-menu"
+			>
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+			<nav id="nav-menu" class="nav-menu">
+				for _, link := range navLinks {
+					<a href={ templ.SafeURL(link.Href) } class="nav-link">{ link.Label }</a>
+				}
+			</nav>
+			<button
+				id="theme-toggle"
+				class="theme-toggle"
+				type="button"
+				aria-label="Toggle light and dark theme"
+			>
+				<svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="12" cy="12" r="4"></circle>
+					<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+				</svg>
+				<svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+				</svg>
+			</button>
+		</div>
+	</header>
+}
+
+templ Hero(d *data.Data) {
+	<section id="home" class="hero">
+		<div class="container hero-inner">
+			<div class="hero-avatar-wrap">
+				<img class="hero-avatar" src="/static/images/profile.jpg" alt={ d.Name } width="220" height="220"/>
+			</div>
+			<h1 class="hero-name">{ d.Name }</h1>
+			<p class="hero-title">{ d.Title }</p>
+			<p class="hero-summary">{ d.Summary }</p>
+			<div class="hero-actions">
+				<a class="btn btn-primary" href="#projects">See my work</a>
+				<a class="btn btn-ghost" href="#contact">Get in touch</a>
+			</div>
+			<ul class="hero-networks">
+				for _, n := range d.Networks {
+					<li>
+						<a href={ templ.SafeURL(n.URL) } target="_blank" rel="noopener noreferrer">{ n.Label }</a>
+					</li>
+				}
+			</ul>
+		</div>
+		<a class="scroll-cue" href="#about" aria-label="Scroll to About section">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M12 5v14M19 12l-7 7-7-7"></path>
+			</svg>
+		</a>
+	</section>
+}
+
+templ About(d *data.Data) {
+	<section id="about" class="section">
+		<div class="container">
+			<h2 class="section-title">About</h2>
+			<div class="about-grid">
+				<div class="about-text">
+					for _, p := range d.AboutParagraphs {
+						<p>{ p }</p>
+					}
+				</div>
+				<aside class="about-facts">
+					<div class="fact-card">
+						<h3>Experience</h3>
+						<p>{ d.ExperienceYears } building software</p>
+					</div>
+					if len(d.Languages) > 0 {
+						<div class="fact-card">
+							<h3>Languages</h3>
+							<ul class="fact-list">
+								for _, l := range d.Languages {
+									<li>
+										<span>{ l.Label }</span>
+										if l.URL != "" {
+											<a href={ templ.SafeURL(l.URL) } target="_blank" rel="noopener noreferrer">{ l.Score }</a>
+										} else {
+											<span class="muted">{ l.Score }</span>
+										}
+									</li>
+								}
+							</ul>
+						</div>
+					}
+					if len(d.Toolkit) > 0 {
+						<div class="fact-card">
+							<h3>Workstation</h3>
+							<ul class="fact-list">
+								for _, t := range d.Toolkit {
+									<li>
+										<span>{ t.Category }</span>
+										<span class="muted">{ strings.Join(t.Tools, ", ") }</span>
+									</li>
+								}
+							</ul>
+						</div>
+					}
+				</aside>
+			</div>
+		</div>
+	</section>
+}
+
+templ Skills(d *data.Data) {
+	<section id="skills" class="section section-alt">
+		<div class="container">
+			<h2 class="section-title">Skills</h2>
+			<ul class="skill-grid">
+				for _, s := range d.Skills {
+					<li class={ "skill-chip", templ.KV("skill-chip-preferred", s.Preferred) }>
+						<a href={ templ.SafeURL(s.URL) } target="_blank" rel="noopener noreferrer">{ s.Label }</a>
+						<span class="skill-years">{ s.Years } yr</span>
+					</li>
+				}
+			</ul>
+		</div>
+	</section>
+}
+
+templ Experience(d *data.Data) {
+	<section id="experience" class="section">
+		<div class="container">
+			<h2 class="section-title">Experience</h2>
+			<p class="section-subtitle">{ d.ExperienceYears } in the industry since { d.StartDate }</p>
+			<ol class="timeline">
+				for _, e := range d.Experience {
+					<li class="timeline-item">
+						<div class="timeline-marker">
+							if e.Current {
+								<span class="timeline-dot timeline-dot-current"></span>
+							} else {
+								<span class="timeline-dot"></span>
+							}
+						</div>
+						<div class="timeline-content">
+							<div class="timeline-header">
+								<h3>{ e.Name }</h3>
+								<span class="timeline-dates">{ e.DateRange } · { e.Duration }</span>
+							</div>
+							<a class="timeline-company" href={ templ.SafeURL(e.CompanyURL) } target="_blank" rel="noopener noreferrer">{ e.Company }</a>
+							<p>{ e.Description }</p>
+							if len(e.Tech) > 0 {
+								<ul class="tag-list">
+									for _, t := range e.Tech {
+										<li class="tag">{ t }</li>
+									}
+								</ul>
+							}
+						</div>
+					</li>
+				}
+			</ol>
+		</div>
+	</section>
+}
+
+templ Projects(d *data.Data) {
+	<section id="projects" class="section section-alt">
+		<div class="container">
+			<h2 class="section-title">Projects</h2>
+			<div class="project-grid">
+				for _, p := range d.Projects {
+					<article class="project-card">
+						if p.ImageURL != "" {
+							<div class="project-thumb">
+								<img
+									src={ p.ImageURL }
+									alt={ p.Name }
+									loading="lazy"
+									onerror="this.closest('.project-thumb').classList.add('img-missing'); this.remove();"
+								/>
+							</div>
+						}
+						<div class="project-body">
+							<div class="project-header">
+								<h3>
+									<a href={ templ.SafeURL(p.URL) } target="_blank" rel="noopener noreferrer">{ p.Name }</a>
+								</h3>
+								if p.Personal {
+									<span class="badge">Personal</span>
+								}
+							</div>
+							<p class="project-dates">{ p.DateRange }</p>
+							<p>{ p.Description }</p>
+						</div>
+					</article>
+				}
+			</div>
+		</div>
+	</section>
+}
+
+templ Studies(d *data.Data) {
+	<section id="studies" class="section">
+		<div class="container">
+			<h2 class="section-title">Education</h2>
+			<ul class="study-list">
+				for _, s := range d.Studies {
+					<li class="study-item">
+						<h3>{ s.Name }</h3>
+						<p class="study-school">{ s.School }</p>
+						<p class="study-dates">{ s.DateRange } · { s.Duration }</p>
+					</li>
+				}
+			</ul>
+		</div>
+	</section>
+}
+
+templ Footer(d *data.Data) {
+	<footer id="contact" class="site-footer">
+		<div class="container footer-inner">
+			<h2 class="section-title">Contact</h2>
+			<p>Feel free to reach out through any of these platforms.</p>
+			<ul class="footer-networks">
+				for _, n := range d.Networks {
+					<li>
+						<a href={ templ.SafeURL(n.URL) } target="_blank" rel="noopener noreferrer">{ n.Label }</a>
+					</li>
+				}
+			</ul>
+			<p class="footer-copy">
+				&copy; <span id="year">2026</span> { d.Name }. All rights reserved.
+			</p>
+		</div>
+	</footer>
+}
