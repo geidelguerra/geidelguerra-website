@@ -8,12 +8,8 @@ REMOTE_TEMP_BIN_PATH="/tmp/$BIN_NAME"
 REMOTE_APP_DIR="/apps/$APP_NAME"
 REMOTE_BIN_PATH="$REMOTE_APP_DIR/$BIN_NAME"
 
-DATA_PATH="./data.json"
-REMOTE_TEMP_DATA_PATH="/tmp/$APP_NAME-data.json"
-REMOTE_DATA_PATH="$REMOTE_APP_DIR/data.json"
-
-SERVICE_USER=geidelguerra
-SERVICE_GROUP=geidelguerra
+SERVICE_USER=website
+SERVICE_GROUP=website
 
 SERVICE_BIN_PATH="$REMOTE_BIN_PATH"
 SERVICE_WORK_DIR="$REMOTE_APP_DIR"
@@ -24,7 +20,6 @@ REMOTE_SERVICE_PATH="/etc/systemd/system/$REMOTE_SERVICE_FILENAME"
 : "${SERVER:?SERVER environment variable must be set}"
 
 [ -f "$BIN_PATH" ] || { echo "Binary not found: $BIN_PATH (run 'task build' first)"; exit 1; }
-[ -f "$DATA_PATH" ] || { echo "Data file not found: $DATA_PATH"; exit 1; }
 
 SERVICE_FILE_CONTENT=$(cat << EOF
 [Unit]
@@ -32,7 +27,7 @@ Description=Geidel Guerra Website
 After=network.target
 
 [Service]
-ExecStart=$SERVICE_BIN_PATH serve -addr $SERVICE_ADDR -data $REMOTE_DATA_PATH
+ExecStart=$SERVICE_BIN_PATH serve -addr $SERVICE_ADDR
 Restart=always
 RestartSec=5
 StartLimitIntervalSec=60
@@ -47,7 +42,6 @@ EOF
 )
 
 scp "$BIN_PATH" "$SERVER:$REMOTE_TEMP_BIN_PATH"
-scp "$DATA_PATH" "$SERVER:$REMOTE_TEMP_DATA_PATH"
 
 ssh -T "$SERVER" << EOF
 if ! id -u "$SERVICE_USER" >/dev/null 2>&1; then
@@ -60,14 +54,6 @@ usermod -a -G "$SERVICE_GROUP" "$SERVICE_USER"
 mkdir -p "$REMOTE_APP_DIR"
 mv -f "$REMOTE_TEMP_BIN_PATH" "$REMOTE_BIN_PATH"
 chmod +x "$REMOTE_BIN_PATH"
-# Only seed data.json on first deploy: it can be edited live on the server
-# (the app re-reads it on every request), so later deploys must not clobber
-# those edits.
-if [ ! -f "$REMOTE_DATA_PATH" ]; then
-    mv -f "$REMOTE_TEMP_DATA_PATH" "$REMOTE_DATA_PATH"
-else
-    rm -f "$REMOTE_TEMP_DATA_PATH"
-fi
 chown -R "$SERVICE_USER:$SERVICE_GROUP" "$REMOTE_APP_DIR"
 echo "$SERVICE_FILE_CONTENT" | tee "$REMOTE_SERVICE_PATH" > /dev/null
 systemctl daemon-reload

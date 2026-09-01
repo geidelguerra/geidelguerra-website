@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -97,21 +96,13 @@ type Data struct {
 	Summary         string   `json:"-"`
 }
 
-// Load reads the site content. It prefers the file at path (so content can
-// be edited without rebuilding the binary) and falls back to fallback
-// (typically an embedded copy of data.json) when path does not exist or
-// can't be read.
-func Load(fallback []byte, path string) (*Data, error) {
-	raw := fallback
-
-	if path != "" {
-		if b, err := os.ReadFile(path); err == nil {
-			raw = b
-		}
-	}
-
+// Load parses the embedded data.json content. There is no dynamic/runtime
+// read from disk: the content is baked into the binary at build time via
+// go:embed, so the returned Data (and thus the whole site) only changes
+// when the binary is rebuilt.
+func Load(embedded []byte) (*Data, error) {
 	var d Data
-	if err := json.Unmarshal(raw, &d); err != nil {
+	if err := json.Unmarshal(embedded, &d); err != nil {
 		return nil, fmt.Errorf("parse data: %w", err)
 	}
 

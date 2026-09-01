@@ -3,6 +3,7 @@ package httpserver
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -16,12 +17,12 @@ import (
 	"github.com/geidelguerra/website/internal/web/views"
 )
 
-// DataLoader returns the current site content. It's called per request so
-// edits to data.json are picked up without restarting the server.
-type DataLoader func() (*data.Data, error)
-
-// New builds the HTTP handler for the site.
-func New(load DataLoader) http.Handler {
+// New builds the HTTP handler for the site. d is parsed once from the
+// embedded data.json (see main.go) and is immutable for the lifetime of the
+// process: there is no dynamic/runtime re-read of data.json from disk.
+// The JSON and PDF representations are also rendered once, up front, and
+// served as static bytes on every request.
+func New(d *data.Data) (http.Handler, error) {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
@@ -36,13 +37,6 @@ func New(load DataLoader) http.Handler {
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		d, err := load()
-		if err != nil {
-			log.Printf("load data: %v", err)
-			http.Error(w, "failed to load site data", http.StatusInternalServerError)
-			return
-		}
-
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		if err := views.IndexPage(d).Render(r.Context(), w); err != nil {
 			log.Printf("render page: %v", err)
@@ -53,56 +47,39 @@ func New(load DataLoader) http.Handler {
 	// /data.json exposes the site content as machine-readable JSON, for
 	// scrapers, crawlers and AI agents that want structured data instead of
 	// scraping the HTML.
+	dataJSON, err := json.MarshalIndent(d, "", "  ")
+	if err != nil {
+		return nil, fmt.Errorf("marshal data.json: %w", err)
+	}
+
 	r.Get("/data.json", func(w http.ResponseWriter, r *http.Request) {
-		d, err := load()
-		if err != nil {
-			log.Printf("load data: %v", err)
-			http.Error(w, "failed to load site data", http.StatusInternalServerError)
-			return
-		}
-
-		body, err := json.MarshalIndent(d, "", "  ")
-		if err != nil {
-			log.Printf("marshal data: %v", err)
-			http.Error(w, "failed to encode site data", http.StatusInternalServerError)
-			return
-		}
-
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Cache-Control", "no-store, must-revalidate")
-		w.Write(body)
+		w.Write(dataJSON)
 	})
 
-	// /cv.pdf renders a printable PDF resume (photo, name, title, bio,
-	// education, skills) from the same site content, always in light mode.
+	// /cv.pdf serves a printable, single-page PDF resume (photo, name,
+	// title, networks, bio, experience, education, skills) built from the
+	// same site content, always in light mode.
+	photo, err := web.ProfilePhoto()
+	if err != nil {
+		log.Printf("load profile photo: %v", err)
+	}
+
+	cvPDF, err := cv.Generate(d, photo)
+	if err != nil {
+		return nil, fmt.Errorf("generate cv.pdf: %w", err)
+	}
+
+	cvContentDisposition := `inline; filename="` + cvFilename(d.Name) + `"`
+
 	r.Get("/cv.pdf", func(w http.ResponseWriter, r *http.Request) {
-		d, err := load()
-		if err != nil {
-			log.Printf("load data: %v", err)
-			http.Error(w, "failed to load site data", http.StatusInternalServerError)
-			return
-		}
-
-		photo, err := web.ProfilePhoto()
-		if err != nil {
-			log.Printf("load profile photo: %v", err)
-		}
-
-		body, err := cv.Generate(d, photo)
-		if err != nil {
-			log.Printf("generate cv: %v", err)
-			http.Error(w, "failed to generate CV", http.StatusInternalServerError)
-			return
-		}
-
 		w.Header().Set("Content-Type", "application/pdf")
-		w.Header().Set("Content-Disposition", `inline; filename="`+cvFilename(d.Name)+`"`)
-		w.Header().Set("Cache-Control", "no-store, must-revalidate")
-		w.Write(body)
+		w.Header().Set("Content-Disposition", cvContentDisposition)
+		w.Write(cvPDF)
 	})
 
-	return r
+	return r, nil
 }
 
 func cvFilename(name string) string {

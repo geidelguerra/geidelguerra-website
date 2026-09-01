@@ -15,12 +15,12 @@ theme via CSS variables.
 
 All page content lives in [`data.json`](./data.json): name, title, about,
 networks, skills, toolkit, languages, studies, experience and projects. Edit
-that file to update the site — no code changes required.
+that file to change the site's content.
 
-At runtime the server reads `data.json` from disk next to the binary (so you
-can edit it live without rebuilding). A copy is also embedded into the binary
-at build time as a fallback, so the binary still works standalone if
-`data.json` isn't present on disk.
+`data.json` is embedded into the binary at build time via `go:embed` (see
+`main.go`) and is the *only* source of content: there is no dynamic/runtime
+read from disk. Editing `data.json` requires rebuilding (`task build` /
+`task generate`) and redeploying for the change to take effect.
 
 ## Replacing the photo / favicon
 
@@ -50,8 +50,8 @@ task clean             # remove bin/ and dist/
 The compiled binary supports two subcommands (defaults to `serve`):
 
 ```sh
-website serve [-addr :8080] [-data data.json]
-website generate [-out dist] [-data data.json]
+website serve [-addr :8080]
+website generate [-out dist]
 ```
 
 `serve` runs the live HTTP server. `generate` renders the same page to a
@@ -71,9 +71,10 @@ static host without running Go at all.
   return a PDF that spills onto a second page (see `ErrTooManyPages`), so
   content that no longer fits fails loudly instead of shipping broken.
 
-Both endpoints send `Cache-Control: no-store` and are also produced by
-`task generate` (`dist/data.json`, `dist/cv.pdf`), so the static export
-stays in sync with the live server.
+Both are rendered once at startup (not per-request, since the content is
+static for the process's lifetime) and are also produced by `task generate`
+(`dist/data.json`, `dist/cv.pdf`), so the static export stays in sync with
+the live server.
 
 ## Theming
 
@@ -88,16 +89,14 @@ wrong theme. The toggle button in the nav bar flips and persists the choice.
 `deploy.sh` builds nothing itself — run it via `task deploy`, which first
 cross-compiles `bin/website` for `linux/amd64`, then:
 
-1. Copies the binary and `data.json` to the server over `scp`.
-2. Over `ssh`, creates a dedicated `geidelguerra` user/group (if missing),
+1. Copies the binary to the server over `scp`.
+2. Over `ssh`, creates a dedicated `website` user/group (if missing),
    installs the binary at `/apps/geidelguerra-website/website`, writes a
    systemd unit (`geidelguerra-website.service`) that runs
-   `website serve -addr :8080 -data /apps/geidelguerra-website/data.json`,
-   and enables + restarts it.
-3. `data.json` is only copied on the *first* deploy — the app re-reads it on
-   every request, so later deploys never clobber content edited directly on
-   the server. Delete `/apps/geidelguerra-website/data.json` on the server if
-   you want the next deploy to reseed it from the repo.
+   `website serve -addr :8080`, and enables + restarts it.
+
+Since `data.json` is embedded in the binary, there's nothing else to copy or
+seed on the server — every deploy is a single self-contained binary.
 
 Requires `SERVER` to be set to an SSH target with key-based access and root
 (or equivalent) privileges, e.g.:
@@ -112,9 +111,9 @@ serve the domain on 443/80.
 ## Project layout
 
 ```
-data.json                        content for all sections
+data.json                        content for all sections (embedded via go:embed)
 main.go                          CLI entry point (serve / generate)
-deploy.sh                        deploy bin/website + data.json over ssh/scp (see task deploy)
+deploy.sh                        deploy the bin/website binary over ssh/scp (see task deploy)
 internal/
   data/                          data.json structs + parsing/formatting helpers
   web/
