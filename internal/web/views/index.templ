@@ -5,18 +5,77 @@ import (
 	"strings"
 
 	"github.com/geidelguerra/website/internal/data"
+	"github.com/geidelguerra/website/internal/seo"
 )
 
-const siteURL = "https://geidelguerra.com"
+// personSchema is a schema.org Person, rendered as JSON-LD so search
+// engines can build a knowledge-panel-style entity for the site owner.
+type personSchema struct {
+	Context     string   `json:"@context"`
+	Type        string   `json:"@type"`
+	Name        string   `json:"name"`
+	URL         string   `json:"url"`
+	Image       string   `json:"image"`
+	JobTitle    string   `json:"jobTitle"`
+	Description string   `json:"description"`
+	SameAs      []string `json:"sameAs,omitempty"`
+}
+
+func buildPersonSchema(d *data.Data) personSchema {
+	sameAs := make([]string, 0, len(d.Networks))
+	for _, n := range d.Networks {
+		sameAs = append(sameAs, n.URL)
+	}
+
+	return personSchema{
+		Context:     "https://schema.org",
+		Type:        "Person",
+		Name:        d.Name,
+		URL:         seo.SiteURL + "/",
+		Image:       seo.SiteURL + "/static/images/profile.jpg",
+		JobTitle:    d.Title,
+		Description: d.Summary,
+		SameAs:      sameAs,
+	}
+}
+
+// socialHandle extracts the "handle" (last URL path segment) of the
+// network whose label matches, e.g. "https://x.com/geidelguerra" -> "geidelguerra".
+func socialHandle(d *data.Data, label string) string {
+	for _, n := range d.Networks {
+		if !strings.EqualFold(n.Label, label) {
+			continue
+		}
+		u := strings.TrimRight(n.URL, "/")
+		if idx := strings.LastIndex(u, "/"); idx != -1 && idx+1 < len(u) {
+			return u[idx+1:]
+		}
+	}
+	return ""
+}
+
+func twitterSiteHandle(d *data.Data) string {
+	handle := socialHandle(d, "X")
+	if handle == "" {
+		return ""
+	}
+	return "@" + handle
+}
 
 // IndexPage renders the full single-page portfolio.
 templ IndexPage(d *data.Data) {
-	@Layout(
-		fmt.Sprintf("%s — %s", d.Name, d.Title),
-		d.Summary,
-		siteURL,
-		siteURL+"/static/images/profile.jpg",
-	) {
+	@Layout(SEO{
+		Title:         fmt.Sprintf("%s — %s", d.Name, d.Title),
+		Description:   d.Summary,
+		CanonicalURL:  seo.SiteURL + "/",
+		SiteName:      d.Name,
+		OGImage:       seo.SiteURL + "/static/images/profile.jpg",
+		OGImageType:   "image/jpeg",
+		OGImageWidth:  413,
+		OGImageHeight: 413,
+		TwitterSite:   twitterSiteHandle(d),
+		JSONLD:        templ.JSONScript("person-jsonld", buildPersonSchema(d)).WithType("application/ld+json"),
+	}) {
 		@Nav()
 		<main>
 			@Hero(d)

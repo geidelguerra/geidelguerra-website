@@ -77,6 +77,29 @@ static for the process's lifetime) and are also produced by `task generate`
 (`dist/data.json`, `dist/cv.pdf`), so the static export stays in sync with
 the live server.
 
+## SEO
+
+- **Meta tags**: description, canonical URL, `robots`, Open Graph (title,
+  description, type, url, image + dimensions, site name, locale) and
+  Twitter Card tags, all driven by `data.json` (see `views.SEO` in
+  `internal/web/views/layout.templ`).
+- **Structured data**: a `schema.org` `Person` JSON-LD block (name, url,
+  image, jobTitle, description, `sameAs` linking to all `networks` in
+  `data.json`), rendered safely via `templ.JSONScript` (which JSON-encodes
+  and escapes for a `<script>` context — don't hand-build this by
+  interpolating a Go string into a `<script>` tag, that reliably breaks:
+  templ's default HTML-escaping mangles JSON's quotes into invalid script
+  content).
+- **`GET /robots.txt`** and **`GET /sitemap.xml`** (`internal/seo`): allow
+  everything, point crawlers at the sitemap; the sitemap lists the single
+  page URL (this is a single-page site, so there's only one URL to list).
+  Both are also written by `task generate` (`dist/robots.txt`,
+  `dist/sitemap.xml`).
+- **theme-color** meta tags (light/dark, matching the CSS `--bg` variables)
+  for the mobile browser chrome.
+- Single `<h1>` (the name, in the hero) with one `<h2>` per section and
+  descriptive link text/`alt` attributes throughout.
+
 ## Theming
 
 Colors are defined as CSS variables in `internal/web/static/css/style.css`,
@@ -150,6 +173,7 @@ main.go                          CLI entry point (serve / generate)
 deploy.sh                        deploy the bin/website binary over ssh/scp (see task deploy)
 internal/
   data/                          data.json structs + parsing/formatting helpers
+  seo/                           robots.txt, sitemap.xml, canonical site URL
   web/
     assets.go                    go:embed of static/
     static/                      css, js, images, favicon.ico

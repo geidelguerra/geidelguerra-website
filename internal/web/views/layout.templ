@@ -1,37 +1,80 @@
 package views
 
+import "fmt"
+
+// SEO bundles all the document-level metadata for Layout: standard meta
+// tags, Open Graph / Twitter Card data, theme colors, and an optional
+// structured-data (JSON-LD) component.
+type SEO struct {
+	Title         string
+	Description   string
+	CanonicalURL  string
+	SiteName      string
+	OGImage       string
+	OGImageType   string
+	OGImageWidth  int
+	OGImageHeight int
+	// TwitterSite is the "@handle" used for twitter:site. Omitted if empty.
+	TwitterSite string
+	// JSONLD is rendered as a <script type="application/ld+json"> in <head>.
+	// Omitted if nil.
+	JSONLD templ.Component
+}
+
 // Layout is the base HTML document shared by the site. It sets up the
 // document head (meta tags, favicon, styles/scripts) and renders content
 // inside <body>. The inline script sets the theme attribute before first
 // paint to avoid a light/dark flash.
-templ Layout(title, description, canonicalURL, ogImage string) {
+templ Layout(seo SEO) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<title>{ title }</title>
-			<meta name="description" content={ description }/>
+			<title>{ seo.Title }</title>
+			<meta name="description" content={ seo.Description }/>
+			<meta name="robots" content="index, follow"/>
 			<meta name="color-scheme" content="light dark"/>
-			<link rel="canonical" href={ canonicalURL }/>
-			<meta property="og:title" content={ title }/>
+			<meta name="theme-color" content="#fbfaff" media="(prefers-color-scheme: light)"/>
+			<meta name="theme-color" content="#0f0e17" media="(prefers-color-scheme: dark)"/>
+			<link rel="canonical" href={ seo.CanonicalURL }/>
+			<meta property="og:title" content={ seo.Title }/>
 			<meta property="og:type" content="website"/>
-			<meta property="og:url" content={ canonicalURL }/>
-			<meta property="og:description" content={ description }/>
-			if ogImage != "" {
-				<meta property="og:image" content={ ogImage }/>
+			<meta property="og:url" content={ seo.CanonicalURL }/>
+			<meta property="og:description" content={ seo.Description }/>
+			<meta property="og:locale" content="en_US"/>
+			if seo.SiteName != "" {
+				<meta property="og:site_name" content={ seo.SiteName }/>
+			}
+			if seo.OGImage != "" {
+				<meta property="og:image" content={ seo.OGImage }/>
+				if seo.OGImageType != "" {
+					<meta property="og:image:type" content={ seo.OGImageType }/>
+				}
+				if seo.OGImageWidth > 0 {
+					<meta property="og:image:width" content={ fmt.Sprint(seo.OGImageWidth) }/>
+				}
+				if seo.OGImageHeight > 0 {
+					<meta property="og:image:height" content={ fmt.Sprint(seo.OGImageHeight) }/>
+				}
 			}
 			<meta name="twitter:card" content="summary"/>
-			<meta name="twitter:title" content={ title }/>
-			<meta name="twitter:description" content={ description }/>
-			if ogImage != "" {
-				<meta name="twitter:image" content={ ogImage }/>
+			<meta name="twitter:title" content={ seo.Title }/>
+			<meta name="twitter:description" content={ seo.Description }/>
+			if seo.OGImage != "" {
+				<meta name="twitter:image" content={ seo.OGImage }/>
+			}
+			if seo.TwitterSite != "" {
+				<meta name="twitter:site" content={ seo.TwitterSite }/>
 			}
 			<link rel="alternate" type="application/json" href="/data.json" title="Site data (JSON)"/>
 			<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
 			<link rel="icon" type="image/png" href="/static/images/favicon.png"/>
 			<link rel="apple-touch-icon" href="/static/images/favicon.png"/>
 			<link rel="stylesheet" href="/static/css/style.css"/>
+			if seo.JSONLD != nil {
+				@seo.JSONLD
+			}
 			<script>
 				(function () {
 					var stored = null;

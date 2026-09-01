@@ -13,6 +13,7 @@ import (
 
 	"github.com/geidelguerra/website/internal/cv"
 	"github.com/geidelguerra/website/internal/data"
+	"github.com/geidelguerra/website/internal/seo"
 	"github.com/geidelguerra/website/internal/web"
 	"github.com/geidelguerra/website/internal/web/views"
 )
@@ -77,6 +78,19 @@ func New(d *data.Data) (http.Handler, error) {
 		w.Header().Set("Content-Type", "application/pdf")
 		w.Header().Set("Content-Disposition", cvContentDisposition)
 		w.Write(cvPDF)
+	})
+
+	// /robots.txt and /sitemap.xml: standard crawler discovery files.
+	robotsTXT := seo.RobotsTXT()
+	r.Get("/robots.txt", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.Write(robotsTXT)
+	})
+
+	sitemapXML := seo.SitemapXML()
+	r.Get("/sitemap.xml", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+		w.Write(sitemapXML)
 	})
 
 	return r, nil

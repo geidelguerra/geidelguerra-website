@@ -12,6 +12,7 @@ import (
 
 	"github.com/geidelguerra/website/internal/cv"
 	"github.com/geidelguerra/website/internal/data"
+	"github.com/geidelguerra/website/internal/seo"
 	"github.com/geidelguerra/website/internal/web"
 	"github.com/geidelguerra/website/internal/web/views"
 )
@@ -32,6 +33,10 @@ func Generate(d *data.Data, outDir string) error {
 	}
 
 	if err := writeCV(d, outDir); err != nil {
+		return err
+	}
+
+	if err := writeSEOFiles(outDir); err != nil {
 		return err
 	}
 
@@ -87,6 +92,20 @@ func writeCV(d *data.Data, outDir string) error {
 
 	if err := os.WriteFile(filepath.Join(outDir, "cv.pdf"), body, 0o644); err != nil {
 		return fmt.Errorf("write cv.pdf: %w", err)
+	}
+
+	return nil
+}
+
+// writeSEOFiles writes robots.txt and sitemap.xml, mirroring the routes
+// served live, for crawlers consuming the static export.
+func writeSEOFiles(outDir string) error {
+	if err := os.WriteFile(filepath.Join(outDir, "robots.txt"), seo.RobotsTXT(), 0o644); err != nil {
+		return fmt.Errorf("write robots.txt: %w", err)
+	}
+
+	if err := os.WriteFile(filepath.Join(outDir, "sitemap.xml"), seo.SitemapXML(), 0o644); err != nil {
+		return fmt.Errorf("write sitemap.xml: %w", err)
 	}
 
 	return nil
