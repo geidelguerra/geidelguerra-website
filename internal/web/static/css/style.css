@@ -796,3 +796,166 @@ a:hover {
 		padding: 12px;
 	}
 }
+
+/* ---------------------------------------------------------------------
+   Ask-about-this-website widget
+--------------------------------------------------------------------- */
+.ask-widget {
+	position: fixed;
+	z-index: 200;
+	right: 16px;
+	bottom: 16px;
+}
+
+.ask-panel {
+	position: fixed;
+	z-index: 200;
+	right: 16px;
+	bottom: 84px;
+	width: 320px;
+	max-width: calc(100vw - 32px);
+	background: var(--surface);
+	border: 1px solid var(--surface-border);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow);
+	padding: 10px;
+}
+
+/* .ask-form/.ask-input/.ask-submit set their own "display", which (being
+   an author stylesheet rule) otherwise beats the UA's
+   "[hidden] { display: none }" rule at equal specificity, so the hidden
+   attribute alone wouldn't hide them. Force it here instead of relying on
+   JS to toggle inline styles. */
+.ask-widget [hidden] {
+	display: none !important;
+}
+
+.ask-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 52px;
+	height: 52px;
+	border: none;
+	border-radius: 50%;
+	background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+	color: #fff;
+	cursor: pointer;
+	box-shadow: var(--shadow);
+	transition: transform var(--transition);
+}
+
+.ask-toggle:hover {
+	transform: translateY(-1px);
+}
+
+.ask-toggle .icon {
+	width: 24px;
+	height: 24px;
+}
+
+.ask-toggle .icon-ask-close {
+	display: none;
+}
+
+.ask-toggle[aria-expanded="true"] .icon-ask-open {
+	display: none;
+}
+
+.ask-toggle[aria-expanded="true"] .icon-ask-close {
+	display: block;
+}
+
+.ask-form {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.ask-input {
+	flex: 1;
+	min-width: 0;
+	border: 1px solid var(--surface-border);
+	border-radius: var(--radius-md);
+	background: var(--bg);
+	color: var(--text);
+	padding: 10px 12px;
+	font-size: 0.9rem;
+	font-family: inherit;
+}
+
+.ask-input:focus {
+	outline: none;
+	border-color: var(--accent);
+}
+
+.ask-input:disabled,
+.ask-submit:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.ask-submit {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 38px;
+	height: 38px;
+	flex: none;
+	border: none;
+	border-radius: var(--radius-md);
+	background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+	color: #fff;
+	cursor: pointer;
+	transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.ask-submit:hover:not(:disabled) {
+	transform: translateY(-1px);
+}
+
+.ask-submit svg {
+	width: 18px;
+	height: 18px;
+}
+
+.ask-answer {
+	margin-top: 10px;
+	padding: 10px 12px;
+	max-height: 300px;
+	overflow-y: auto;
+	border-radius: var(--radius-md);
+	background: var(--bg-alt);
+	color: var(--text);
+	font-size: 0.88rem;
+	line-height: 1.5;
+}
+
+.ask-result + .ask-result {
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px solid var(--surface-border);
+}
+
+.ask-result h4 {
+	margin: 0 0 4px;
+	font-size: 0.82rem;
+	color: var(--accent);
+}
+
+.ask-result p {
+	margin: 0;
+}
+
+.ask-empty {
+	margin: 0;
+	color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+	.ask-panel {
+		left: 16px;
+		right: 16px;
+		width: auto;
+	}
+}

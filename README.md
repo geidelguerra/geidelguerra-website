@@ -77,6 +77,51 @@ static for the process's lifetime) and are also produced by `task generate`
 (`dist/data.json`, `dist/cv.pdf`), so the static export stays in sync with
 the live server.
 
+## Ask about this website
+
+A small floating widget (bottom-right) lets visitors search the site's own
+content from a text box ("Ask about this website"). This is a fast, fully
+client-side **fuzzy keyword search**, not an LLM: there is no model, no
+download, and no network request involved in answering a question, so
+results appear instantly (a few milliseconds) on every device, with zero
+external calls.
+
+An earlier iteration of this feature ran a tiny LLM (GGUF, via
+[wllama](https://github.com/ngxson/wllama)/WebAssembly) fully client-side
+for conversational answers. It was dropped in favor of search: CPU-only
+WASM inference of even a small (~0.5B/360M parameter) model was too slow
+for a snappy experience on modest hardware (tens of seconds per reply in
+testing), and fine-tuning a model to fix that only helps quality/prompt
+size, not raw per-token decode speed. Search trades "conversational" for
+"instant and always accurate" (it can only surface real content, so it
+can't hallucinate either).
+
+How it works:
+
+- `internal/web/views/ask_search.go`'s `buildSearchIndex` turns the site's
+  content (`*data.Data`) into a flat list of small documents: one for the
+  about/profile blurb, one for skills, one for the toolkit, one for spoken
+  languages, one per job, one per project, one per education entry, and
+  one for contact links. This runs once, server-side, at the same time as
+  everything else in `data.json`/`cv.pdf` (see below), so it's always in
+  sync with the site's real content and needs no separate build step.
+- `internal/web/views/ask.templ` embeds that index directly in the page as
+  JSON (`templ.JSONScript`, same technique used for the `Person` JSON-LD
+  block), so the client needs zero extra network round trips to search.
+- `internal/web/static/js/ask.js` does the actual matching: it tokenizes
+  each document's title plus its curated keywords (deliberately *not* the
+  free-form description text, which would add too much incidental-match
+  noise), then scores a query against them with exact/prefix/substring
+  matches weighted highest and a length-scaled Levenshtein edit-distance
+  check for basic typo tolerance. Scores are summed (not averaged) across
+  query words so one strong, specific hit (e.g. a company name) isn't
+  diluted by other unmatched words in a longer question. The top 3 matches
+  above a minimum score are rendered; below it, a friendly "no direct
+  match" message is shown instead of nothing.
+- The widget stays `hidden` until this (essentially instant) setup runs,
+  then reveals itself; on any JS error it just never reveals itself
+  instead of showing a broken widget.
+
 ## SEO
 
 - **Meta tags**: description, canonical URL, `robots`, Open Graph (title,
@@ -192,7 +237,10 @@ internal/
   web/
     assets.go                    go:embed of static/
     static/                      css, js, images, favicon.ico
+      js/ask.js                  "Ask about this website" fuzzy search widget (see above)
     views/                       templ components (layout + page sections)
+      ask.templ                 "Ask about this website" widget markup
+      ask_search.go              builds the search index embedded in the page
   httpserver/                    chi router for the live server
   generator/                     static site exporter
   cv/                            PDF resume generator (github.com/go-pdf/fpdf)
