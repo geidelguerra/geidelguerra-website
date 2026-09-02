@@ -72,10 +72,11 @@ static host without running Go at all.
   return a PDF that spills onto a second page (see `ErrTooManyPages`), so
   content that no longer fits fails loudly instead of shipping broken.
 
-Both are rendered once at startup (not per-request, since the content is
-static for the process's lifetime) and are also produced by `task generate`
-(`dist/data.json`, `dist/cv.pdf`), so the static export stays in sync with
-the live server.
+Both are always returned fresh (no caching headers), so a redeploy is
+visible immediately. Both are rendered once at startup (not per-request,
+since the content is static for the process's lifetime) and are also
+produced by `task generate` (`dist/data.json`, `dist/cv.pdf`), so the
+static export stays in sync with the live server.
 
 ## Ask about this website
 
@@ -150,10 +151,22 @@ How it works:
 - CSS and JS are minified once at startup/build time (`internal/web/minify.go`,
   using `github.com/tdewolff/minify/v2`, pure Go) and served from memory,
   no build step or external tool required.
-- All static assets (`/static/*`, `/favicon.ico`) get
-  `Cache-Control: public, max-age=2592000, immutable` directly from the Go
-  server, so caching is correct even without nginx/Cloudflare in front
-  (nginx adds the same header again when deployed, see Deployment below).
+- The minified CSS/JS (`style.css`, `app.js`) plus `ask.js` are served at a
+  content-hashed filename (e.g. `style-<sha256>.css`) via
+  [`github.com/benbjohnson/hashfs`](https://github.com/benbjohnson/hashfs)
+  (`internal/web/hashed.go`; `web.StaticAssetPath` builds the URL, used in
+  `layout.templ`). Hashed URLs are cached for a year
+  (`Cache-Control: public, max-age=31536000`); since the filename itself
+  changes whenever the content does, this is always safe: a redeploy can
+  never serve a stale asset under a URL a browser already has cached. The
+  plain (unhashed) filename still resolves too, just without the
+  aggressive caching, so nothing breaks if something links to it directly.
+- Everything else under `/static/*` (images, `/favicon.ico`) still gets a
+  flat `Cache-Control: public, max-age=2592000, immutable` directly from
+  the Go server, so caching is correct even without nginx/Cloudflare in
+  front (nginx adds the same header again when deployed, see Deployment
+  below). These aren't hashed since they're either rarely-changing (photo,
+  favicon) or referenced by a fixed conventional path (`/favicon.ico`).
 - `internal/web/static/images/profile.jpg` and `favicon.png` are pre-sized
   for how they're actually displayed (160px hero avatar, favicon/touch
   icon) rather than shipping the original photo resolution; if you
@@ -236,6 +249,8 @@ internal/
   seo/                           robots.txt, sitemap.xml, canonical site URL
   web/
     assets.go                    go:embed of static/
+    hashed.go                    hashfs-wrapped, minified CSS/JS (see Performance)
+    minify.go                    CSS/JS minification helpers
     static/                      css, js, images, favicon.ico
       js/ask.js                  "Ask about this website" fuzzy search widget (see above)
     views/                       templ components (layout + page sections)

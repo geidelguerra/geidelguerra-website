@@ -4,7 +4,6 @@ package httpserver
 import (
 	"encoding/json"
 	"fmt"
-	"io/fs"
 	"log"
 	"net/http"
 	"strings"
@@ -35,42 +34,16 @@ func New(d *data.Data) (http.Handler, error) {
 	staticFS := web.Static()
 	fileServer := http.FileServer(http.FS(staticFS))
 
-	r.Handle("/static/*", http.StripPrefix("/static/", withCacheControl(staticCacheControl, fileServer)))
+	// Assets referenced via web.StaticAssetPath (css/style.css minified,
+	// js/app.js minified, js/ask.js) get a hashed filename and are cached
+	// aggressively by web.Handler() itself (see internal/web/hashed.go). The
+	// staticCacheControl baseline below covers everything else under
+	// /static/ that's still requested by its plain name (e.g. images),
+	// matching the previous behavior for those.
+	r.Handle("/static/*", http.StripPrefix("/static/", withCacheControl(staticCacheControl, web.Handler())))
 	r.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", staticCacheControl)
 		fileServer.ServeHTTP(w, r)
-	})
-
-	// Serve minified CSS/JS instead of the raw embedded sources. Registered
-	// as exact routes, which chi matches ahead of the /static/* wildcard
-	// above.
-	cssSrc, err := fs.ReadFile(staticFS, "css/style.css")
-	if err != nil {
-		return nil, fmt.Errorf("read style.css: %w", err)
-	}
-	minifiedCSS, err := web.MinifyCSS(cssSrc)
-	if err != nil {
-		return nil, fmt.Errorf("minify style.css: %w", err)
-	}
-
-	jsSrc, err := fs.ReadFile(staticFS, "js/app.js")
-	if err != nil {
-		return nil, fmt.Errorf("read app.js: %w", err)
-	}
-	minifiedJS, err := web.MinifyJS(jsSrc)
-	if err != nil {
-		return nil, fmt.Errorf("minify app.js: %w", err)
-	}
-
-	r.Get("/static/css/style.css", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/css; charset=utf-8")
-		w.Header().Set("Cache-Control", staticCacheControl)
-		w.Write(minifiedCSS)
-	})
-	r.Get("/static/js/app.js", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
-		w.Header().Set("Cache-Control", staticCacheControl)
-		w.Write(minifiedJS)
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -83,7 +56,8 @@ func New(d *data.Data) (http.Handler, error) {
 
 	// /data.json exposes the site content as machine-readable JSON, for
 	// scrapers, crawlers and AI agents that want structured data instead of
-	// scraping the HTML.
+	// scraping the HTML. Always returned fresh: no caching headers are set,
+	// so a redeploy is visible immediately.
 	dataJSON, err := json.MarshalIndent(d, "", "  ")
 	if err != nil {
 		return nil, fmt.Errorf("marshal data.json: %w", err)
@@ -97,7 +71,8 @@ func New(d *data.Data) (http.Handler, error) {
 
 	// /cv.pdf serves a printable, single-page PDF resume (photo, name,
 	// title, networks, bio, experience, education, skills) built from the
-	// same site content, always in light mode.
+	// same site content, always in light mode. Always returned fresh, same
+	// as /data.json above.
 	photo, err := web.ProfilePhoto()
 	if err != nil {
 		log.Printf("load profile photo: %v", err)

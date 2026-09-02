@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/benbjohnson/hashfs v0.2.2
 	github.com/go-pdf/fpdf v0.9.0
 	github.com/tdewolff/minify/v2 v2.24.17
 )

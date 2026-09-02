@@ -111,17 +111,44 @@ func writeSEOFiles(outDir string) error {
 	return nil
 }
 
+// hashedStaticAssets are served via a hashed, cache-busted URL (see
+// web.StaticAssetPath) rather than their plain path, so the static export
+// must write them at that exact hashed path: unlike the live server's
+// web.Handler(), a plain static file host can't parse/verify a hash suffix
+// and fall back to the real file on its own.
+var hashedStaticAssets = []string{"css/style.css", "js/app.js", "js/ask.js"}
+
 // copyStatic copies the embedded assets into outDir, mirroring the URL
-// layout served by the live server: favicon.ico stays at the root, and
-// everything else lives under static/.
+// layout served by the live server: favicon.ico stays at the root,
+// css/style.css, js/app.js (both minified) and js/ask.js are written at
+// their hashed filename, and everything else lives under static/ as-is.
 func copyStatic(outDir string) error {
 	staticFS := web.Static()
+	assets := web.HashedAssets()
+
+	hashed := make(map[string]bool, len(hashedStaticAssets))
+	for _, name := range hashedStaticAssets {
+		hashed[name] = true
+
+		content, err := fs.ReadFile(assets, name)
+		if err != nil {
+			return fmt.Errorf("read %s: %w", name, err)
+		}
+
+		dest := filepath.Join(outDir, "static", filepath.FromSlash(assets.HashName(name)))
+		if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
+			return err
+		}
+		if err := os.WriteFile(dest, content, 0o644); err != nil {
+			return fmt.Errorf("write %s: %w", dest, err)
+		}
+	}
 
 	return fs.WalkDir(staticFS, ".", func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
-		if path == "." {
+		if path == "." || hashed[path] {
 			return nil
 		}
 
@@ -141,19 +168,6 @@ func copyStatic(outDir string) error {
 		content, err := fs.ReadFile(staticFS, path)
 		if err != nil {
 			return fmt.Errorf("read %s: %w", path, err)
-		}
-
-		// Serve minified CSS/JS instead of the raw embedded sources, matching
-		// the live server.
-		switch path {
-		case "css/style.css":
-			if content, err = web.MinifyCSS(content); err != nil {
-				return fmt.Errorf("minify style.css: %w", err)
-			}
-		case "js/app.js":
-			if content, err = web.MinifyJS(content); err != nil {
-				return fmt.Errorf("minify app.js: %w", err)
-			}
 		}
 
 		if err := os.WriteFile(dest, content, 0o644); err != nil {
