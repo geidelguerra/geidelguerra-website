@@ -12,6 +12,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 
@@ -75,10 +76,27 @@ func runServe(args []string) {
 		log.Fatalf("build server: %v", err)
 	}
 
-	log.Printf("listening on %s", *addr)
+	log.Printf("listening on %s", displayURL(*addr))
 	if err := http.ListenAndServe(*addr, handler); err != nil {
 		log.Fatal(err)
 	}
+}
+
+// displayURL turns a listen address (e.g. ":8080", "0.0.0.0:8080",
+// "127.0.0.1:3000") into a clickable http:// URL for the terminal. An empty
+// or wildcard host (":8080", "0.0.0.0:8080", "[::]:8080") is displayed as
+// localhost, since that's what actually resolves in a browser.
+func displayURL(addr string) string {
+	host, port, err := net.SplitHostPort(addr)
+	if err != nil {
+		return addr
+	}
+
+	if host == "" || host == "0.0.0.0" || host == "::" {
+		host = "localhost"
+	}
+
+	return fmt.Sprintf("http://%s:%s", host, port)
 }
 
 func runGenerate(args []string) {

@@ -203,10 +203,20 @@ seed on the server; every deploy is a single self-contained binary plus its
 nginx front door.
 
 Requires `SERVER` (an SSH target with key-based access and root, or
-equivalent, privileges) and `DOMAIN` (the hostname nginx should listen for):
+equivalent, privileges) and `DOMAIN` (the hostname nginx should listen for),
+either passed inline:
 
 ```sh
 SERVER=root@geidelguerra.com DOMAIN=geidelguerra.com task deploy
+```
+
+or set once in a `.env` file (copy `.env.example` to `.env`), which
+`Taskfile.yaml` loads automatically for every task via its `dotenv` key:
+
+```sh
+cp .env.example .env
+# edit .env with your SERVER/DOMAIN
+task deploy
 ```
 
 The generated nginx config:

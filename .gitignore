@@ -3,3 +3,4 @@
 .task/
 *.log
 .DS_Store
+.env

@@ -1,5 +1,9 @@
 version: "3"
 
+# Load variables (e.g. SERVER, DOMAIN for `task deploy`) from a local .env
+# file, if present. Silent, so it's a no-op when the file doesn't exist.
+dotenv: [".env"]
+
 vars:
   BIN_DIR: bin
   BIN_NAME: website
@@ -89,3 +93,4 @@ tasks:
     deps:
       - build:linux
     cmd: ./deploy.sh
+
