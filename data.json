@@ -43,6 +43,15 @@
   ],
   "experience": [
     {
+      "name": "Co-Founder",
+      "company": "GNG Tech Services LLC",
+      "companyUrl": "https://gngtechservices.com",
+      "startDate": "2026-09",
+      "endDate": "Present",
+      "description": "Software consultancy I co-founded, based in Tampa, FL, serving clients remotely across the US. Three focused service lines: business portfolio websites, custom software solutions and integrations, and practical AI integrations (chatbots, workflow automation, content generation).",
+      "tech": []
+    },
+    {
       "name": "Senior Software Developer",
       "company": "2dor Gourmet Ice LLC",
       "companyUrl": "https://www.mixologyice.com",
