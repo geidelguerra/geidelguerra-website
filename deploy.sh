@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-APP_NAME="website"
+APP_NAME="geidelguerra-website"
 BIN_NAME="website"
 BIN_PATH="./bin/$BIN_NAME"
 REMOTE_TEMP_BIN_PATH="/tmp/$BIN_NAME"
@@ -22,61 +22,6 @@ REMOTE_SERVICE_PATH="/etc/systemd/system/$REMOTE_SERVICE_FILENAME"
 REMOTE_NGINX_FILENAME="$APP_NAME.conf"
 REMOTE_TEMP_NGINX_PATH="/tmp/$REMOTE_NGINX_FILENAME"
 REMOTE_NGINX_PATH="/etc/nginx/conf.d/$REMOTE_NGINX_FILENAME"
-
-# Cloudflare's published IP ranges (https://www.cloudflare.com/ips/). Used
-# below to (1) restore the real visitor IP from the CF-Connecting-IP header
-# and (2) restrict direct access to the origin to Cloudflare + localhost, so
-# Cloudflare's cache/WAF can't be bypassed by hitting the server's IP
-# directly. Update this list if Cloudflare changes their ranges.
-CLOUDFLARE_IPS=(
-    173.245.48.0/20
-    103.21.244.0/22
-    103.22.200.0/22
-    103.31.4.0/22
-    141.101.64.0/18
-    108.162.192.0/18
-    190.93.240.0/20
-    188.114.96.0/20
-    197.234.240.0/22
-    198.41.128.0/17
-    162.158.0.0/15
-    104.16.0.0/13
-    104.24.0.0/14
-    172.64.0.0/13
-    131.0.72.0/22
-    2400:cb00::/32
-    2606:4700::/32
-    2803:f800::/32
-    2405:b500::/32
-    2405:8100::/32
-    2a06:98c0::/29
-    2c0f:f248::/32
-)
-
-CLOUDFLARE_REAL_IP_DIRECTIVES=""
-CLOUDFLARE_ALLOW_DIRECTIVES=""
-for ip in "${CLOUDFLARE_IPS[@]}"; do
-    CLOUDFLARE_REAL_IP_DIRECTIVES+="set_real_ip_from $ip;"$'\n'
-    CLOUDFLARE_ALLOW_DIRECTIVES+="    allow $ip;"$'\n'
-done
-
-# Off by default: only enable this if DOMAIN's DNS is actually proxied
-# through Cloudflare (orange-clouded). Otherwise every request bypasses
-# Cloudflare, hits the origin directly, and gets a 403 from the deny-all
-# below. Opt in with RESTRICT_TO_CLOUDFLARE=true.
-RESTRICT_TO_CLOUDFLARE="${RESTRICT_TO_CLOUDFLARE:-false}"
-if [ "$RESTRICT_TO_CLOUDFLARE" = "true" ]; then
-    CLOUDFLARE_ACCESS_BLOCK="    # Only Cloudflare (and localhost, for local health checks) may reach
-    # this origin directly, so Cloudflare's cache/WAF can't be bypassed by
-    # hitting the server's IP.
-$CLOUDFLARE_ALLOW_DIRECTIVES
-    allow 127.0.0.1;
-    allow ::1;
-    deny all;
-"
-else
-    CLOUDFLARE_ACCESS_BLOCK=""
-fi
 
 : "${SERVER:?SERVER environment variable must be set}"
 : "${DOMAIN:?DOMAIN environment variable must be set (e.g. DOMAIN=geidelguerra.com)}"
@@ -111,18 +56,10 @@ WantedBy=multi-user.target
 EOF
 
 cat > "$LOCAL_TEMP_NGINX_PATH" << EOF
-# --- Cloudflare integration --------------------------------------------
-# Trust CF-Connecting-IP only when the connection actually comes from a
-# Cloudflare IP, so \$remote_addr reflects the real visitor instead of
-# Cloudflare's edge node.
-$CLOUDFLARE_REAL_IP_DIRECTIVES
-real_ip_header CF-Connecting-IP;
-real_ip_recursive on;
-
-# Cloudflare forwards the visitor's real scheme via X-Forwarded-Proto
-# (nginx's own \$scheme here is always "http", since we only listen on
-# port 80). Fall back to \$scheme if that header is ever missing, e.g. a
-# direct, non-Cloudflare request.
+# If deployed behind a reverse proxy/CDN that sets X-Forwarded-Proto (nginx
+# itself only listens on port 80, so its own \$scheme is always "http"),
+# trust that header for the visitor's real scheme. Falls back to nginx's
+# own \$scheme if the header is ever missing, e.g. a direct request.
 map \$http_x_forwarded_proto \$origin_scheme {
     default \$http_x_forwarded_proto;
     ""      \$scheme;
@@ -139,8 +76,7 @@ server {
     listen [::]:80;
     server_name $DOMAIN;
 
-$CLOUDFLARE_ACCESS_BLOCK
-    # Long-lived, cacheable static assets: let Cloudflare's edge and
+    # Long-lived, cacheable static assets: let any CDN/edge in front and
     # visitors' browsers cache these aggressively.
     location /static/ {
         proxy_pass http://127.0.0.1:$PORT;
@@ -158,7 +94,7 @@ $CLOUDFLARE_ACCESS_BLOCK
         add_header Cache-Control "public, max-age=2592000, immutable" always;
     }
 
-    # Everything else (the page, /data.json, /cv.pdf): avoid Cloudflare or
+    # Everything else (the page, /data.json, /cv.pdf): avoid a CDN/edge or
     # browsers caching stale content after a redeploy without a purge.
     location / {
         proxy_pass http://127.0.0.1:$PORT;

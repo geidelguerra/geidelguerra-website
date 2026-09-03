@@ -163,10 +163,10 @@ How it works:
   aggressive caching, so nothing breaks if something links to it directly.
 - Everything else under `/static/*` (images, `/favicon.ico`) still gets a
   flat `Cache-Control: public, max-age=2592000, immutable` directly from
-  the Go server, so caching is correct even without nginx/Cloudflare in
-  front (nginx adds the same header again when deployed, see Deployment
-  below). These aren't hashed since they're either rarely-changing (photo,
-  favicon) or referenced by a fixed conventional path (`/favicon.ico`).
+  the Go server, so caching is correct even without nginx in front (nginx
+  adds the same header again when deployed, see Deployment below). These
+  aren't hashed since they're either rarely-changing (photo, favicon) or
+  referenced by a fixed conventional path (`/favicon.ico`).
 - `internal/web/static/images/profile.jpg` and `favicon.png` are pre-sized
   for how they're actually displayed (160px hero avatar, favicon/touch
   icon) rather than shipping the original photo resolution; if you
@@ -209,33 +209,21 @@ equivalent, privileges) and `DOMAIN` (the hostname nginx should listen for):
 SERVER=root@geidelguerra.com DOMAIN=geidelguerra.com task deploy
 ```
 
-The generated nginx config assumes the domain is proxied through Cloudflare
-(orange-clouded DNS) and:
+The generated nginx config:
 
-- Restores the real visitor IP from Cloudflare's `CF-Connecting-IP` header
-  (via `set_real_ip_from`/`real_ip_header`, using Cloudflare's published IP
-  ranges), instead of logging Cloudflare's edge IP for every request.
-- Trusts Cloudflare's `X-Forwarded-Proto` for the visitor's real scheme
-  (falls back to nginx's own `$scheme` if it's ever missing).
-- Optionally (**off by default**) restricts direct access to the origin to
-  Cloudflare's IP ranges plus localhost (`allow`/`deny` in the server
-  block), so the origin can't be reached by hitting its IP directly,
-  bypassing Cloudflare entirely. Opt in with
-  `RESTRICT_TO_CLOUDFLARE=true SERVER=... DOMAIN=... task deploy`, but **only**
-  if `DOMAIN`'s DNS record is actually proxied through Cloudflare
-  (orange-clouded), otherwise every request will get a 403.
+- Trusts `X-Forwarded-Proto` (if set by a reverse proxy/CDN in front) for
+  the visitor's real scheme, falling back to nginx's own `$scheme` if it's
+  ever missing.
 - Sets long-lived, immutable `Cache-Control` on `/static/*` and
-  `/favicon.ico` so Cloudflare's edge and browsers cache them aggressively,
-  and `Cache-Control: no-cache` on everything else (the page, `/data.json`,
-  `/cv.pdf`) so a redeploy is visible immediately without needing a cache
-  purge.
+  `/favicon.ico` so any CDN/edge in front and browsers cache them
+  aggressively, and `Cache-Control: no-cache` on everything else (the
+  page, `/data.json`, `/cv.pdf`) so a redeploy is visible immediately
+  without needing a cache purge.
 - Enables gzip for text-based responses.
 
-Cloudflare's IP ranges are hardcoded in `deploy.sh` (`CLOUDFLARE_IPS`); check
-https://www.cloudflare.com/ips/ occasionally and update that list if they
-change. The generated nginx config is plain HTTP on port 80, typically
-paired with Cloudflare's "Flexible" SSL mode, or run `certbot --nginx -d
-<DOMAIN>` on the server for real TLS to the origin ("Full"/"Full strict").
+The generated nginx config is plain HTTP on port 80; run `certbot --nginx
+-d <DOMAIN>` on the server for real TLS, or terminate TLS at a CDN/proxy
+in front of it instead.
 
 
 ## Project layout
