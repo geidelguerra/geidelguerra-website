@@ -65,16 +65,22 @@ map \$http_x_forwarded_proto \$origin_scheme {
     ""      \$scheme;
 }
 
-gzip on;
-gzip_vary on;
-gzip_proxied any;
-gzip_comp_level 5;
-gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript image/svg+xml;
-
 server {
     listen 80;
     listen [::]:80;
     server_name $DOMAIN;
+
+    # Scoped to this server block (not the top-level http context) since
+    # the system's nginx.conf commonly already sets "gzip on;" globally
+    # (e.g. Debian/Ubuntu's default), and repeating it at the same context
+    # nginx.conf's own http block uses is a duplicate-directive error, not
+    # a harmless override. Nested here, it's simply this server's own
+    # setting instead.
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 5;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript image/svg+xml;
 
     # Long-lived, cacheable static assets: let any CDN/edge in front and
     # visitors' browsers cache these aggressively.

@@ -48,7 +48,7 @@
       "companyUrl": "https://www.mixologyice.com",
       "startDate": "2025-02",
       "endDate": "Present",
-      "description": "Gourmet ice company in Miami, FL. Building automation tools that integrate APIs, microcontrollers, and scanners.",
+      "description": "Gourmet ice company in Miami, FL. Building a warehouse management system (orders, inventory, customers, delivery routes) and a drivers' delivery mobile app, plus automation tools that integrate APIs, microcontrollers, and scanners.",
       "tech": ["Go", "SQLite", "TypeScript", "PostgreSQL"]
     },
     {
