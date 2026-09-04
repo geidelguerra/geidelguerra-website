@@ -57,10 +57,10 @@ tasks:
     cmd: go build -ldflags="-s -w" -o {{.BIN_DIR}}/{{.BIN_NAME}} .
 
   run:
-    desc: Run the live server (go run, no build artifact)
+    desc: Run the live server (go run, no build artifact; configured via HOST/PORT env vars or .env)
     deps:
       - templ:generate
-    cmd: go run . serve {{.CLI_ARGS}}
+    cmd: go run .
 
   dev:
     desc: Run the live server and watch .templ files for changes in parallel
@@ -88,9 +88,20 @@ tasks:
     cmds:
       - rm -rf {{.BIN_DIR}} {{.DIST_DIR}}
 
-  deploy:
+  "deploy:ssh":
     desc: 'Build for linux/amd64 and deploy via SSH, incl. nginx (requires SERVER=user@host and DOMAIN=example.com)'
     deps:
       - build:linux
-    cmd: ./deploy.sh
+    requires:
+      vars:
+        - SERVER
+        - DOMAIN
+    cmd: ./deploy_ssh.sh
+
+  "deploy:cloudflare":
+    desc: 'Deploy as a Cloudflare Container via deploy_cloudflare.sh (requires DOMAIN=example.com, already an active Cloudflare zone)'
+    requires:
+      vars:
+        - DOMAIN
+    cmd: ./deploy_cloudflare.sh
 

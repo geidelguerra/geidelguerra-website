@@ -3,8 +3,10 @@
 //
 // Usage:
 //
-//	website serve [-addr :8080]     run the live HTTP server (default)
-//	website generate [-out dist]    export a static build
+//	website                        run the live HTTP server (default);
+//	                               configured via HOST/PORT env vars (or a
+//	                               local .env file), no CLI flags needed
+//	website generate [-out dist]   export a static build
 package main
 
 import (
@@ -29,6 +31,12 @@ import (
 var embeddedData []byte
 
 func main() {
+	// Optional: load a local .env file (never committed — see .gitignore)
+	// so HOST/PORT don't have to be exported by hand during local
+	// development. Real environment variables always win; see
+	// loadDotEnv's doc comment.
+	loadDotEnv(".env")
+
 	args := os.Args[1:]
 
 	cmd := "serve"
@@ -39,7 +47,7 @@ func main() {
 
 	switch cmd {
 	case "serve":
-		runServe(args)
+		runServe()
 	case "generate", "build":
 		runGenerate(args)
 	case "help", "-h", "--help":
@@ -57,14 +65,19 @@ func isFlag(s string) bool {
 
 func printUsage() {
 	fmt.Fprintln(os.Stderr, `Usage:
-  website serve [-addr :8080]   run the live HTTP server (default)
-  website generate [-out dist]  export a static build`)
+  website                        run the live HTTP server (default)
+  website generate [-out dist]   export a static build
+
+The live server takes no CLI flags: it's configured entirely via
+environment variables (or a local .env file):
+  HOST   interface to bind (default: all interfaces)
+  PORT   port to listen on (default: 8080)`)
 }
 
-func runServe(args []string) {
-	fset := flag.NewFlagSet("serve", flag.ExitOnError)
-	addr := fset.String("addr", ":8080", "address to listen on")
-	fset.Parse(args)
+func runServe() {
+	host := getenv("HOST", "")
+	port := getenv("PORT", "8080")
+	addr := host + ":" + port
 
 	d, err := data.Load(embeddedData)
 	if err != nil {
@@ -76,10 +89,17 @@ func runServe(args []string) {
 		log.Fatalf("build server: %v", err)
 	}
 
-	log.Printf("listening on %s", displayURL(*addr))
-	if err := http.ListenAndServe(*addr, handler); err != nil {
+	log.Printf("listening on %s", displayURL(addr))
+	if err := http.ListenAndServe(addr, handler); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getenv(key, fallback string) string {
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return fallback
 }
 
 // displayURL turns a listen address (e.g. ":8080", "0.0.0.0:8080",

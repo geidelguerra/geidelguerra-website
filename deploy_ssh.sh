@@ -14,7 +14,6 @@ SERVICE_GROUP=website
 PORT=8080
 SERVICE_BIN_PATH="$REMOTE_BIN_PATH"
 SERVICE_WORK_DIR="$REMOTE_APP_DIR"
-SERVICE_ADDR=":$PORT"
 REMOTE_SERVICE_FILENAME="$APP_NAME.service"
 REMOTE_TEMP_SERVICE_PATH="/tmp/$REMOTE_SERVICE_FILENAME"
 REMOTE_SERVICE_PATH="/etc/systemd/system/$REMOTE_SERVICE_FILENAME"
@@ -22,6 +21,13 @@ REMOTE_SERVICE_PATH="/etc/systemd/system/$REMOTE_SERVICE_FILENAME"
 REMOTE_NGINX_FILENAME="$APP_NAME.conf"
 REMOTE_TEMP_NGINX_PATH="/tmp/$REMOTE_NGINX_FILENAME"
 REMOTE_NGINX_PATH="/etc/nginx/conf.d/$REMOTE_NGINX_FILENAME"
+
+# The binary takes no CLI flags/subcommands to serve (see main.go) — it's
+# configured entirely via environment variables (HOST, PORT), read from a
+# single .env file next to the binary via systemd's EnvironmentFile=,
+# rather than baked into the (world-readable) unit file itself.
+REMOTE_TEMP_ENV_PATH="/tmp/$APP_NAME.env"
+REMOTE_ENV_PATH="$REMOTE_APP_DIR/.env"
 
 : "${SERVER:?SERVER environment variable must be set}"
 : "${DOMAIN:?DOMAIN environment variable must be set (e.g. DOMAIN=geidelguerra.com)}"
@@ -34,7 +40,16 @@ REMOTE_NGINX_PATH="/etc/nginx/conf.d/$REMOTE_NGINX_FILENAME"
 # they were (unset) shell variables.
 LOCAL_TEMP_SERVICE_PATH=$(mktemp)
 LOCAL_TEMP_NGINX_PATH=$(mktemp)
-trap 'rm -f "$LOCAL_TEMP_SERVICE_PATH" "$LOCAL_TEMP_NGINX_PATH"' EXIT
+LOCAL_TEMP_ENV_PATH=$(mktemp)
+trap 'rm -f "$LOCAL_TEMP_SERVICE_PATH" "$LOCAL_TEMP_NGINX_PATH" "$LOCAL_TEMP_ENV_PATH"' EXIT
+
+# Written with restrictive permissions from the start (before it ever has
+# content); HOST is left unset so the app binds all interfaces, which
+# nginx's proxy_pass to 127.0.0.1:$PORT relies on.
+( umask 077 && cat > "$LOCAL_TEMP_ENV_PATH" << EOF
+PORT=$PORT
+EOF
+)
 
 cat > "$LOCAL_TEMP_SERVICE_PATH" << EOF
 [Unit]
@@ -42,7 +57,8 @@ Description=Website
 After=network.target
 
 [Service]
-ExecStart=$SERVICE_BIN_PATH serve -addr $SERVICE_ADDR
+ExecStart=$SERVICE_BIN_PATH
+EnvironmentFile=$REMOTE_ENV_PATH
 Restart=always
 RestartSec=5
 StartLimitIntervalSec=60
@@ -119,6 +135,9 @@ EOF
 scp "$BIN_PATH" "$SERVER:$REMOTE_TEMP_BIN_PATH"
 scp "$LOCAL_TEMP_SERVICE_PATH" "$SERVER:$REMOTE_TEMP_SERVICE_PATH"
 scp "$LOCAL_TEMP_NGINX_PATH" "$SERVER:$REMOTE_TEMP_NGINX_PATH"
+# -p preserves the local mode 600 during transfer, so the .env file is
+# never briefly world-readable in the remote /tmp before the chmod below.
+scp -p "$LOCAL_TEMP_ENV_PATH" "$SERVER:$REMOTE_TEMP_ENV_PATH"
 
 ssh -T "$SERVER" << EOF
 if ! id -u "$SERVICE_USER" >/dev/null 2>&1; then
@@ -131,6 +150,11 @@ usermod -a -G "$SERVICE_GROUP" "$SERVICE_USER"
 mkdir -p "$REMOTE_APP_DIR"
 mv -f "$REMOTE_TEMP_BIN_PATH" "$REMOTE_BIN_PATH"
 chmod +x "$REMOTE_BIN_PATH"
+
+mv -f "$REMOTE_TEMP_ENV_PATH" "$REMOTE_ENV_PATH"
+chown "$SERVICE_USER:$SERVICE_GROUP" "$REMOTE_ENV_PATH"
+chmod 600 "$REMOTE_ENV_PATH"
+
 chown -R "$SERVICE_USER:$SERVICE_GROUP" "$REMOTE_APP_DIR"
 
 mv -f "$REMOTE_TEMP_SERVICE_PATH" "$REMOTE_SERVICE_PATH"

@@ -1,0 +1,66 @@
+{
+	"name": "geidelguerra-website",
+	"main": "src/index.js",
+	// Keep this at (or after) the date you last deployed — see
+	// https://developers.cloudflare.com/workers/configuration/compatibility-dates/
+	"compatibility_date": "2026-09-04",
+	"compatibility_flags": ["nodejs_compat"],
+
+	// Ingests Worker + Container logs (this app's log.Printf/stdout output)
+	// into the dashboard's Logs view for up to 7 days. See
+	// https://developers.cloudflare.com/workers/observability/logs/workers-logs/.
+	// head_sampling_rate defaults to 1 (100%) — fine for this low-traffic
+	// site; lower it if traffic grows enough for log volume/cost to matter.
+	"observability": {
+		"enabled": true
+	},
+
+	// Keep-warm ping (see src/index.js's `scheduled` handler): every 15
+	// minutes, roughly 8am-8pm Eastern. Cron Triggers always run in UTC and
+	// don't shift for DST, so "12-23,0" is a deliberately generous union of
+	// that window's EST (13:00-00:59 UTC) and EDT (12:00-23:59 UTC)
+	// equivalents. This keeps the container warm through business hours
+	// (avoiding the ~1-3s cold start on real visitors) while still letting
+	// it sleep overnight to save on Container billing. Adjust to your own
+	// timezone/traffic pattern, or drop entirely if cost matters more.
+	"triggers": {
+		"crons": ["*/15 12-23,0 * * *"]
+	},
+
+	// This app has no secret or environment-specific runtime config (see
+	// main.go: only HOST/PORT, which the container sets itself in
+	// src/index.js) — so there's nothing to render into a generated config
+	// at deploy time, unlike ../deploy_cloudflare.sh's gngtechservices-website
+	// counterpart. This file is deployed as-is.
+
+	"containers": [
+		{
+			"class_name": "Website",
+			"image": "./Dockerfile",
+			// The repository root, not this directory — the Dockerfile needs
+			// the full Go module (go.mod, internal/, data.json, main.go).
+			"image_build_context": "..",
+			// "lite" (1/16 vCPU, 256 MiB RAM, 2 GB disk) comfortably fits
+			// this binary — bump to "basic" or larger only if needed. See
+			// https://developers.cloudflare.com/containers/platform/pricing/
+			"instance_type": "lite",
+			"max_instances": 3
+		}
+	],
+
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "WEBSITE",
+				"class_name": "Website"
+			}
+		]
+	},
+
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": ["Website"]
+		}
+	]
+}

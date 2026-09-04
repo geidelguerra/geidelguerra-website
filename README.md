@@ -34,30 +34,38 @@ Just overwrite these files (keep the same names) and rebuild.
 ## Tasks
 
 ```sh
-task build           # build a static, stripped binary into bin/website
-task build:linux      # cross-compile a static binary for linux/amd64 (used by deploy)
-task run              # go run the live server (task run -- -addr :3000)
-task dev              # live server + templ --watch, regenerating on .templ changes
-task generate         # export a static build into dist/
+task build             # build a static, stripped binary into bin/website
+task build:linux       # cross-compile a static binary for linux/amd64 (used by deploy)
+task run               # go run the live server (PORT=3000 task run to override the port)
+task dev               # live server + templ --watch, regenerating on .templ changes
+task generate          # export a static build into dist/
 task serve:static      # serve dist/ locally for previewing the static export
 task fmt               # templ fmt + go fmt
 task test              # go test ./...
-task deploy            # build for linux/amd64 and deploy via deploy.sh
+task deploy:ssh        # build for linux/amd64 and deploy via deploy_ssh.sh (VPS/SSH)
+task deploy:cloudflare # deploy via deploy_cloudflare.sh (Cloudflare Containers)
 task clean             # remove bin/ and dist/
 ```
 
 ## CLI
 
-The compiled binary supports two subcommands (defaults to `serve`):
+The compiled binary takes no flags to run — it just works:
 
 ```sh
-website serve [-addr :8080]
-website generate [-out dist]
+website                        # run the live HTTP server (default)
+website generate [-out dist]   # export a static build
 ```
 
-`serve` runs the live HTTP server. `generate` renders the same page to a
-static `index.html` plus its static assets, so the site can be hosted on any
-static host without running Go at all.
+Running the binary with no arguments starts the live HTTP server,
+configured entirely via environment variables (or a local `.env` file, see
+`dotenv.go`):
+
+- `HOST` — interface to bind (default: all interfaces)
+- `PORT` — port to listen on (default: `8080`)
+
+`generate` renders the same page to a static `index.html` plus its static
+assets, so the site can be hosted on any static host without running Go at
+all.
 
 ## Machine-readable data & CV
 
@@ -183,17 +191,29 @@ wrong theme. The toggle button in the nav bar flips and persists the choice.
 
 ## Deployment
 
-`deploy.sh` builds nothing itself; run it via `task deploy`, which first
-cross-compiles `bin/website` for `linux/amd64`, then:
+The binary itself needs nothing but `HOST`/`PORT` (see CLI above) to run;
+two ready-made deploy scripts cover the common cases.
 
-1. Renders a systemd unit and an nginx server block to local temp files
-   (kept as separate files, then `scp`'d verbatim, specifically to avoid
-   nginx's own `$host`/`$scheme`/etc. variables being mistaken for shell
-   variables and expanded away when embedded in a remote `ssh` command).
-2. Copies the binary + those two files to the server over `scp`.
+### `deploy_ssh.sh` (VPS / SSH)
+
+Run via `task deploy:ssh`, which first cross-compiles `bin/website` for
+`linux/amd64`, then:
+
+1. Renders a systemd unit, an nginx server block, and a single `.env` file
+   (containing just `PORT`) to local temp files (kept as separate files,
+   then `scp`'d verbatim, specifically to avoid nginx's own
+   `$host`/`$scheme`/etc. variables being mistaken for shell variables and
+   expanded away when embedded in a remote `ssh` command).
+2. Copies the binary + those files to the server over `scp` (the `.env`
+   file is transferred mode-600, though there's nothing secret in it
+   today — same pattern as the other config files).
 3. Over `ssh`: creates a dedicated `website` user/group (if missing),
-   installs the binary at `/apps/website/website`, writes/enables/restarts
-   a systemd unit (`website.service`) that runs `website serve -addr :8080`.
+   installs the binary at `/apps/website/website`, installs the `.env`
+   file at `/apps/website/.env`, writes/enables/restarts a systemd unit
+   (`website.service`) that runs the binary directly (no CLI flags) with
+   `EnvironmentFile=/apps/website/.env` supplying `PORT` (`HOST` is left
+   unset so it binds all interfaces, which nginx's `proxy_pass` to
+   `127.0.0.1:$PORT` relies on).
 4. Installs `nginx` if it's missing, writes the rendered server block to
    `/etc/nginx/conf.d/website.conf` (reverse-proxying `DOMAIN` on port 80 to
    `127.0.0.1:8080`), runs `nginx -t`, and reloads/restarts it.
@@ -207,7 +227,7 @@ equivalent, privileges) and `DOMAIN` (the hostname nginx should listen for),
 either passed inline:
 
 ```sh
-SERVER=root@geidelguerra.com DOMAIN=geidelguerra.com task deploy
+SERVER=root@geidelguerra.com DOMAIN=geidelguerra.com task deploy:ssh
 ```
 
 or set once in a `.env` file (copy `.env.example` to `.env`), which
@@ -216,7 +236,7 @@ or set once in a `.env` file (copy `.env.example` to `.env`), which
 ```sh
 cp .env.example .env
 # edit .env with your SERVER/DOMAIN
-task deploy
+task deploy:ssh
 ```
 
 The generated nginx config:
@@ -235,13 +255,79 @@ The generated nginx config is plain HTTP on port 80; run `certbot --nginx
 -d <DOMAIN>` on the server for real TLS, or terminate TLS at a CDN/proxy
 in front of it instead.
 
+### `deploy_cloudflare.sh` (Cloudflare Containers)
+
+An alternative to `deploy_ssh.sh` that runs the *same* Go binary —
+unmodified — as a [Cloudflare Container](https://developers.cloudflare.com/containers/)
+instead of on a VM you manage. A small Worker (`cloudflare/src/index.js`)
+proxies every request into the container; Cloudflare builds the image from
+`cloudflare/Dockerfile` (which uses the repository root as its build
+context, so it can see the full Go module) and runs it on-demand.
+
+Unlike a typical Worker deploy, this app has no secrets or
+environment-specific config to inject at deploy time (no Turnstile, no
+email provider — this is a static portfolio site with no contact form), so
+`cloudflare/wrangler.jsonc` is committed and deployed as-is; there's no
+generated/gitignored config variant to worry about.
+
+Requirements:
+
+- A Cloudflare account on the [Workers Paid plan](https://developers.cloudflare.com/workers/platform/pricing/)
+  ($5/month minimum) — Containers aren't available on the Free plan.
+- `DOMAIN` already added as an **active Cloudflare zone** (i.e. its DNS is
+  managed by Cloudflare) — both Containers and the
+  [Custom Domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/)
+  this script sets up require it.
+- [Node.js/npm](https://nodejs.org/) and a running
+  [Docker](https://www.docker.com/)-compatible engine locally —
+  `wrangler deploy` uses it to build the container image.
+
+Usage:
+
+```sh
+DOMAIN=geidelguerra.com task deploy:cloudflare
+# or, without Task:
+DOMAIN=geidelguerra.com ./deploy_cloudflare.sh
+```
+
+What it does:
+
+1. Installs npm dependencies in `cloudflare/` (`wrangler`,
+   `@cloudflare/containers`) if not already present.
+2. Runs `npx wrangler deploy --domain "$DOMAIN"`, which builds
+   `cloudflare/Dockerfile` with Docker, pushes the image to Cloudflare's
+   registry, deploys the Worker (`cloudflare/src/index.js`), and binds it
+   to `DOMAIN` as a [Custom Domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/).
+
+The `Website` class in `cloudflare/src/index.js` runs a single, on-demand
+container instance (`instance_type: "lite"` — 1/16 vCPU, 256 MiB RAM,
+plenty for this binary) that sleeps after 30 minutes of inactivity to save
+on [Container billing](https://developers.cloudflare.com/containers/platform/pricing/);
+the next request after that pays a small cold-start cost (documented at
+[1-3 seconds](https://developers.cloudflare.com/containers/concepts/architecture/#cold-starts)).
+Adjust `sleepAfter`/`instance_type`/`max_instances` there and in
+`cloudflare/wrangler.jsonc` if traffic grows.
+
+**Keep-warm Cron Trigger:** `wrangler.jsonc`'s `triggers.crons`
+(`*/15 12-23,0 * * *`) pings `/robots.txt` every 15 minutes during roughly
+8am-8pm Eastern (handled in `cloudflare/src/index.js`'s `scheduled`
+handler) — adjust to your own timezone/traffic pattern, or drop the
+`triggers` block entirely if the cold-start latency doesn't matter enough
+to justify the extra Container uptime.
+
 
 ## Project layout
 
 ```
 data.json                        content for all sections (embedded via go:embed)
-main.go                          CLI entry point (serve / generate)
-deploy.sh                        deploy the bin/website binary over ssh/scp (see task deploy)
+main.go                          entry point: runs the live server by default, or `generate`
+dotenv.go                        optional .env loader for local development (HOST/PORT/...)
+deploy_ssh.sh                    deploy the bin/website binary over ssh/scp (see task deploy:ssh)
+deploy_cloudflare.sh             deploy as a Cloudflare Container (see task deploy:cloudflare)
+cloudflare/                      Worker + Container plumbing for deploy_cloudflare.sh
+  src/index.js                   Worker entrypoint proxying into the Container
+  wrangler.jsonc                 Worker/Container config
+  Dockerfile                     builds the Go binary into a container image
 internal/
   data/                          data.json structs + parsing/formatting helpers
   seo/                           robots.txt, sitemap.xml, canonical site URL

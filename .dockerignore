@@ -1,8 +1,6 @@
-/bin/
-/dist/
-.task/
-*.log
-.DS_Store
-.env
+.git
+.task
+bin
+dist
 cloudflare/node_modules
 cloudflare/.wrangler

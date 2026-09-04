@@ -1,0 +1,16 @@
+{
+	"name": "geidelguerra-website-cloudflare",
+	"private": true,
+	"type": "module",
+	"description": "Worker + Container plumbing to deploy the geidelguerra.com website (../ Go module) to Cloudflare. See ../README.md > Deployment > Cloudflare Containers.",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy"
+	},
+	"devDependencies": {
+		"wrangler": "^4.0.0"
+	},
+	"dependencies": {
+		"@cloudflare/containers": "^0.2.0"
+	}
+}
