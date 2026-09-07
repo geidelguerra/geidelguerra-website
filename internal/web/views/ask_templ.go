@@ -8,16 +8,36 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/geidelguerra/website/internal/data"
+// AskTurnstileSiteKey is the public Turnstile sitekey used to protect
+// POST /api/ask (see internal/ask) from automated abuse of the Workers AI
+// call it makes. Sitekeys aren't secret — only the matching secret key
+// (kept as the TURNSTILE_SECRET_KEY env var/secret, never committed to this
+// repo — see internal/ask.Config) can verify the tokens it produces — and
+// Cloudflare separately restricts which domains a sitekey's widget will
+// even render/verify for (configured on the widget itself, in the
+// Cloudflare dashboard's Turnstile page; currently geidelguerra.com,
+// localhost, and 127.0.0.1).
+const AskTurnstileSiteKey = "0x4AAAAAAErnGfhJQuQ3iGq0"
 
-// AskWidget renders the "Ask about this website" widget: a floating button
-// that opens a small search panel. There is no model, no network call, and
-// no server involved in answering questions: the site's content is
-// pre-indexed once at render time (see ask_search.go) and embedded
-// directly in the page as JSON, and static/js/ask.js does a small, fast,
-// fuzzy client-side search over it, so results appear instantly. The panel
-// closes on its own toggle button, on Escape, or on a click outside it.
-func AskWidget(d *data.Data) templ.Component {
+// AskWidget renders the "Chat with this website" widget: a floating button
+// that opens a small chat panel (also openable via the hero's "Chat with
+// this website" call to action — see index.templ's Hero — by way of the
+// shared [data-ask-open] selector static/js/ask.js wires up). Questions are
+// answered by Cloudflare Workers AI (see internal/ask, called from
+// static/js/ask.js), grounded in the site's own data.json content and the
+// ongoing conversation (multiple turns are sent on each request, so
+// follow-up questions have context), and protected by a Turnstile
+// challenge (see AskTurnstileSiteKey above) so that endpoint can't be
+// scripted/abused for free LLM calls. POST /api/ask is implemented once,
+// in Go, and works identically regardless of how this app is deployed
+// (local `task run`, deploy_ssh.sh, or deploy_cloudflare.sh) as long as its
+// three required environment variables are set (see internal/ask.Config);
+// if they aren't, or a request otherwise fails, static/js/ask.js appends a
+// plain error message to the chat instead of an assistant reply. The panel
+// closes on its own toggle button, on Escape, or on a click outside it;
+// the conversation itself is only kept in memory (see static/js/ask.js),
+// so it's lost on page reload.
+func AskWidget() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -38,15 +58,20 @@ func AskWidget(d *data.Data) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"ask-widget\" class=\"ask-widget\" hidden>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"ask-widget\" class=\"ask-widget\" hidden><div id=\"ask-panel\" class=\"ask-panel\" hidden><div id=\"ask-messages\" class=\"ask-messages\" aria-live=\"polite\"><p class=\"ask-empty\">Ask me anything about Geidel — his skills, experience, or projects.</p></div><!--\n\t\t\t\tPopulated lazily by static/js/ask.js, only once the panel is first\n\t\t\t\topened: the Turnstile script is loaded and rendered into this\n\t\t\t\tcontainer (data-sitekey below), and the resulting token is sent\n\t\t\t\talong with each message to POST /api/ask. \"interaction-only\"\n\t\t\t\tappearance keeps it invisible unless Cloudflare decides an actual\n\t\t\t\tchallenge is needed for a given visitor.\n\t\t\t--><div id=\"ask-turnstile\" class=\"ask-turnstile\" data-sitekey=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.JSONScript("ask-search-index", buildSearchIndex(d)).Render(ctx, templ_7745c5c3_Buffer)
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(AskTurnstileSiteKey)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/ask.templ`, Line: 46, Col: 83}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div id=\"ask-panel\" class=\"ask-panel\" hidden><form id=\"ask-form\" class=\"ask-form\"><input id=\"ask-input\" class=\"ask-input\" type=\"text\" name=\"question\" placeholder=\"Ask about this website\" autocomplete=\"off\"> <button id=\"ask-submit\" class=\"ask-submit\" type=\"submit\" aria-label=\"Ask\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M5 12h14M13 6l6 6-6 6\"></path></svg></button></form><div id=\"ask-results\" class=\"ask-answer\" aria-live=\"polite\" hidden></div></div><button id=\"ask-toggle\" class=\"ask-toggle\" type=\"button\" aria-label=\"Ask about this website\" aria-expanded=\"false\" aria-controls=\"ask-panel\"><svg class=\"icon icon-ask-open\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z\"></path></svg> <svg class=\"icon icon-ask-close\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M18 6 6 18M6 6l12 12\"></path></svg></button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"></div><form id=\"ask-form\" class=\"ask-form\"><input id=\"ask-input\" class=\"ask-input\" type=\"text\" name=\"question\" placeholder=\"Chat with this website\" autocomplete=\"off\"> <button id=\"ask-submit\" class=\"ask-submit\" type=\"submit\" aria-label=\"Send\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M5 12h14M13 6l6 6-6 6\"></path></svg></button></form></div><button id=\"ask-toggle\" class=\"ask-toggle\" type=\"button\" data-ask-open aria-label=\"Chat with this website\" aria-expanded=\"false\" aria-controls=\"ask-panel\"><svg class=\"icon icon-ask-open\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z\"></path></svg> <svg class=\"icon icon-ask-close\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M18 6 6 18M6 6l12 12\"></path></svg></button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

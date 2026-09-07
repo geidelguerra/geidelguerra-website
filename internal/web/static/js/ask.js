@@ -1,11 +1,31 @@
-// "Ask about this website" widget.
+// "Chat with this website" widget.
 //
-// A small fuzzy search over the site's own content, pre-indexed once on the
-// server (see internal/web/views/ask_search.go) and embedded directly in
-// the page as JSON (#ask-search-index). There is no model, no download, no
-// network request, and no server round trip involved in answering a
-// question: everything below runs synchronously, client-side, so results
-// appear instantly.
+// A small multi-turn conversation, answered by an actual LLM (Cloudflare
+// Workers AI), called via POST /api/ask — implemented once, in Go (see
+// internal/ask), and served identically no matter how this app is deployed
+// (local `task run`, deploy_ssh.sh, or deploy_cloudflare.sh), grounded in
+// the site's own data.json content so it can't wander off-topic or
+// hallucinate unrelated facts. The whole conversation so far (not just the
+// latest message) is sent on every request, so follow-up questions have
+// context; it's only kept in memory (see conversation below), so it's lost
+// on page reload — there's no server-side session/history.
+//
+// Any element with a data-ask-open attribute opens the panel (see the
+// wiring below) — not just the floating toggle button, but also the
+// "Chat with this website" call to action in the hero (see index.templ),
+// so the widget is discoverable without relying on visitors noticing the
+// floating button.
+//
+// /api/ask is protected by a Cloudflare Turnstile challenge (loaded lazily
+// below, once the panel is first opened) so it can't be scripted for free
+// LLM calls; its token is sent along with each message and verified
+// server-side before the Workers AI call is made.
+//
+// There is no fallback: if /api/ask isn't configured (see
+// internal/ask.Config) on whatever's serving this page, or a request
+// otherwise fails transiently, or an invalid/expired Turnstile token gets
+// rejected, a plain error message is appended to the chat instead of an
+// assistant reply.
 (function () {
 	"use strict";
 
@@ -16,13 +36,74 @@
 	var panel = document.getElementById("ask-panel");
 	var form = document.getElementById("ask-form");
 	var input = document.getElementById("ask-input");
-	var results = document.getElementById("ask-results");
-	var indexScript = document.getElementById("ask-search-index");
+	var submitButton = document.getElementById("ask-submit");
+	var messagesEl = document.getElementById("ask-messages");
+	var turnstileContainer = document.getElementById("ask-turnstile");
+
+	// The conversation sent to /api/ask on every request: only committed
+	// turns (a question that got a real answer back), never a loading
+	// placeholder or a failed attempt — see the submit handler below. Capped
+	// to the most recent MAX_HISTORY_MESSAGES so the request/prompt doesn't
+	// grow unbounded over a long conversation.
+	var conversation = [];
+	var MAX_HISTORY_MESSAGES = 12;
+
+	// Bumped on every submit so a slower, earlier request's response can't
+	// clobber a later one's if a visitor sends more than one message in
+	// quick succession.
+	var activeRequestId = 0;
+
+	var turnstileWidgetId = null;
+	var turnstileToken = "";
+	var turnstileLoadStarted = false;
+
+	// Loads and explicitly renders the Turnstile widget into #ask-turnstile,
+	// the first time it's called. Lazy (called from openPanel, not at page
+	// load) so visitors who never open the ask panel never fetch the extra
+	// third-party script. Safe to call repeatedly; only does anything once.
+	function loadTurnstile() {
+		if (turnstileLoadStarted || !turnstileContainer) return;
+		turnstileLoadStarted = true;
+
+		window.__onAskTurnstileLoad = function () {
+			try {
+				// "interaction-only" keeps the widget invisible unless Cloudflare
+				// decides an actual challenge is needed (this widget's
+				// server-side mode, "managed", supports this appearance).
+				turnstileWidgetId = window.turnstile.render(turnstileContainer, {
+					sitekey: turnstileContainer.getAttribute("data-sitekey"),
+					appearance: "interaction-only",
+					callback: function (token) {
+						turnstileToken = token;
+					},
+					"error-callback": function () {
+						turnstileToken = "";
+					},
+					"expired-callback": function () {
+						turnstileToken = "";
+					},
+				});
+			} catch (err) {
+				console.error("Ask widget: Turnstile render failed", err);
+			}
+		};
+
+		var script = document.createElement("script");
+		script.src =
+			"https://challenges.cloudflare.com/turnstile/v0/api.js?onload=__onAskTurnstileLoad&render=explicit";
+		script.async = true;
+		script.defer = true;
+		script.onerror = function () {
+			console.error("Ask widget: failed to load Turnstile script");
+		};
+		document.head.appendChild(script);
+	}
 
 	function openPanel() {
 		panel.hidden = false;
 		toggle.setAttribute("aria-expanded", "true");
 		input.focus();
+		loadTurnstile();
 	}
 
 	function closePanel() {
@@ -39,10 +120,23 @@
 			}
 		});
 
-		// Close on a click/tap outside the widget (button + panel).
+		// Other "Chat with this website" calls to action (e.g. the hero's)
+		// only ever open the panel — unlike the floating button above, they
+		// don't also need to close it again on a second click.
+		document.querySelectorAll("[data-ask-open]").forEach(function (el) {
+			if (el === toggle) return;
+			el.addEventListener("click", openPanel);
+		});
+
+		// Close on a click/tap outside the widget (button + panel) — but not
+		// on a click on one of those other calls to action, which live
+		// outside #ask-widget and would otherwise immediately re-close the
+		// panel they just opened, since this listener also runs on that
+		// same (bubbled) click.
 		document.addEventListener("click", function (e) {
 			if (panel.hidden) return;
 			if (widget.contains(e.target)) return;
+			if (e.target.closest && e.target.closest("[data-ask-open]")) return;
 			closePanel();
 		});
 
@@ -55,171 +149,72 @@
 		});
 	}
 
-	// Common words that carry little search signal on their own, so they
-	// don't dilute matching against the (much more specific) keywords.
-	var STOPWORDS = {
-		the: 1, a: 1, an: 1, is: 1, are: 1, was: 1, were: 1, do: 1, does: 1,
-		did: 1, what: 1, who: 1, whom: 1, which: 1, how: 1, why: 1, when: 1,
-		where: 1, of: 1, in: 1, on: 1, at: 1, to: 1, for: 1, and: 1, or: 1,
-		with: 1, tell: 1, me: 1, you: 1, your: 1, he: 1, his: 1, him: 1,
-		this: 1, that: 1, website: 1, site: 1, has: 1, have: 1, can: 1,
-		about: 1,
-	};
+	var emptyPlaceholder = messagesEl.querySelector(".ask-empty");
 
-	function tokenize(text) {
-		return (text || "")
-			.toLowerCase()
-			.split(/[^a-z0-9+.#]+/)
-			.filter(function (w) {
-				return w.length > 1;
+	function scrollToBottom() {
+		messagesEl.scrollTop = messagesEl.scrollHeight;
+	}
+
+	// Appends a chat bubble (role "user"/"assistant"), an error notice
+	// (role "error"), or the transient "Thinking…" indicator (role
+	// "loading", removed again via the returned element) to the chat.
+	function appendMessage(role, text) {
+		if (emptyPlaceholder) {
+			emptyPlaceholder.remove();
+			emptyPlaceholder = null;
+		}
+
+		var el = document.createElement("div");
+		if (role === "loading") {
+			el.className = "ask-message ask-message-loading";
+			el.textContent = text;
+		} else if (role === "error") {
+			el.className = "ask-message-error";
+			el.textContent = text;
+		} else {
+			el.className = "ask-message ask-message-" + role;
+			el.textContent = text;
+		}
+
+		messagesEl.appendChild(el);
+		scrollToBottom();
+		return el;
+	}
+
+	// Resets the Turnstile widget after each /api/ask attempt (success,
+	// rejection, or error alike) so a fresh token is ready for the next
+	// message — tokens are single-use and expire after 5 minutes.
+	function resetTurnstile() {
+		turnstileToken = "";
+		if (turnstileWidgetId !== null && window.turnstile) {
+			window.turnstile.reset(turnstileWidgetId);
+		}
+	}
+
+	// Calls the Cloudflare Worker's POST /api/ask (see internal/ask), which
+	// verifies the Turnstile token before answering using Workers AI,
+	// grounded in the site's data.json content and the conversation so far
+	// (messages: an array of {role: "user"|"assistant", content}). Rejects
+	// on any non-2xx response — including a 403 for a missing/invalid/expired
+	// Turnstile token, or a 503 if /api/ask isn't configured (see
+	// internal/ask.Config) — network error, or malformed/empty payload; the
+	// caller shows a plain error message in that case (see the submit
+	// handler below).
+	function askAI(messages) {
+		return fetch("/api/ask", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ messages: messages, turnstileToken: turnstileToken }),
+		})
+			.then(function (res) {
+				if (!res.ok) throw new Error("ask endpoint responded with " + res.status);
+				return res.json();
+			})
+			.then(function (data) {
+				var answer = data && data.answer;
+				if (!answer || typeof answer !== "string") throw new Error("ask endpoint returned no answer");
+				return answer;
 			});
-	}
-
-	// Plain Levenshtein edit distance, used only for short-word typo
-	// tolerance (see wordScore). O(n*m) is plenty fast at these lengths.
-	function levenshtein(a, b) {
-		if (a === b) return 0;
-		var al = a.length;
-		var bl = b.length;
-		if (al === 0) return bl;
-		if (bl === 0) return al;
-
-		var prev = new Array(bl + 1);
-		for (var j = 0; j <= bl; j++) prev[j] = j;
-
-		for (var i = 1; i <= al; i++) {
-			var cur = [i];
-			for (var j2 = 1; j2 <= bl; j2++) {
-				var cost = a[i - 1] === b[j2 - 1] ? 0 : 1;
-				cur[j2] = Math.min(prev[j2] + 1, cur[j2 - 1] + 1, prev[j2 - 1] + cost);
-			}
-			prev = cur;
-		}
-
-		return prev[bl];
-	}
-
-	// Scores how well a single query word (q) matches a single keyword (k),
-	// favoring exact/prefix/substring matches, and only tolerating a typo
-	// (small edit distance, scaled to word length) as a last resort and at a
-	// lower weight, so gibberish doesn't coincidentally clear the threshold.
-	function wordScore(q, k) {
-		if (q === k) return 3;
-		if (q.length >= 3 && k.length >= 3) {
-			if (k.indexOf(q) === 0 || q.indexOf(k) === 0) return 2;
-		}
-		// A short word appearing *anywhere inside* a longer, unrelated one
-		// (e.g. "tac" inside "con-tac-t") is coincidence, not a real match;
-		// only count it once both words carry enough signal on their own.
-		if (Math.min(q.length, k.length) >= 4 && (k.indexOf(q) !== -1 || q.indexOf(k) !== -1)) {
-			return 1.2;
-		}
-
-		var maxLen = Math.max(q.length, k.length);
-		if (maxLen >= 5) {
-			var allowed = Math.floor(maxLen * 0.2); // e.g. 1 typo per ~5 chars
-			if (levenshtein(q, k) <= allowed) return 0.6;
-		}
-
-		return 0;
-	}
-
-	// Only the doc's title and its curated keywords (company/skill/tech
-	// names, category words like "experience") are indexed for matching.
-	// The free-form description in doc.text is intentionally NOT tokenized
-	// into keywords: it's long, prose-y text where many incidental words
-	// would otherwise create false-positive fuzzy matches.
-	function buildDocs() {
-		if (!indexScript) return [];
-
-		var raw;
-		try {
-			raw = JSON.parse(indexScript.textContent);
-		} catch (err) {
-			console.error("Ask widget: invalid search index", err);
-			return [];
-		}
-
-		return raw.map(function (doc) {
-			var keywordSet = {};
-			tokenize(doc.title).forEach(function (w) {
-				keywordSet[w] = true;
-			});
-			(doc.keywords || []).forEach(function (phrase) {
-				keywordSet[phrase.toLowerCase()] = true;
-				tokenize(phrase).forEach(function (w) {
-					keywordSet[w] = true;
-				});
-			});
-
-			return { title: doc.title, text: doc.text, keywords: Object.keys(keywordSet) };
-		});
-	}
-
-	var docs = buildDocs();
-
-	function search(query) {
-		var queryWords = tokenize(query).filter(function (w) {
-			return !STOPWORDS[w];
-		});
-		if (!queryWords.length) return [];
-
-		// Scores are summed (not averaged) across query words on purpose: a
-		// query like "his tech stack at Cerberu" should still surface the
-		// Cerberu doc on the strength of that one exact, specific match, even
-		// though "tech"/"stack" don't appear in it. Averaging would dilute
-		// that single strong hit down below the threshold.
-		var scored = docs.map(function (doc) {
-			var total = 0;
-			queryWords.forEach(function (q) {
-				var best = 0;
-				for (var i = 0; i < doc.keywords.length; i++) {
-					var s = wordScore(q, doc.keywords[i]);
-					if (s > best) best = s;
-					if (best === 3) break;
-				}
-				total += best;
-			});
-			return { doc: doc, score: total };
-		});
-
-		scored.sort(function (a, b) {
-			return b.score - a.score;
-		});
-
-		// 1.8 requires roughly one solid prefix/exact hit, or a couple of
-		// corroborating weaker (substring/fuzzy) hits, filtering out
-		// coincidental single-typo matches against unrelated content.
-		return scored.filter(function (s) { return s.score >= 1.8; }).slice(0, 3);
-	}
-
-	function render(matches) {
-		results.innerHTML = "";
-		results.hidden = false;
-
-		if (!matches.length) {
-			var empty = document.createElement("p");
-			empty.className = "ask-empty";
-			empty.textContent =
-				"No direct match. Try asking about skills, experience, projects, education, or contact info.";
-			results.appendChild(empty);
-			return;
-		}
-
-		matches.forEach(function (m) {
-			var item = document.createElement("div");
-			item.className = "ask-result";
-
-			var title = document.createElement("h4");
-			title.textContent = m.doc.title;
-			item.appendChild(title);
-
-			var text = document.createElement("p");
-			text.textContent = m.doc.text;
-			item.appendChild(text);
-
-			results.appendChild(item);
-		});
 	}
 
 	if (form) {
@@ -227,7 +222,47 @@
 			e.preventDefault();
 			var question = (input.value || "").trim();
 			if (!question) return;
-			render(search(question));
+
+			// Guards against a slower, earlier request's response landing after
+			// a later one's, if a visitor sends more than one message in
+			// quick succession.
+			var requestId = ++activeRequestId;
+
+			input.value = "";
+			input.disabled = true;
+			submitButton.disabled = true;
+
+			appendMessage("user", question);
+			var pending = conversation.concat([{ role: "user", content: question }]);
+			var loadingEl = appendMessage("loading", "Thinking\u2026");
+
+			askAI(pending)
+				.then(function (answer) {
+					if (requestId !== activeRequestId) return;
+					loadingEl.remove();
+					appendMessage("assistant", answer);
+
+					// Only committed to history now that the request actually
+					// succeeded — a failed attempt (see .catch below) never
+					// pollutes the context sent on the next message.
+					conversation = pending.concat([{ role: "assistant", content: answer }]);
+					if (conversation.length > MAX_HISTORY_MESSAGES) {
+						conversation = conversation.slice(conversation.length - MAX_HISTORY_MESSAGES);
+					}
+				})
+				.catch(function (err) {
+					if (requestId !== activeRequestId) return;
+					console.error("Ask widget: /api/ask failed", err);
+					loadingEl.remove();
+					appendMessage("error", "Sorry, I couldn't answer that right now. Please try again in a moment.");
+				})
+				.then(function () {
+					if (requestId !== activeRequestId) return;
+					resetTurnstile();
+					input.disabled = false;
+					submitButton.disabled = false;
+					input.focus();
+				});
 		});
 	}
 

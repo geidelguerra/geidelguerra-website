@@ -18,6 +18,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/geidelguerra/website/internal/ask"
 	"github.com/geidelguerra/website/internal/data"
 	"github.com/geidelguerra/website/internal/generator"
 	"github.com/geidelguerra/website/internal/httpserver"
@@ -71,7 +72,14 @@ func printUsage() {
 The live server takes no CLI flags: it's configured entirely via
 environment variables (or a local .env file):
   HOST   interface to bind (default: all interfaces)
-  PORT   port to listen on (default: 8080)`)
+  PORT   port to listen on (default: 8080)
+
+The "Chat with this website" widget's POST /api/ask (see internal/ask)
+needs three more variables; if any are unset, that endpoint responds 503
+rather than partially working, and the rest of the site is unaffected:
+  CLOUDFLARE_ACCOUNT_ID   Cloudflare account ID (not a secret)
+  CLOUDFLARE_API_TOKEN    API Token that can call Workers AI
+  TURNSTILE_SECRET_KEY    secret key for the ask widget's Turnstile sitekey`)
 }
 
 func runServe() {
@@ -84,7 +92,13 @@ func runServe() {
 		log.Fatalf("data: %v", err)
 	}
 
-	handler, err := httpserver.New(d)
+	askConfig := ask.Config{
+		AccountID:       getenv("CLOUDFLARE_ACCOUNT_ID", ""),
+		APIToken:        getenv("CLOUDFLARE_API_TOKEN", ""),
+		TurnstileSecret: getenv("TURNSTILE_SECRET_KEY", ""),
+	}
+
+	handler, err := httpserver.New(d, askConfig)
 	if err != nil {
 		log.Fatalf("build server: %v", err)
 	}

@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
+	"github.com/geidelguerra/website/internal/ask"
 	"github.com/geidelguerra/website/internal/cv"
 	"github.com/geidelguerra/website/internal/data"
 	"github.com/geidelguerra/website/internal/seo"
@@ -22,8 +23,10 @@ import (
 // embedded data.json (see main.go) and is immutable for the lifetime of the
 // process: there is no dynamic/runtime re-read of data.json from disk.
 // The JSON and PDF representations are also rendered once, up front, and
-// served as static bytes on every request.
-func New(d *data.Data) (http.Handler, error) {
+// served as static bytes on every request. askConfig configures POST
+// /api/ask (see internal/ask); if it's zero-valued, that route responds
+// 503 to every request instead of guessing/erroring unpredictably.
+func New(d *data.Data, askConfig ask.Config) (http.Handler, error) {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
@@ -103,6 +106,13 @@ func New(d *data.Data) (http.Handler, error) {
 		w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 		w.Write(sitemapXML)
 	})
+
+	// POST /api/ask powers the "Chat with this website" widget (see
+	// internal/ask and internal/web/static/js/ask.js). Works the same way
+	// regardless of deployment: local dev, deploy_ssh.sh, or
+	// deploy_cloudflare.sh (where cloudflare/src/index.js just proxies
+	// straight through to this handler, no special-casing there).
+	r.Post("/api/ask", ask.NewHandler(d, askConfig).ServeHTTP)
 
 	return r, nil
 }

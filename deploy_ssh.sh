@@ -46,8 +46,18 @@ trap 'rm -f "$LOCAL_TEMP_SERVICE_PATH" "$LOCAL_TEMP_NGINX_PATH" "$LOCAL_TEMP_ENV
 # Written with restrictive permissions from the start (before it ever has
 # content); HOST is left unset so the app binds all interfaces, which
 # nginx's proxy_pass to 127.0.0.1:$PORT relies on.
+#
+# CLOUDFLARE_ACCOUNT_ID/CLOUDFLARE_API_TOKEN/TURNSTILE_SECRET_KEY configure
+# the "Chat with this website" widget's POST /api/ask (see internal/ask);
+# they're optional here (default to empty, via ${VAR:-}) so a deploy still
+# works without them — that endpoint just responds 503 to every request
+# instead. Set them in this script's caller's environment (e.g. the repo
+# root's own .env, which `task deploy:ssh` already loads) to enable it.
 ( umask 077 && cat > "$LOCAL_TEMP_ENV_PATH" << EOF
 PORT=$PORT
+CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID:-}
+CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN:-}
+TURNSTILE_SECRET_KEY=${TURNSTILE_SECRET_KEY:-}
 EOF
 )
 

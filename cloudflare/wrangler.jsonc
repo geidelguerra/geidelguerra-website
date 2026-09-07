@@ -27,11 +27,14 @@
 		"crons": ["*/15 12-23,0 * * *"]
 	},
 
-	// This app has no secret or environment-specific runtime config (see
-	// main.go: only HOST/PORT, which the container sets itself in
-	// src/index.js) — so there's nothing to render into a generated config
-	// at deploy time, unlike ../deploy_cloudflare.sh's gngtechservices-website
-	// counterpart. This file is deployed as-is.
+	// This file is deployed as-is (unlike ../deploy_cloudflare.sh's
+	// gngtechservices-website counterpart, there's no generated config
+	// variant). The three vars/secrets main.go's getenv() reads for POST
+	// /api/ask (CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN,
+	// TURNSTILE_SECRET_KEY — see internal/ask and README.md > "Ask about
+	// this website") are set out of band with `wrangler secret put <NAME>`
+	// and forwarded to the container by src/index.js's `Website`
+	// constructor, not declared here.
 
 	"containers": [
 		{

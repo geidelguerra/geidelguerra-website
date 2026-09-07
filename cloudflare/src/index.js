@@ -1,6 +1,15 @@
 // Worker entrypoint for running the geidelguerra.com website (the Go
 // binary built from the repository root) as a Cloudflare Container. See
 // README.md > Deployment > Cloudflare Containers and ../deploy_cloudflare.sh.
+//
+// This Worker is a thin proxy: every request (including POST /api/ask,
+// which powers the "Chat with this website" widget) goes straight to the
+// container. The Go binary implements /api/ask itself (see internal/ask),
+// calling Cloudflare's Workers AI and Turnstile REST APIs directly — the
+// same code path used by every other deployment of this app (local `task
+// run`, deploy_ssh.sh) — so this Worker only needs to forward the three
+// credentials it needs as container env vars, sourced from this Worker's
+// own secrets (see `Website`'s constructor below).
 import { env } from "cloudflare:workers";
 import { Container, getContainer } from "@cloudflare/containers";
 
@@ -24,9 +33,23 @@ export class Website extends Container {
 	// Raise this (or set it very high) if that latency matters more than
 	// the savings, or shrink the cron's business-hours window instead.
 	sleepAfter = "30m";
-	envVars = {
-		PORT: String(CONTAINER_PORT),
-	};
+
+	// Forwards this Worker's own secrets/vars (set via `wrangler secret
+	// put`, never committed — see README.md > "Chat with this website")
+	// into the container's environment, so main.go's getenv() picks them
+	// up exactly like it would from a local .env file or deploy_ssh.sh's
+	// real environment variables. `env` here is this Durable Object's
+	// binding environment (see the base Container/DurableObject class),
+	// not the container's — this is what makes it available to read.
+	constructor(ctx, env) {
+		super(ctx, env);
+		this.envVars = {
+			PORT: String(CONTAINER_PORT),
+			CLOUDFLARE_ACCOUNT_ID: env.CLOUDFLARE_ACCOUNT_ID ?? "",
+			CLOUDFLARE_API_TOKEN: env.CLOUDFLARE_API_TOKEN ?? "",
+			TURNSTILE_SECRET_KEY: env.TURNSTILE_SECRET_KEY ?? "",
+		};
+	}
 }
 
 export default {

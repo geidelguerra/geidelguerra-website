@@ -86,7 +86,7 @@ templ IndexPage(d *data.Data) {
 			@Studies(d)
 		</main>
 		@Footer(d)
-		@AskWidget(d)
+		@AskWidget()
 	}
 }
 
@@ -155,6 +155,15 @@ templ Hero(d *data.Data) {
 			<div class="hero-actions">
 				<a class="btn btn-primary" href="#experience">See my work</a>
 				<a class="btn btn-ghost" href="#contact">Get in touch</a>
+				<!--
+					Opens the same chat panel as the floating widget (see
+					AskWidget in ask.templ) — static/js/ask.js wires up every
+					element with data-ask-open, not just the floating button, so
+					this call to action works without any JS changes specific to
+					it. Kept as a real <button>, not a link: it performs an
+					action on this page rather than navigating anywhere.
+				-->
+				<button class="btn btn-ghost" type="button" data-ask-open>Chat with this website</button>
 			</div>
 			<ul class="hero-networks">
 				for _, n := range d.Networks {

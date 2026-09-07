@@ -1,40 +1,71 @@
 package views
 
-import "github.com/geidelguerra/website/internal/data"
+// AskTurnstileSiteKey is the public Turnstile sitekey used to protect
+// POST /api/ask (see internal/ask) from automated abuse of the Workers AI
+// call it makes. Sitekeys aren't secret — only the matching secret key
+// (kept as the TURNSTILE_SECRET_KEY env var/secret, never committed to this
+// repo — see internal/ask.Config) can verify the tokens it produces — and
+// Cloudflare separately restricts which domains a sitekey's widget will
+// even render/verify for (configured on the widget itself, in the
+// Cloudflare dashboard's Turnstile page; currently geidelguerra.com,
+// localhost, and 127.0.0.1).
+const AskTurnstileSiteKey = "0x4AAAAAAErnGfhJQuQ3iGq0"
 
-// AskWidget renders the "Ask about this website" widget: a floating button
-// that opens a small search panel. There is no model, no network call, and
-// no server involved in answering questions: the site's content is
-// pre-indexed once at render time (see ask_search.go) and embedded
-// directly in the page as JSON, and static/js/ask.js does a small, fast,
-// fuzzy client-side search over it, so results appear instantly. The panel
-// closes on its own toggle button, on Escape, or on a click outside it.
-templ AskWidget(d *data.Data) {
+// AskWidget renders the "Chat with this website" widget: a floating button
+// that opens a small chat panel (also openable via the hero's "Chat with
+// this website" call to action — see index.templ's Hero — by way of the
+// shared [data-ask-open] selector static/js/ask.js wires up). Questions are
+// answered by Cloudflare Workers AI (see internal/ask, called from
+// static/js/ask.js), grounded in the site's own data.json content and the
+// ongoing conversation (multiple turns are sent on each request, so
+// follow-up questions have context), and protected by a Turnstile
+// challenge (see AskTurnstileSiteKey above) so that endpoint can't be
+// scripted/abused for free LLM calls. POST /api/ask is implemented once,
+// in Go, and works identically regardless of how this app is deployed
+// (local `task run`, deploy_ssh.sh, or deploy_cloudflare.sh) as long as its
+// three required environment variables are set (see internal/ask.Config);
+// if they aren't, or a request otherwise fails, static/js/ask.js appends a
+// plain error message to the chat instead of an assistant reply. The panel
+// closes on its own toggle button, on Escape, or on a click outside it;
+// the conversation itself is only kept in memory (see static/js/ask.js),
+// so it's lost on page reload.
+templ AskWidget() {
 	<div id="ask-widget" class="ask-widget" hidden>
-		@templ.JSONScript("ask-search-index", buildSearchIndex(d))
 		<div id="ask-panel" class="ask-panel" hidden>
+			<div id="ask-messages" class="ask-messages" aria-live="polite">
+				<p class="ask-empty">Ask me anything about Geidel — his skills, experience, or projects.</p>
+			</div>
+			<!--
+				Populated lazily by static/js/ask.js, only once the panel is first
+				opened: the Turnstile script is loaded and rendered into this
+				container (data-sitekey below), and the resulting token is sent
+				along with each message to POST /api/ask. "interaction-only"
+				appearance keeps it invisible unless Cloudflare decides an actual
+				challenge is needed for a given visitor.
+			-->
+			<div id="ask-turnstile" class="ask-turnstile" data-sitekey={ AskTurnstileSiteKey }></div>
 			<form id="ask-form" class="ask-form">
 				<input
 					id="ask-input"
 					class="ask-input"
 					type="text"
 					name="question"
-					placeholder="Ask about this website"
+					placeholder="Chat with this website"
 					autocomplete="off"
 				/>
-				<button id="ask-submit" class="ask-submit" type="submit" aria-label="Ask">
+				<button id="ask-submit" class="ask-submit" type="submit" aria-label="Send">
 					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 						<path d="M5 12h14M13 6l6 6-6 6"></path>
 					</svg>
 				</button>
 			</form>
-			<div id="ask-results" class="ask-answer" aria-live="polite" hidden></div>
 		</div>
 		<button
 			id="ask-toggle"
 			class="ask-toggle"
 			type="button"
-			aria-label="Ask about this website"
+			data-ask-open
+			aria-label="Chat with this website"
 			aria-expanded="false"
 			aria-controls="ask-panel"
 		>
