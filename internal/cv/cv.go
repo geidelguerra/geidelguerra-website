@@ -39,7 +39,7 @@ const (
 	colorChipBg          = "#f2f0fb" // --bg-alt
 )
 
-const pageMargin = 15.0
+const pageMargin = 12.0
 
 // maxExperienceEntries caps how many jobs are listed, oldest dropped first,
 // so the resume reliably fits a single page even if more are added later.

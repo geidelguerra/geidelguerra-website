@@ -18,6 +18,7 @@ type personSchema struct {
 	Image       string   `json:"image"`
 	JobTitle    string   `json:"jobTitle"`
 	Description string   `json:"description"`
+	KnowsAbout  []string `json:"knowsAbout,omitempty"`
 	SameAs      []string `json:"sameAs,omitempty"`
 }
 
@@ -25,6 +26,11 @@ func buildPersonSchema(d *data.Data) personSchema {
 	sameAs := make([]string, 0, len(d.Networks))
 	for _, n := range d.Networks {
 		sameAs = append(sameAs, n.URL)
+	}
+
+	knowsAbout := make([]string, 0, len(d.Skills))
+	for _, s := range d.Skills {
+		knowsAbout = append(knowsAbout, s.Label)
 	}
 
 	return personSchema{
@@ -35,6 +41,7 @@ func buildPersonSchema(d *data.Data) personSchema {
 		Image:       seo.SiteURL + "/static/images/profile.jpg",
 		JobTitle:    d.Title,
 		Description: d.Summary,
+		KnowsAbout:  knowsAbout,
 		SameAs:      sameAs,
 	}
 }

@@ -28,6 +28,19 @@ fi
 # HOST/PORT, which the container sets itself in cloudflare/src/index.js),
 # so cloudflare/wrangler.jsonc is deployed as-is — no generated temp
 # config or `wrangler secret put` step needed.
+#
+# CLOUDFLARE_API_TOKEN may already be set in the environment (e.g. for
+# main.go's ask feature, see README.md > "Ask about this website"), but
+# wrangler also honors CLOUDFLARE_API_TOKEN for its own API authentication,
+# and that token may not have permission to deploy. Stash it under another
+# name and unset it before invoking wrangler, then restore it afterwards.
+ASK_CLOUDFLARE_API_TOKEN="${CLOUDFLARE_API_TOKEN:-}"
+unset CLOUDFLARE_API_TOKEN
+
 ( cd "$CF_DIR" && npx wrangler deploy --domain "$DOMAIN" )
+
+if [ -n "$ASK_CLOUDFLARE_API_TOKEN" ]; then
+    export CLOUDFLARE_API_TOKEN="$ASK_CLOUDFLARE_API_TOKEN"
+fi
 
 echo "Deployed. On the very first deploy, Cloudflare can take a few minutes to provision the container image before https://$DOMAIN/ responds."
